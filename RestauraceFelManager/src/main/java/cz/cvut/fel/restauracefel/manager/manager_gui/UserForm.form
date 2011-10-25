@@ -1,0 +1,197 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" max="-2" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Component id="jLabelLogin" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelSurname" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelPIN" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelPasswd" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelName" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelRoles" alignment="0" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="jTextFieldPasswd" min="-2" pref="195" max="-2" attributes="0"/>
+                  <Component id="jTextFieldRoles" min="-2" pref="195" max="-2" attributes="0"/>
+                  <Component id="jTextFieldName" pref="195" max="32767" attributes="1"/>
+                  <Component id="jTextFieldSurname" alignment="0" pref="195" max="32767" attributes="1"/>
+                  <Component id="jTextFieldPIN" alignment="0" pref="195" max="32767" attributes="1"/>
+                  <Component id="jTextFieldLogin" alignment="0" pref="195" max="32767" attributes="1"/>
+              </Group>
+              <EmptySpace min="-2" pref="37" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Group type="102" alignment="0" attributes="1">
+                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="jTextFieldOwnPasswd" max="32767" attributes="0"/>
+                  </Group>
+                  <Component id="jButtonDelete" pref="167" max="32767" attributes="1"/>
+                  <Component id="jButtonClear" pref="167" max="32767" attributes="1"/>
+                  <Component id="jButtonInsert" alignment="0" max="32767" attributes="1"/>
+                  <Component id="jButtonRole" alignment="0" max="32767" attributes="1"/>
+              </Group>
+              <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" max="-2" attributes="0">
+              <EmptySpace min="-2" pref="14" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabelName" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTextFieldName" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonInsert" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabelSurname" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTextFieldSurname" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonClear" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabelPIN" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTextFieldPIN" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonDelete" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabelLogin" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTextFieldLogin" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabelPasswd" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTextFieldPasswd" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTextFieldOwnPasswd" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabelRoles" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTextFieldRoles" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonRole" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="jLabelName">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Jm&#xe9;no"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelSurname">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="P&#x159;&#xed;jmen&#xed;"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelPIN">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="PIN"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelLogin">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="U&#x17e;ivatelsk&#xe9; jm&#xe9;no"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelPasswd">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="V&#xfd;choz&#xed; heslo"/>
+        <Property name="toolTipText" type="java.lang.String" value="V&#xfd;choz&#xed; heslo, kter&#xe9; se u&#x17e;ivateli nastav&#xed;&#xa; p&#x159;i vytv&#xe1;&#x159;en&#xed; jeho u&#x17e;ivatelsk&#xe9;ho z&#xe1;znamu."/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldLogin">
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldName">
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldSurname">
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldPIN">
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtonInsert">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Vlo&#x17e;it z&#xe1;znam o zam&#x11b;stnanci"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonInsertActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtonClear">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Vy&#x10d;istit formul&#xe1;&#x159;"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonClearActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtonDelete">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Smazat z&#xe1;znam"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonDeleteActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelRoles">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="U&#x17e;ivatelsk&#xe9; role"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldRoles">
+      <Properties>
+        <Property name="editable" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtonRole">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Upravit u&#x17e;ivatelsk&#xe9; role"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonRoleActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldPasswd">
+      <Properties>
+        <Property name="editable" type="boolean" value="false"/>
+        <Property name="text" type="java.lang.String" value="1234"/>
+        <Property name="toolTipText" type="java.lang.String" value="V&#xfd;choz&#xed; heslo, kter&#xe9; se u&#x17e;ivateli nastav&#xed;  p&#x159;i vytv&#xe1;&#x159;en&#xed; jeho u&#x17e;ivatelsk&#xe9;ho z&#xe1;znamu."/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Vlastn&#xed; heslo"/>
+        <Property name="toolTipText" type="java.lang.String" value="Zm&#x11b;nil si ji&#x17e; dan&#xfd; u&#x17e;ivatel v&#xfd;choz&#xed; heslo na svoje tajn&#xe9; heslo?"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldOwnPasswd">
+      <Properties>
+        <Property name="editable" type="boolean" value="false"/>
+        <Property name="toolTipText" type="java.lang.String" value="Zm&#x11b;nil si ji&#x17e; dan&#xfd; u&#x17e;ivatel v&#xfd;choz&#xed; heslo na svoje tajn&#xe9; heslo?"/>
+      </Properties>
+    </Component>
+  </SubComponents>
+</Form>

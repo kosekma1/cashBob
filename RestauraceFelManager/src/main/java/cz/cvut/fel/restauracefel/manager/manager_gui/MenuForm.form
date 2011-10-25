@@ -1,0 +1,162 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" attributes="0">
+                  <Component id="jButtonPrint" alignment="1" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jLabelDate" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelName" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelUser" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="jComboBoxUser" max="32767" attributes="3"/>
+                          <Component id="jTextFieldDate" alignment="0" max="32767" attributes="3"/>
+                          <Component id="jTextFieldName" alignment="0" min="-2" pref="189" max="-2" attributes="3"/>
+                      </Group>
+                  </Group>
+              </Group>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="88" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                          <Component id="jButtonInsert" alignment="1" max="32767" attributes="1"/>
+                          <Component id="jButtonClear" alignment="1" max="32767" attributes="1"/>
+                          <Component id="jButtonDelete" alignment="1" max="32767" attributes="1"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <EmptySpace min="-2" pref="56" max="-2" attributes="0"/>
+                      <Component id="jButtonMenuItems" min="-2" max="-2" attributes="1"/>
+                  </Group>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabelName" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTextFieldName" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonInsert" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabelDate" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTextFieldDate" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonClear" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabelUser" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jComboBoxUser" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonDelete" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jButtonMenuItems" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonPrint" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace pref="19" max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="jLabelName">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="N&#xe1;zev menu"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelDate">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Datum vytvo&#x159;en&#xed; menu"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelUser">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Vytvo&#x159;il"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldName">
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldDate">
+    </Component>
+    <Component class="javax.swing.JComboBox" name="jComboBoxUser">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="0"/>
+        </Property>
+        <Property name="toolTipText" type="java.lang.String" value="U&#x17e;ivatel, kter&#xfd; vytvo&#x159;il toto menu."/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtonInsert">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Vytvo&#x159;it z&#xe1;znam"/>
+        <Property name="toolTipText" type="java.lang.String" value="Vlo&#x17e;it nov&#xfd; z&#xe1;znam Menu"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonInsertActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtonDelete">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Smazat z&#xe1;znam"/>
+        <Property name="toolTipText" type="java.lang.String" value="Smazat vybran&#xfd; z&#xe1;znam Menu"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonDeleteActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtonClear">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Vy&#x10d;istit formul&#xe1;&#x159;"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonClearActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtonMenuItems">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Nastavit polo&#x17e;ky menu"/>
+        <Property name="toolTipText" type="java.lang.String" value="P&#x159;i&#x159;adit ozna&#x10d;en&#xe9;mu menu polo&#x17e;ky menu."/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonMenuItemsActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtonPrint">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Vytisknout menu"/>
+        <Property name="toolTipText" type="java.lang.String" value="Tisk ozna&#x10d;en&#xe9;ho menu."/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonPrintActionPerformed"/>
+      </Events>
+    </Component>
+  </SubComponents>
+</Form>

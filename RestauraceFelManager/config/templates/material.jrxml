@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="title" class="java.lang.String"/>
+	<parameter name="name" class="java.lang.String"/>
+	<parameter name="actualAmount" class="java.lang.String"/>
+	<parameter name="unit" class="java.lang.String"/>
+	<parameter name="minimalAmount" class="java.lang.String"/>
+	<parameter name="generated" class="java.lang.String"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="actualAmount" class="java.lang.Double"/>
+	<field name="unit" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="minimalAmount" class="java.lang.Double"/>
+	<background>
+		<band height="14"/>
+	</background>
+	<title>
+		<band height="80">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="27" width="555" height="36" backcolor="#B9C8C6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="18" isBold="true" isItalic="false" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{title}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="63" width="555" height="1"/>
+			</line>
+			<line>
+				<reportElement x="0" y="26" width="555" height="1"/>
+			</line>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="50">
+			<textField>
+				<reportElement x="0" y="13" width="110" height="26"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="425" y="13" width="130" height="25"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{actualAmount}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="38" width="555" height="1"/>
+			</line>
+			<textField>
+				<reportElement x="123" y="13" width="100" height="26"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{unit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="239" y="13" width="133" height="25"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{minimalAmount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="27">
+			<textField>
+				<reportElement x="0" y="0" width="110" height="23"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="425" y="0" width="130" height="23"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{actualAmount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="123" y="0" width="100" height="23"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{unit}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="239" y="0" width="133" height="23"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression class="java.lang.Double"><![CDATA[$F{minimalAmount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="50">
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement key="textField" x="99" y="30" width="67" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement verticalAlignment="Middle">
+					<font size="10" pdfEncoding="Cp1250"/>
+				</textElement>
+				<textFieldExpression class="java.util.Date"><![CDATA[new Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="435" y="30" width="100" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.Integer"><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="20" y="30" width="76" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{generated} + ":"]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="65"/>
+	</summary>
+</jasperReport>
