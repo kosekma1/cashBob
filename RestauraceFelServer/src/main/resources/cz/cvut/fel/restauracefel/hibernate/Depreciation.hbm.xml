@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 16.3.2009 21:36:54 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class catalog="db_rest_fel" name="cz.cvut.fel.restauracefel.hibernate.Depreciation" table="depreciation">
+    <id name="depreciationId" type="java.lang.Integer">
+      <column name="depreciationID"/>
+      <generator class="native"/>
+    </id>
+    <many-to-one class="cz.cvut.fel.restauracefel.hibernate.User" name="userReporter">
+      <column name="userReporterID" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="cz.cvut.fel.restauracefel.hibernate.User" name="userOffender">
+      <column name="userOffenderID" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="cz.cvut.fel.restauracefel.hibernate.Material" name="material">
+      <column name="materialID" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="cz.cvut.fel.restauracefel.hibernate.ReasonType" name="reasonType">
+      <column name="reasonTypeID"/>
+    </many-to-one>
+    <property name="quantity" type="double">
+      <column name="quantity" not-null="true"/>
+    </property>
+    <property name="date" type="java.util.Date">
+      <column name="date" not-null="true"/>
+    </property>
+    <property name="note" type="string">
+      <column name="note"/>
+    </property>
+    <property name="isDeleted" type="int">
+      <column name="isDeleted" not-null="true"/>
+    </property>
+  </class>
+</hibernate-mapping>

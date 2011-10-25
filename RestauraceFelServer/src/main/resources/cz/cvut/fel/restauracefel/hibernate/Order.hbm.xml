@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 16.3.2009 21:36:54 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class catalog="db_rest_fel" name="cz.cvut.fel.restauracefel.hibernate.Order" table="xorder">
+    <id name="orderId" type="java.lang.Integer">
+      <column name="orderID"/>
+      <generator class="native"/>
+    </id>
+    <property name="isPaid" type="int">
+      <column name="isPaid" not-null="true"/>
+    </property>
+    <property name="time" type="java.util.Date">
+      <column name="time" not-null="true"/>
+    </property>
+    <many-to-one class="cz.cvut.fel.restauracefel.hibernate.Account" column="accountID" name="account"/>
+    <many-to-one class="cz.cvut.fel.restauracefel.hibernate.User" column="userID" name="user"/>
+    <property name="isDeleted" type="int">
+      <column name="isDeleted" not-null="true"/>
+    </property>
+  </class>
+</hibernate-mapping>

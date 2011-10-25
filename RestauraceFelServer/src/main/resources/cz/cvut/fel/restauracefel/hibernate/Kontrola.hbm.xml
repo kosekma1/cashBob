@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="cz.cvut.fel.restauracefel.hibernate.Kontrola" table="kontrola">
+    <id name="measurementId" type="java.lang.Integer">
+      <column name="measurementId"/>
+      <generator class="native"/>
+    </id>
+    <many-to-one class="cz.cvut.fel.restauracefel.hibernate.Uzaverka" name="uzaverka">
+      <column name="id" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="cz.cvut.fel.restauracefel.hibernate.Material" name="surovina">
+      <column name="materialId" not-null="true"/>
+    </many-to-one>
+    <property name="noveMnozstvi" type="double">
+      <column name="noveMnoztvi" not-null="true"/>
+    </property>
+    <property name="stareMnozstvi" type="double">
+      <column name="stareMnozstvi" not-null="true"/>
+    </property>
+    <property name="prodanoVahou" type="double">
+      <column name="prodanoVahou" not-null="true"/>
+    </property>
+    <property name="prodanoPokladnou" type="double">
+      <column name="prodanoPokladnou" not-null="true"/>
+    </property>
+    <property name="rozdil" type="double">
+      <column name="rozdil" not-null="true"/>
+    </property>
+    <property name="valid" type="boolean">
+      <column name="valid" not-null="true"/>
+    </property>
+  </class>
+</hibernate-mapping>

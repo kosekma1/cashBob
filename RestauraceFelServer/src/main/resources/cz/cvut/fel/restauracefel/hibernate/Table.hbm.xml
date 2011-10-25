@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 16.3.2009 21:36:54 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class catalog="db_rest_fel" name="cz.cvut.fel.restauracefel.hibernate.Table" table="xtable">
+    <id name="tableId" type="java.lang.Integer">
+      <column name="tableID"/>
+      <generator class="native"/>
+    </id>
+    <property name="tableNumber" type="int">
+      <column name="tableNumber" not-null="true"/>
+    </property>
+    <property name="numberOfPlaces" type="int">
+      <column name="numberOfPlaces" not-null="true"/>
+    </property>
+    <property name="isDeleted" type="int">
+      <column name="isDeleted" not-null="true"/>
+    </property>
+  </class>
+</hibernate-mapping>

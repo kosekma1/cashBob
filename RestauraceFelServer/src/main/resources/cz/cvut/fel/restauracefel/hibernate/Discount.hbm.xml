@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 16.3.2009 21:36:54 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class catalog="db_rest_fel" name="cz.cvut.fel.restauracefel.hibernate.Discount" table="discount">
+    <id name="discountId" type="java.lang.Integer">
+      <column name="discountID"/>
+      <generator class="native"/>
+    </id>
+    <many-to-one class="cz.cvut.fel.restauracefel.hibernate.DiscountType" name="discountType">
+      <column name="discountTypeID" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="cz.cvut.fel.restauracefel.hibernate.MenuItem" name="menuItem">
+      <column name="menuItemID" not-null="true"/>
+    </many-to-one>
+    <property name="amount" type="double">
+      <column name="amount" not-null="true"/>
+    </property>
+    <property name="coefficient" type="double">
+      <column name="coefficient" not-null="true"/>
+    </property>
+    <property name="isDeleted" type="int">
+      <column name="isDeleted" not-null="true"/>
+    </property>
+  </class>
+</hibernate-mapping>

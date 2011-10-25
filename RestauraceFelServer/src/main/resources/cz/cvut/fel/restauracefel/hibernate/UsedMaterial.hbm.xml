@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 16.3.2009 21:36:54 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class catalog="db_rest_fel" name="cz.cvut.fel.restauracefel.hibernate.UsedMaterial" table="usedmaterial">
+    <id name="usedMaterialId" type="java.lang.Integer">
+      <column name="usedMaterialID"/>
+      <generator class="identity"/>
+    </id>
+    <many-to-one class="cz.cvut.fel.restauracefel.hibernate.Material" name="material">
+      <column name="materialID" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="cz.cvut.fel.restauracefel.hibernate.MenuItem" name="menuItem">
+      <column name="menuItemID" not-null="true"/>
+    </many-to-one>
+    <property name="quantity" type="double">
+      <column name="quantity" not-null="true"/>
+    </property>
+    <property name="isDeleted" type="int">
+      <column name="isDeleted" not-null="true"/>
+    </property>
+  </class>
+</hibernate-mapping>

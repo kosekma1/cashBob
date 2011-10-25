@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 16.3.2009 21:36:54 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class catalog="db_rest_fel" lazy="false" name="cz.cvut.fel.restauracefel.hibernate.Account" table="account">
+    <id name="accountId" type="java.lang.Integer">
+      <column name="accountID"/>
+      <generator class="native"/>
+    </id>
+    <property name="name" type="string">
+      <column name="name" not-null="true"/>
+    </property>
+    <many-to-one class="cz.cvut.fel.restauracefel.hibernate.AccountStatusType" name="accountStatusType">
+      <column name="accountStatusTypeId" not-null="true"/>
+    </many-to-one>
+    <many-to-one class="cz.cvut.fel.restauracefel.hibernate.AccountCategory" name="accountCategory">
+      <column name="accountCategoryId" not-null="false"/>
+    </many-to-one>
+    <many-to-one class="cz.cvut.fel.restauracefel.hibernate.Table" name="table">
+      <column name="tableId" not-null="false"/>
+    </many-to-one>
+    <many-to-one class="cz.cvut.fel.restauracefel.hibernate.User" name="user">
+      <column name="userId" not-null="false"/>
+    </many-to-one>
+    <many-to-one class="cz.cvut.fel.restauracefel.hibernate.DiscountType" name="discountType">
+      <column name="discountTypeId" not-null="false"/>
+    </many-to-one>
+    <property name="note" type="string">
+      <column name="note" not-null="false"/>
+    </property>
+    <property name="isDeleted" type="int">
+      <column name="isDeleted" not-null="true"/>
+    </property>
+  </class>
+</hibernate-mapping>

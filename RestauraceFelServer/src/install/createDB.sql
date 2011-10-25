@@ -1,0 +1,788 @@
+-- phpMyAdmin SQL Dump
+-- version 3.2.0.1
+-- http://www.phpmyadmin.net
+--
+-- Počítač: localhost
+-- Vygenerováno: Středa 28. dubna 2010, 18:56
+-- Verze MySQL: 5.1.36
+-- Verze PHP: 5.3.0
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+--
+-- Databáze: `db_rest_fel`
+--
+
+DROP DATABASE IF EXISTS `db_rest_fel`;
+
+CREATE DATABASE `db_rest_fel` DEFAULT CHARACTER SET utf8 COLLATE utf8_czech_ci;
+USE `db_rest_fel`;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `account`
+--
+
+CREATE TABLE IF NOT EXISTS `account` (
+  `accountID` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `accountStatusTypeId` int(11) NOT NULL,
+  `tableId` int(11) DEFAULT NULL,
+  `userId` int(11) DEFAULT NULL,
+  `discountTypeId` int(11) DEFAULT NULL,
+  `isDeleted` int(11) NOT NULL,
+  `accountCategoryId` int(11) DEFAULT NULL,
+  `note` varchar(255) COLLATE utf8_czech_ci DEFAULT NULL,
+  PRIMARY KEY (`accountID`),
+  KEY `FKB9D38A2DD748587B` (`tableId`),
+  KEY `FKB9D38A2DA7BA9C91` (`accountStatusTypeId`),
+  KEY `FKB9D38A2D541CE2AD` (`discountTypeId`),
+  KEY `FKB9D38A2D9609962D` (`userId`),
+  KEY `FKB9D38A2D8E987115` (`accountCategoryId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Vypisuji data pro tabulku `account`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `accountcategory`
+--
+
+CREATE TABLE IF NOT EXISTS `accountcategory` (
+  `accountCategoryID` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `note` varchar(255) COLLATE utf8_czech_ci DEFAULT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`accountCategoryID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Vypisuji data pro tabulku `accountcategory`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `accountstatustype`
+--
+
+CREATE TABLE IF NOT EXISTS `accountstatustype` (
+  `accountStatusTypeID` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `note` varchar(255) COLLATE utf8_czech_ci DEFAULT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`accountStatusTypeID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=3 ;
+
+--
+-- Vypisuji data pro tabulku `accountstatustype`
+--
+
+INSERT INTO `accountstatustype` (`accountStatusTypeID`, `name`, `note`, `isDeleted`) VALUES
+(1, 'neuzavřen', NULL, 0),
+(2, 'uzavřen', NULL, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `depreciation`
+--
+
+CREATE TABLE IF NOT EXISTS `depreciation` (
+  `depreciationID` int(11) NOT NULL AUTO_INCREMENT,
+  `userReporterID` int(11) NOT NULL,
+  `userOffenderID` int(11) NOT NULL,
+  `materialID` int(11) NOT NULL,
+  `reasonTypeID` int(11) DEFAULT NULL,
+  `quantity` double NOT NULL,
+  `date` datetime NOT NULL,
+  `note` varchar(255) COLLATE utf8_czech_ci DEFAULT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`depreciationID`),
+  KEY `FKCFD3BD8D8114BBA6` (`userOffenderID`),
+  KEY `FKCFD3BD8D937DB3F3` (`reasonTypeID`),
+  KEY `FKCFD3BD8DF12B8BCE` (`userReporterID`),
+  KEY `FKCFD3BD8D36DB23E5` (`materialID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Vypisuji data pro tabulku `depreciation`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `discount`
+--
+
+CREATE TABLE IF NOT EXISTS `discount` (
+  `discountID` int(11) NOT NULL AUTO_INCREMENT,
+  `discountTypeID` int(11) NOT NULL,
+  `menuItemID` int(11) NOT NULL,
+  `amount` double NOT NULL,
+  `coefficient` double NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`discountID`),
+  KEY `FK10487541227598DB` (`menuItemID`),
+  KEY `FK10487541541CE2AD` (`discountTypeID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Vypisuji data pro tabulku `discount`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `discounttype`
+--
+
+CREATE TABLE IF NOT EXISTS `discounttype` (
+  `discountTypeID` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`discountTypeID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Vypisuji data pro tabulku `discounttype`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `expenditure`
+--
+
+CREATE TABLE IF NOT EXISTS `expenditure` (
+  `expenditureID` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) NOT NULL,
+  `materialID` int(11) NOT NULL,
+  `quantity` double NOT NULL,
+  `date` datetime NOT NULL,
+  `note` varchar(255) COLLATE utf8_czech_ci DEFAULT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`expenditureID`),
+  KEY `FK85FF097F36DB23E5` (`materialID`),
+  KEY `FK85FF097F9609962D` (`userId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Vypisuji data pro tabulku `expenditure`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `income`
+--
+
+CREATE TABLE IF NOT EXISTS `income` (
+  `incomeID` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) NOT NULL,
+  `materialID` int(11) NOT NULL,
+  `quantity` double NOT NULL,
+  `price` double NOT NULL,
+  `date` datetime NOT NULL,
+  `note` varchar(255) COLLATE utf8_czech_ci DEFAULT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`incomeID`),
+  KEY `FKB969A1A936DB23E5` (`materialID`),
+  KEY `FKB969A1A99609962D` (`userId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Vypisuji data pro tabulku `income`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `kontrola`
+--
+
+CREATE TABLE IF NOT EXISTS `kontrola` (
+  `measurementId` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
+  `materialId` int(11) NOT NULL,
+  `noveMnoztvi` double NOT NULL,
+  `stareMnozstvi` double NOT NULL,
+  `prodanoVahou` double NOT NULL,
+  `prodanoPokladnou` double NOT NULL,
+  `rozdil` double NOT NULL,
+  `valid` bit(1) NOT NULL,
+  PRIMARY KEY (`measurementId`),
+  KEY `FK1D3EAD9C964F52B4` (`id`),
+  KEY `FK1D3EAD9C36DB23E5` (`materialId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Vypisuji data pro tabulku `kontrola`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `material`
+--
+
+CREATE TABLE IF NOT EXISTS `material` (
+  `materialID` int(11) NOT NULL AUTO_INCREMENT,
+  `unitTypeID` int(11) NOT NULL,
+  `materialTypeID` int(11) NOT NULL,
+  `name` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `currentQuantity` double NOT NULL,
+  `barcode` varchar(25) COLLATE utf8_czech_ci NOT NULL,
+  `minimal` double NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  `density` double NOT NULL,
+  `emptyPackageWeight` double NOT NULL,
+  `packageCapacity` double NOT NULL,
+  PRIMARY KEY (`materialID`),
+  KEY `FK11D36527E47DD173` (`unitTypeID`),
+  KEY `FK11D365275F765AF9` (`materialTypeID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Vypisuji data pro tabulku `material`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `materialtype`
+--
+
+CREATE TABLE IF NOT EXISTS `materialtype` (
+  `materialTypeID` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `note` varchar(255) COLLATE utf8_czech_ci DEFAULT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`materialTypeID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Vypisuji data pro tabulku `materialtype`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `menu`
+--
+
+CREATE TABLE IF NOT EXISTS `menu` (
+  `menuID` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) NOT NULL,
+  `name` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `date` datetime NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`menuID`),
+  KEY `FK33155F9609962D` (`userId`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=4 ;
+
+--
+-- Vypisuji data pro tabulku `menu`
+--
+
+INSERT INTO `menu` (`menuID`, `userId`, `name`, `date`, `isDeleted`) VALUES
+(1, 1, 'Piva', '2010-03-11 00:00:00', 0),
+(2, 1, 'Vína', '2010-03-11 00:00:00', 0),
+(3, 1, 'Destiláty', '2010-03-11 00:00:00', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `menuitem`
+--
+
+CREATE TABLE IF NOT EXISTS `menuitem` (
+  `menuItemID` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `price` double NOT NULL,
+  `quantity` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `isAvailable` int(11) NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  `menuItemTypeID` int(11) NOT NULL,
+  PRIMARY KEY (`menuItemID`),
+  KEY `FKDC0CC8F25E4164EF` (`menuItemTypeID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=10 ;
+
+--
+-- Vypisuji data pro tabulku `menuitem`
+--
+
+INSERT INTO `menuitem` (`menuItemID`, `name`, `price`, `quantity`, `isAvailable`, `isDeleted`, `menuItemTypeID`) VALUES
+(1, 'Plzeň 12°', 35, '0.5 l', 1, 0, 1),
+(2, 'Krušovice 10°', 20, '0.5 l', 1, 0, 1),
+(3, 'Zlatopramen 11°', 22, '0.5 l', 1, 0, 1),
+(4, 'Veltlínské zelené', 28, '0.2 l', 1, 0, 2),
+(5, 'Müller Thurgau', 28, '0.2 l', 1, 0, 2),
+(6, 'Absolut vodka', 36, '0.05 l', 1, 0, 3),
+(7, 'Becherovka', 30, '0.05 l', 1, 0, 3),
+(8, 'Bacardi', 38, '0.05 l', 1, 0, 3),
+(9, 'Jelzin Gold', 28, '0.05 l', 1, 0, 3);
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `menuitemtype`
+--
+
+CREATE TABLE IF NOT EXISTS `menuitemtype` (
+  `menuItemTypeID` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `itemCount` int(11) NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`menuItemTypeID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=4 ;
+
+--
+-- Vypisuji data pro tabulku `menuitemtype`
+--
+
+INSERT INTO `menuitemtype` (`menuItemTypeID`, `name`, `itemCount`, `isDeleted`) VALUES
+(1, 'Piva', 3, 0),
+(2, 'Vína', 2, 0),
+(3, 'Destiláty', 4, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `menu_menuitem`
+--
+
+CREATE TABLE IF NOT EXISTS `menu_menuitem` (
+  `menuMenuItemID` int(11) NOT NULL AUTO_INCREMENT,
+  `menuID` int(11) NOT NULL,
+  `menuItemID` int(11) NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`menuMenuItemID`),
+  KEY `FK18277FD2879DD455` (`menuID`),
+  KEY `FK18277FD2227598DB` (`menuItemID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=10 ;
+
+--
+-- Vypisuji data pro tabulku `menu_menuitem`
+--
+
+INSERT INTO `menu_menuitem` (`menuMenuItemID`, `menuID`, `menuItemID`, `isDeleted`) VALUES
+(1, 1, 1, 0),
+(2, 1, 2, 0),
+(3, 1, 3, 0),
+(4, 2, 4, 0),
+(5, 2, 5, 0),
+(6, 3, 6, 0),
+(7, 3, 7, 0),
+(8, 3, 8, 0),
+(9, 3, 9, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `order_menuitem`
+--
+
+CREATE TABLE IF NOT EXISTS `order_menuitem` (
+  `orderMenuItemID` int(11) NOT NULL AUTO_INCREMENT,
+  `menuItemID` int(11) NOT NULL,
+  `orderID` int(11) NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`orderMenuItemID`),
+  KEY `FK8F48CAC3EBA60F7B` (`orderID`),
+  KEY `FK8F48CAC3227598DB` (`menuItemID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Vypisuji data pro tabulku `order_menuitem`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `reasontype`
+--
+
+CREATE TABLE IF NOT EXISTS `reasontype` (
+  `reasonTypeID` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `note` varchar(255) COLLATE utf8_czech_ci DEFAULT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`reasonTypeID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Vypisuji data pro tabulku `reasontype`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `right`
+--
+
+CREATE TABLE IF NOT EXISTS `right` (
+  `rightID` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`rightID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=26 ;
+
+--
+-- Vypisuji data pro tabulku `right`
+--
+
+INSERT INTO `right` (`rightID`, `name`, `isDeleted`) VALUES
+(1, 'Změna přístupových práv', 0),
+(2, 'Tvorba nového účtu', 0),
+(3, 'Přehled účtů', 0),
+(4, 'Tvorba nové objednávky', 0),
+(5, 'Placení objednávek', 0),
+(6, 'Přesun objednávek', 0),
+(7, 'Tvorba nového zákazníka', 0),
+(8, 'Tvorba nové slevy', 0),
+(9, 'Přiřazení slevy osobám a rolím', 0),
+(10, 'Tvorba nové kategorie účtů', 0),
+(11, 'Editace zaměstnanců', 0),
+(12, 'Změna uživatelských hesel', 0),
+(13, 'Tvorba menu', 0),
+(14, 'Tvorba položek menu', 0),
+(15, 'Editace stolů', 0),
+(16, 'Zálohování dat', 0),
+(17, 'Editace surovin', 0),
+(18, 'Příjem surovin', 0),
+(19, 'Výdej surovin', 0),
+(20, 'Odpis surovin', 0),
+(21, 'Editace druhů surovin', 0),
+(22, 'Editace důvodů odpisu', 0),
+(23, 'Tvorba uzávěrky (zrcadlo)', 0),
+(24, 'Přehled uzávěrek', 0),
+(25, 'Nastavení klienta', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `role`
+--
+
+CREATE TABLE IF NOT EXISTS `role` (
+  `roleID` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`roleID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=4 ;
+
+--
+-- Vypisuji data pro tabulku `role`
+--
+
+INSERT INTO `role` (`roleID`, `name`, `isDeleted`) VALUES
+(1, 'manager', 0),
+(2, 'waiter', 0),
+(3, 'cook', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `role_discounttype`
+--
+
+CREATE TABLE IF NOT EXISTS `role_discounttype` (
+  `roleDiscountTypeID` int(11) NOT NULL AUTO_INCREMENT,
+  `roleID` int(11) NOT NULL,
+  `discountTypeID` int(11) NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`roleDiscountTypeID`),
+  KEY `FK6265552490B440C3` (`roleID`),
+  KEY `FK62655524541CE2AD` (`discountTypeID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Vypisuji data pro tabulku `role_discounttype`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `role_right`
+--
+
+CREATE TABLE IF NOT EXISTS `role_right` (
+  `roleRightID` int(11) NOT NULL AUTO_INCREMENT,
+  `roleID` int(11) NOT NULL,
+  `rightID` int(11) NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`roleRightID`),
+  KEY `FK6CC8F5137B4F0997` (`rightID`),
+  KEY `FK6CC8F51390B440C3` (`roleID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=40 ;
+
+--
+-- Vypisuji data pro tabulku `role_right`
+--
+
+INSERT INTO `role_right` (`roleRightID`, `roleID`, `rightID`, `isDeleted`) VALUES
+(1, 1, 1, 0),
+(2, 1, 2, 0),
+(3, 1, 3, 0),
+(4, 1, 4, 0),
+(5, 1, 5, 0),
+(6, 1, 6, 0),
+(7, 1, 7, 0),
+(8, 1, 8, 0),
+(9, 1, 9, 0),
+(10, 1, 10, 0),
+(11, 1, 11, 0),
+(12, 1, 12, 0),
+(13, 1, 13, 0),
+(14, 1, 14, 0),
+(15, 1, 15, 0),
+(16, 1, 16, 0),
+(17, 1, 17, 0),
+(18, 1, 18, 0),
+(19, 1, 19, 0),
+(20, 1, 20, 0),
+(21, 1, 21, 0),
+(22, 1, 22, 0),
+(23, 1, 23, 0),
+(24, 1, 24, 0),
+(25, 1, 25, 0),
+(26, 2, 2, 0),
+(27, 2, 3, 0),
+(28, 2, 4, 0),
+(29, 2, 5, 0),
+(30, 2, 6, 0),
+(31, 2, 7, 0),
+(32, 3, 13, 0),
+(33, 3, 14, 0),
+(34, 3, 17, 0),
+(35, 3, 18, 0),
+(36, 3, 19, 0),
+(37, 3, 20, 0),
+(38, 3, 23, 0),
+(39, 3, 24, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `unittype`
+--
+
+CREATE TABLE IF NOT EXISTS `unittype` (
+  `unitTypeID` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `abbreviation` varchar(16) COLLATE utf8_czech_ci NOT NULL,
+  `typeID` int(11) NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`unitTypeID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=9 ;
+
+--
+-- Vypisuji data pro tabulku `unittype`
+--
+
+INSERT INTO `unittype` (`unitTypeID`, `name`, `abbreviation`, `typeID`, `isDeleted`) VALUES
+(1, 'gram', 'g', 1, 0),
+(2, 'kilogram', 'kg', 1, 0),
+(3, 'mililitr', 'ml', 2, 0),
+(4, 'decilitr', 'dl', 2, 0),
+(5, 'litr', 'l', 2, 0),
+(6, 'sud 50 l', 'keg 50', 2, 0),
+(7, 'sud 30 l', 'keg 30', 2, 0),
+(8, 'kus', 'ks', 3, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `usedmaterial`
+--
+
+CREATE TABLE IF NOT EXISTS `usedmaterial` (
+  `usedMaterialID` int(11) NOT NULL AUTO_INCREMENT,
+  `materialID` int(11) NOT NULL,
+  `menuItemID` int(11) NOT NULL,
+  `quantity` double NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`usedMaterialID`),
+  KEY `FKC47543E4227598DB` (`menuItemID`),
+  KEY `FKC47543E436DB23E5` (`materialID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Vypisuji data pro tabulku `usedmaterial`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `user`
+--
+
+CREATE TABLE IF NOT EXISTS `user` (
+  `userID` int(11) NOT NULL AUTO_INCREMENT,
+  `firstName` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `lastName` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `personalIdentificationNumber` varchar(64) COLLATE utf8_czech_ci NOT NULL,
+  `username` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `isDeleted` int(11) NOT NULL DEFAULT '0',
+  `credit` double NOT NULL DEFAULT '0',
+  PRIMARY KEY (`userID`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=3 ;
+
+--
+-- Vypisuji data pro tabulku `user`
+--
+
+INSERT INTO `user` (`userID`, `firstName`, `lastName`, `personalIdentificationNumber`, `username`, `password`, `isDeleted`, `credit`) VALUES
+(1, 'Jan', 'Novak', '123456', 'novak', '1234', 0, 0),
+(2, 'Petr', 'Mach', '234563', 'mach', '1234', 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `user_discounttype`
+--
+
+CREATE TABLE IF NOT EXISTS `user_discounttype` (
+  `userDiscountTypeID` int(11) NOT NULL AUTO_INCREMENT,
+  `userID` int(11) NOT NULL,
+  `discountTypeID` int(11) NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`userDiscountTypeID`),
+  KEY `FKDDEDBBEF541CE2AD` (`discountTypeID`),
+  KEY `FKDDEDBBEF9609962D` (`userID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Vypisuji data pro tabulku `user_discounttype`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `user_role`
+--
+
+CREATE TABLE IF NOT EXISTS `user_role` (
+  `userRoleID` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) NOT NULL,
+  `roleId` int(11) NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`userRoleID`),
+  KEY `FK143BF46A90B440C3` (`roleId`),
+  KEY `FK143BF46A9609962D` (`userId`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=3 ;
+
+--
+-- Vypisuji data pro tabulku `user_role`
+--
+
+INSERT INTO `user_role` (`userRoleID`, `userId`, `roleId`, `isDeleted`) VALUES
+(1, 1, 1, 0),
+(2, 2, 2, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `user_table`
+--
+
+CREATE TABLE IF NOT EXISTS `user_table` (
+  `userID` int(11) NOT NULL AUTO_INCREMENT,
+  `firstName` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `lastName` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `personalIdentificationNumber` varchar(64) COLLATE utf8_czech_ci NOT NULL,
+  `username` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `password` varchar(255) COLLATE utf8_czech_ci NOT NULL,
+  `credit` double NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`userID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Vypisuji data pro tabulku `user_table`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `uzaverka`
+--
+
+CREATE TABLE IF NOT EXISTS `uzaverka` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
+  `closed` bit(1) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FK5BD64B5D9609962D` (`userId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Vypisuji data pro tabulku `uzaverka`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `xorder`
+--
+
+CREATE TABLE IF NOT EXISTS `xorder` (
+  `orderID` int(11) NOT NULL AUTO_INCREMENT,
+  `isPaid` int(11) NOT NULL,
+  `time` datetime NOT NULL,
+  `accountID` int(11) DEFAULT NULL,
+  `userID` int(11) DEFAULT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`orderID`),
+  KEY `FKD31711D6468E1879` (`accountID`),
+  KEY `FKD31711D69609962D` (`userID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Vypisuji data pro tabulku `xorder`
+--
+
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `xtable`
+--
+
+CREATE TABLE IF NOT EXISTS `xtable` (
+  `tableID` int(11) NOT NULL AUTO_INCREMENT,
+  `tableNumber` int(11) NOT NULL,
+  `numberOfPlaces` int(11) NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`tableID`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+
+
+CREATE USER 'restfel'@'localhost' IDENTIFIED BY 'restfel';
+GRANT ALL ON db_rest_fel.* TO 'restfel'@'localhost';
+
