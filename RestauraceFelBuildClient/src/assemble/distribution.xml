@@ -1,0 +1,73 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+  <id>distribution</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+
+  <includeBaseDirectory>false</includeBaseDirectory>
+
+  <fileSets>
+    <fileSet>
+      <directory>../RestauraceFel/target/RestauraceFel-${project.version}-distribution</directory>
+      <outputDirectory>.</outputDirectory>
+    </fileSet>
+    <fileSet>
+      <directory>../RestauraceFel/target</directory>
+      <outputDirectory>RestauraceFel-${project.version}/src</outputDirectory>
+      <includes>
+        <include>*-sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../RestauraceFelLibrary/target</directory>
+      <outputDirectory>RestauraceFel-${project.version}/src</outputDirectory>
+      <includes>
+        <include>*-sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../RestauraceFelLibraryHibernate/target</directory>
+      <outputDirectory>RestauraceFel-${project.version}/src</outputDirectory>
+      <includes>
+        <include>*-sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../RestauraceFelManager/target</directory>
+      <outputDirectory>RestauraceFel-${project.version}/src</outputDirectory>
+      <includes>
+        <include>*-sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../RestauraceFelPokladna/target</directory>
+      <outputDirectory>RestauraceFel-${project.version}/src</outputDirectory>
+      <includes>
+        <include>*-sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../RestauraceFelStorage/target</directory>
+      <outputDirectory>RestauraceFel-${project.version}/src</outputDirectory>
+      <includes>
+        <include>*-sources.jar</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../RestauraceFelStorage</directory>
+      <outputDirectory>RestauraceFel-${project.version}</outputDirectory>
+      <includes>
+        <include>rxtxSerial.dll</include>
+        <include>librxtxSerial.so</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>../RestauraceFelStorage/rxtx_binaries</directory>
+      <outputDirectory>RestauraceFel-${project.version}/rxtx_binaries</outputDirectory>
+    </fileSet>
+  </fileSets>
+
+
+</assembly>
