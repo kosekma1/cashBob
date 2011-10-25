@@ -1,0 +1,198 @@
+<?xml version="1.1" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JDialogFormInfo">
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="2"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+  </SyntheticProperties>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jLabelPrimaryIP" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelSecondaryIP" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelFilePath" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="jTextFieldSecondaryServerIP" pref="100" max="32767" attributes="1"/>
+                                  <Component id="jTextFieldPrimaryServerIP" alignment="0" pref="100" max="32767" attributes="1"/>
+                              </Group>
+                              <EmptySpace pref="18" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="jButtonClose" max="32767" attributes="1"/>
+                                  <Component id="jButtonInsert" alignment="1" max="32767" attributes="1"/>
+                              </Group>
+                          </Group>
+                          <Component id="jTextFieldFilePath" pref="229" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jLabelPritingDir" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelMoney" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="jLabelCommPort" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="jTextFieldMoney" alignment="1" pref="229" max="32767" attributes="1"/>
+                          <Component id="jButtonPrint" alignment="1" pref="229" max="32767" attributes="0"/>
+                          <Component id="jTextFieldDirPath" alignment="0" pref="229" max="32767" attributes="0"/>
+                          <Component id="comInputText" alignment="0" min="-2" pref="102" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jTextFieldPrimaryServerIP" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonInsert" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelPrimaryIP" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jTextFieldSecondaryServerIP" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButtonClose" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabelSecondaryIP" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabelFilePath" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTextFieldFilePath" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabelPritingDir" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTextFieldDirPath" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jButtonPrint" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabelMoney" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jTextFieldMoney" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jLabelCommPort" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="comInputText" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JFormattedTextField" name="jTextFieldPrimaryServerIP">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(getIPFormat());"/>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value=""/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelPrimaryIP">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="IP adresa prim&#xe1;rn&#xed;ho serveru"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JFormattedTextField" name="jTextFieldSecondaryServerIP">
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JFormattedTextField(getIPFormat());"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelSecondaryIP">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="IP adresa sekund&#xe1;rn&#xed;ho serveru"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelMoney">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Pou&#x17e;&#xed;van&#xe1; m&#x11b;na"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldMoney">
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtonInsert">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Ulo&#x17e;it nastaven&#xed;"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonInsertActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtonClose">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Zp&#x11b;t"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCloseActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelFilePath">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Konfigura&#x10d;n&#xed; soubor"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldFilePath">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Tahoma" size="11" style="1"/>
+        </Property>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelPritingDir">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Adres&#xe1;&#x159; s tiskov&#xfd;mi sestavami"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="jTextFieldDirPath">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Tahoma" size="11" style="1"/>
+        </Property>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButtonPrint">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Nastavit adres&#xe1;&#x159; s tiskov&#xfd;mi sestavami"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonPrintActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabelCommPort">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Comm port"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="comInputText">
+    </Component>
+  </SubComponents>
+</Form>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><restaurationFELadmin>
+  <primaryServerIP>127.000.000.001</primaryServerIP>
+  <secondaryServerIP>127.000.000.001</secondaryServerIP>
+  <money>Kč</money>
+  <printingTemplatesDir>/home/jindra/NetBeansProjects/cashbob/CashBob/RestauraceFel/config/templates</printingTemplatesDir>
+  <scaletype>COM</scaletype>  
+  <com>/dev/ttyUSB0</com>
+  <baudrate>9600</baudrate>
+  <databits>8</databits>
+  <paritybits>0</paritybits>
+  <stopbits>1</stopbits>  
+</restaurationFELadmin><!--
+    DATABITS_5 = 5;
+    DATABITS_6 = 6;
+    DATABITS_7 = 7;
+    DATABITS_8 = 8;
+    PARITY_NONE = 0;
+    PARITY_ODD = 1;
+    PARITY_EVEN = 2;
+    PARITY_MARK = 3;
+    PARITY_SPACE = 4;
+    STOPBITS_1 = 1;
+    STOPBITS_2 = 2;
+    STOPBITS_1_5 = 3;
+-->

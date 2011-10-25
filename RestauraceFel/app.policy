@@ -1,0 +1,8 @@
+grant{
+  //permission java.net.SocketPermission "127.0.0.1:1099" , "accept,listen,connect,resolve";
+  //permission java.net.SocketPermission "127.0.0.1:*" , "accept,listen,connect,resolve";
+  permission java.security.AllPermission;
+  //permission java.net.SocketPermission "192.168.100.102:*" , "accept,listen,connect,resolve";
+  //permission java.net.SocketPermission "*:1099-65535" , "accept,listen,connect,resolve";
+  //permission java.net.SocketPermission "*:4549" , "accept,listen,connect,resolve";
+};
