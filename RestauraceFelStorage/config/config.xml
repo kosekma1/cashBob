@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><restaurationFELadmin>
+  <primaryServerIP>127.000.000.001</primaryServerIP>
+  <secondaryServerIP>127.000.000.001</secondaryServerIP>
+  <money>Kč</money>
+  <printingTemplatesDir>D:\skola\si2-si3\svnprojekty\RestauraceFELManager\config\templates</printingTemplatesDir>  
+  <com>COM4</com>  
+</restaurationFELadmin>
