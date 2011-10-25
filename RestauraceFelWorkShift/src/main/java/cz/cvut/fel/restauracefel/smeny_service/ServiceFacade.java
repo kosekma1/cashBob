@@ -53,6 +53,7 @@ public class ServiceFacade {
             facade = null;
             Registry reg = null;
             try {
+                /* Zobrazi inicializovane fasady
                 reg = LocateRegistry.getRegistry(config.getPrimaryServerIP(), 1099);
                 String ip = config.getPrimaryServerIP();
                 String[] list = reg.list();
@@ -61,8 +62,10 @@ public class ServiceFacade {
                     vystup = vystup + s + "\n";
                 }
                 JOptionPane.showMessageDialog(null, vystup, "SeviceFacade", JOptionPane.ERROR_MESSAGE);
+                 * 
+                 */
                 facade = (IServiceFacadeSmeny) reg.lookup(name);
-                JOptionPane.showMessageDialog(null, "Facade inicializovana", "SeviceFacade", JOptionPane.ERROR_MESSAGE);
+                //JOptionPane.showMessageDialog(null, "Facade inicializovana", "SeviceFacade", JOptionPane.ERROR_MESSAGE);
             } catch (Exception e) {
                 try {
                     reg = LocateRegistry.getRegistry(config.getSecondaryServerIP(), 1099);
