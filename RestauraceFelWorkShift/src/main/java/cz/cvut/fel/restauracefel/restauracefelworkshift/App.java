@@ -11,5 +11,6 @@ public class App
         System.out.println( "Hello World!" );
         System.out.println("Added text");
         System.out.println("New text");
+        System.out.println("New text 3");
     }
 }
