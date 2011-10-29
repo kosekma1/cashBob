@@ -26,7 +26,7 @@ public class SmenyController /*implements IModuleInteface */ {
     public User user;
     public String[] prava;
     private Object[][] tableData = null;
-    private String[] headerNames = new String[]{"Název", "Od", "Do", "Role", "Status"}; //Header if table
+    private String[] headerNames = new String[]{"Název", "Od", "Do", "Role", "Status"}; //Header of table
     private ResultTableModel modelTypeWorkShift = null;
     private DefaultComboBoxModel modelRoles = null;
     
@@ -56,7 +56,7 @@ public class SmenyController /*implements IModuleInteface */ {
     public void generateTableDataTypeShifts() throws RemoteException, FileNotFoundException, NotBoundException {
         List typeWorkshifts = ServiceFacade.getInstance().getTypeWorkShifts();
         List rolesList = ServiceFacade.getInstance().getAllRoles();
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
         
         if (typeWorkshifts != null) {
             tableData = new Object[typeWorkshifts.size()][5];
@@ -73,8 +73,7 @@ public class SmenyController /*implements IModuleInteface */ {
                         tableData[i][j++] = role.getName();
                         break;
                     }
-                }
-                //tableData[i][j++] = shift.getIdWorkshiftRole(); //predelat na jmeno role
+                }                
                 tableData[i][j++] = shift.getStatus();
 
                 System.out.println(shift.getName() + " "
