@@ -1,5 +1,7 @@
 package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 
+import cz.cvut.fel.restauracefel.hibernate.Template;
+import cz.cvut.fel.restauracefel.hibernate.Typeworkshift;
 import cz.cvut.fel.restauracefel.hibernate.User;
 import java.awt.Insets;
 import java.awt.Point;
@@ -15,6 +17,8 @@ import cz.cvut.fel.restauracefel.library.service.EmptyListException;
 import cz.cvut.fel.restauracefel.library.service.Validator;
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
 import cz.cvut.fel.restauracefel.smeny.smeny_gui.ChooseDeleteTemplateDialog;
+import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
+import java.util.Arrays;
 
 /**
  * Trida reprezentujici GUI formular pro vytvareni noveho uctu.
@@ -25,7 +29,7 @@ public class CreateTemplateForm extends AbstractForm {
 
     private ChooseShiftDialog chooseShiftDialog = null;
     private ChooseDeleteShiftDialog chooseDeleteShiftDialog = null;
-    private ChooseDeleteTemplateDialog chooseDeleteTemplateDialog = null;    
+    private ChooseDeleteTemplateDialog chooseDeleteTemplateDialog = null;
     private StatusBar statusBar = null;
     private MainFrame parent = null;
     private Point point = new Point(550, 210);
@@ -42,7 +46,8 @@ public class CreateTemplateForm extends AbstractForm {
     public CreateTemplateForm(MainFrame parent, StatusBar bar) throws FileNotFoundException, NotBoundException, RemoteException {
         this.parent = parent;
         this.statusBar = bar;
-        initComponents();
+        loadAllData();
+        initComponents();        
         refresh();
         clearFields();
     }
@@ -53,6 +58,7 @@ public class CreateTemplateForm extends AbstractForm {
     @Override
     protected void refresh() {
         statusBar.setMessage("Tento formulář slouží k vytvoření nové šablony.");
+        jTableWorkShifts.setModel(SmenyController.getInstance().getModelWorkShift());
     }
 
     /**
@@ -73,7 +79,7 @@ public class CreateTemplateForm extends AbstractForm {
      */
     //@Override
     protected void clearFields() {
-        Validator.clearTextField(templateNameTextField);        
+        Validator.clearTextField(templateNameTextField);
     }
 
     /**
@@ -97,7 +103,10 @@ public class CreateTemplateForm extends AbstractForm {
         }
          */
     }
-
+    private void loadAllData() throws FileNotFoundException, NotBoundException, RemoteException{       
+       SmenyController.getInstance().generateTableTemplateData();
+       
+    }
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -130,7 +139,7 @@ public class CreateTemplateForm extends AbstractForm {
         newTemplatePanel.setBackground(javax.swing.UIManager.getDefaults().getColor("CheckBox.light"));
         newTemplatePanel.setOpaque(false);
 
-        templateNameTextField.setFont(new java.awt.Font("Tahoma", 0, 12));
+        templateNameTextField.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         templateNameTextField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         templateNameTextField.setMargin(new Insets(10, 10, 10, 10));
         templateNameTextField.addActionListener(new java.awt.event.ActionListener() {
@@ -206,27 +215,7 @@ public class CreateTemplateForm extends AbstractForm {
         jScrollPane2.setViewportView(jTableWorkShifts);
 
         jTableTemplates.setFont(new java.awt.Font("Calibri", 0, 14));
-        jTableTemplates.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null},
-                {null},
-                {null},
-                {null},
-                {null},
-                {null},
-                {null},
-                {null},
-                {null},
-                {null},
-                {null},
-                {null},
-                {null},
-                {null}
-            },
-            new String [] {
-                "Název šablony"
-            }
-        ));
+        jTableTemplates.setModel(SmenyController.getInstance().getModelTemplate());
         jScrollPane1.setViewportView(jTableTemplates);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -333,11 +322,21 @@ public class CreateTemplateForm extends AbstractForm {
                 .addComponent(jLabelTitleCreateDeleteTemplate, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(newTemplatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37))
+                .addGap(74, 74, 74))
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonSaveTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveTemplateActionPerformed
+        try {
+            saveTemplate();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(CreateShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            Logger.getLogger(CreateShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(CreateShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         /*
         KeyboardDialog keyboard = new KeyboardDialog(parent, true);
         keyboard.setLocation(point);
@@ -346,6 +345,63 @@ public class CreateTemplateForm extends AbstractForm {
          *
          */
     }//GEN-LAST:event_jButtonSaveTemplateActionPerformed
+
+    private void saveTemplate() throws FileNotFoundException, NotBoundException, RemoteException {
+        String templateName = templateNameTextField.getText();
+
+        if (templateName.trim().equals("")) {
+            JOptionPane.showMessageDialog(null, "Zadejte název šablony.", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (templateName.trim().length() > 50) {
+            JOptionPane.showMessageDialog(null, "Příliš dlouhý název šablony (max. 50 znaků).", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (ServiceFacade.getInstance().findTemplateByName(templateName) != null) {
+            JOptionPane.showMessageDialog(null, "Šablona stejného názvu již existuje.", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Object[][] table = SmenyController.getInstance().getTableWorkShiftData();
+        int j = 0;
+        boolean empty = true;
+        for (int i = 0; i < table.length; i++) {
+            if (table[i][j] != null) {
+                empty = false;
+                break;
+            }
+        }
+
+        if (empty) {
+            JOptionPane.showMessageDialog(null, "Vložte alespoň jednu směnu.", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        //save name of the template
+        Template template = new Template();
+        template.setName(templateName);
+        ServiceFacade.getInstance().creatNewTemplate(template);
+
+        //save workshifts connected with saved template
+        template = ServiceFacade.getInstance().findTemplateByName(templateName);
+        int idTemplate = template.getIdTemplate();
+
+        Typeworkshift tws = null;
+        for (int i = 0; i < table.length; i++) {
+            if (table[i][j] != null) {
+                tws = ServiceFacade.getInstance().findTypeworkshiftByName((String) table[i][j]);
+                ServiceFacade.getInstance().createNewTemplateList(idTemplate, tws.getIdTypeWorkshift());
+            }
+        }
+        JOptionPane.showMessageDialog(null, "Šablona uložena.", "Úspěšné uložení.", JOptionPane.INFORMATION_MESSAGE);
+        clearFields();
+        SmenyController.getInstance().clearTableWorkShiftData();
+        
+        loadAllData(); //aktualizace tabulky sablon
+        jTableTemplates.setModel(SmenyController.getInstance().getModelTemplate());
+        
+        this.repaint();
+    }
 
     private void jButtonAddWorkShiftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddWorkShiftActionPerformed
         try {
@@ -365,7 +421,7 @@ public class CreateTemplateForm extends AbstractForm {
 
 private void jButtonRemoveWorkShiftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRemoveWorkShiftActionPerformed
     try {
-        chooseDeleteShiftDialog = new ChooseDeleteShiftDialog(parent, true, templateNameTextField);
+        chooseDeleteShiftDialog = new ChooseDeleteShiftDialog(parent, true, jTableWorkShifts);
         chooseDeleteShiftDialog.setLocation(point);
         chooseDeleteShiftDialog.setVisible(true);
     } catch (EmptyListException ex) {
@@ -380,19 +436,19 @@ private void jButtonRemoveWorkShiftActionPerformed(java.awt.event.ActionEvent ev
 }//GEN-LAST:event_jButtonRemoveWorkShiftActionPerformed
 
 private void jButtonDeleteTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteTemplateActionPerformed
-        try {
-            ChooseDeleteTemplateDialog chooseDeleteTemplateDialog = new ChooseDeleteTemplateDialog(parent, true, templateNameTextField);
-            chooseDeleteTemplateDialog.setLocation(point);
-            chooseDeleteTemplateDialog.setVisible(true);
-        } catch (EmptyListException ex) {
-            Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NotBoundException ex) {
-            Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    try {
+        ChooseDeleteTemplateDialog chooseDeleteTemplateDialog = new ChooseDeleteTemplateDialog(parent, true, templateNameTextField);
+        chooseDeleteTemplateDialog.setLocation(point);
+        chooseDeleteTemplateDialog.setVisible(true);
+    } catch (EmptyListException ex) {
+        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (RemoteException ex) {
+        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (NotBoundException ex) {
+        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (FileNotFoundException ex) {
+        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+    }
 
 }//GEN-LAST:event_jButtonDeleteTemplateActionPerformed
 

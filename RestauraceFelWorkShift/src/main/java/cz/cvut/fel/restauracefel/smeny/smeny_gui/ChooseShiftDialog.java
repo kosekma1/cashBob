@@ -1,11 +1,17 @@
 package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 
+import cz.cvut.fel.restauracefel.hibernate.Typeworkshift;
 import java.io.FileNotFoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTextField;
 import cz.cvut.fel.restauracefel.library.service.EmptyListException;
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
+import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
+import java.util.List;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 //import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
 
@@ -15,9 +21,8 @@ import javax.swing.JTable;
  * @author Tomas Hnizdil
  */
 public class ChooseShiftDialog extends AbstractDialog {
-
-    private JTextField target = null;    
-    private JTable targetTable = null;
+    
+    private JTable targetTable = null;    
 
     /**
      * Konstruktor tridy ChooseTableDialog
@@ -31,16 +36,15 @@ public class ChooseShiftDialog extends AbstractDialog {
      * @throws java.io.FileNotFoundException
      */
     public ChooseShiftDialog(MainFrame parent, boolean modal, JTable targetTable) throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {
-        super(parent, modal);
-        this.target = target; 
-        this.targetTable = targetTable;
+        super(parent, modal);        
+        this.targetTable = targetTable;        
         initComponents();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         refresh();
     }
 
     /**
-     * Metoda provadi aktualizaci seznamu vsech stolu.
+     * Metoda provadi aktualizaci vsech tabulek a listu
      *
      * @throws java.rmi.RemoteException
      * @throws java.rmi.NotBoundException
@@ -49,8 +53,9 @@ public class ChooseShiftDialog extends AbstractDialog {
     protected void refresh() throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {
         //String[] tables = ServiceFacade.getInstance().getTableNames();
         //if (tables==null) throw new EmptyListException("Žádné stoly", "V systému nejsou momentálně evidovány žádné stoly.");
-       String[] tables = new String[]{"První směna", "Druhá směna", "Třetí směna", "Čtvrtá směna", "Pátá směna", "Šestá směna", "Sedmá směna", "Osmá směna"};
-        jList1.setListData(tables);
+        //String[] tables = new String[]{"První směna", "Druhá směna", "Třetí směna", "Čtvrtá směna", "Pátá směna", "Šestá směna", "Sedmá směna", "Osmá směna"};
+        SmenyController.getInstance().generateDataList();        
+        jList1.setListData(SmenyController.getInstance().getDataList());
     }
 
     /** This method is called from within the constructor to
@@ -163,18 +168,16 @@ public class ChooseShiftDialog extends AbstractDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBackActionPerformed
-        target.setText("");
+        
         dispose();
     }//GEN-LAST:event_jButtonBackActionPerformed
 
     private void clicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clicked
-        // TODO add your handling code here:
-        target.setText((String) jList1.getSelectedValue());
+        // TODO add your handling code here:        
         SmenyController.getInstance().addWorkShift((String) jList1.getSelectedValue());
-        targetTable.setModel(SmenyController.getInstance().getModelWorkShift());        
+        targetTable.setModel(SmenyController.getInstance().getModelWorkShift());                
         dispose();
     }//GEN-LAST:event_clicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonBack;
     private javax.swing.JLabel jLabel1;

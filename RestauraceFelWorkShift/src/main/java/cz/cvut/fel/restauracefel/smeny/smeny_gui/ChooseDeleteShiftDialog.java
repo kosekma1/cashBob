@@ -5,6 +5,8 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import javax.swing.JTextField;
 import cz.cvut.fel.restauracefel.library.service.EmptyListException;
+import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
+import javax.swing.JTable;
 //import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
 
 /**
@@ -14,7 +16,7 @@ import cz.cvut.fel.restauracefel.library.service.EmptyListException;
  */
 public class ChooseDeleteShiftDialog extends AbstractDialog {
 
-    private JTextField target = null;
+    private JTable targetTable = null;
 
     /**
      * Konstruktor tridy ChooseTableDialog
@@ -27,9 +29,9 @@ public class ChooseDeleteShiftDialog extends AbstractDialog {
      * @throws java.rmi.NotBoundException
      * @throws java.io.FileNotFoundException
      */
-    public ChooseDeleteShiftDialog(MainFrame parent, boolean modal, JTextField target) throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {
+    public ChooseDeleteShiftDialog(MainFrame parent, boolean modal, JTable targetTable) throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {
         super(parent, modal);
-        this.target = target;
+        this.targetTable = targetTable;
         initComponents();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         refresh();
@@ -47,8 +49,10 @@ public class ChooseDeleteShiftDialog extends AbstractDialog {
         //if (tables==null) throw new EmptyListException("Žádné stoly", "V systému nejsou momentálně evidovány žádné stoly.");
         
         //shifts for delete - odkaz na pole nebo list by mel byt predan konstruktorem nebo nejakou set metodou
-        String[] tables = new String[]{"První směna", "Druhá směna", "Třetí směna", "Čtvrtá směna", "Pátá směna", "Šestá směna", "Sedmá směna", "Osmá směna"};
-        jList1.setListData(tables);
+        //String[] tables = new String[]{"První směna", "Druhá směna", "Třetí směna", "Čtvrtá směna", "Pátá směna", "Šestá směna", "Sedmá směna", "Osmá směna"};
+        //jList1.setListData(tables);
+        SmenyController.getInstance().generateDataListForDelete();   
+        jList1.setListData(SmenyController.getInstance().getDataListForDelete());        
     }
 
     /** This method is called from within the constructor to
@@ -161,13 +165,13 @@ public class ChooseDeleteShiftDialog extends AbstractDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBackActionPerformed
-        target.setText("");
+        
         dispose();
     }//GEN-LAST:event_jButtonBackActionPerformed
 
     private void clicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clicked
-        // TODO add your handling code here:
-        target.setText((String) jList1.getSelectedValue());
+        SmenyController.getInstance().deleteWorkShift(jList1.getSelectedIndex());        
+        targetTable.setModel(SmenyController.getInstance().getModelWorkShift());           
         dispose();
     }//GEN-LAST:event_clicked
 

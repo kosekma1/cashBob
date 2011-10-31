@@ -295,8 +295,8 @@ public class CreateShiftForm extends AbstractForm {
                 .addGap(82, 82, 82))
         );
     }// </editor-fold>//GEN-END:initComponents
-    private void saveTypeWorksfhit() throws FileNotFoundException, NotBoundException, RemoteException{
-         String name = this.shiftNameTextField.getText();
+    private void saveTypeWorkshift() throws FileNotFoundException, NotBoundException, RemoteException{
+        String name = this.shiftNameTextField.getText();
         if(name.trim().equals("")) {
             JOptionPane.showMessageDialog(null, "Zadejte název směny.", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
             return;
@@ -342,7 +342,7 @@ public class CreateShiftForm extends AbstractForm {
     
     private void jButtonSaveShiftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveShiftActionPerformed
         try {
-            saveTypeWorksfhit();                       
+            saveTypeWorkshift();                       
             
             /* TODO - Keybord???
             KeyboardDialog keyboard = new KeyboardDialog(parent, true);

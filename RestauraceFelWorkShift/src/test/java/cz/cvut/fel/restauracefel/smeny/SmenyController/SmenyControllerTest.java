@@ -184,4 +184,8 @@ public class SmenyControllerTest extends TestCase {
          * 
          */
     }
+    
+    public void testgenerateDataList() throws Exception {
+        
+    }
 }

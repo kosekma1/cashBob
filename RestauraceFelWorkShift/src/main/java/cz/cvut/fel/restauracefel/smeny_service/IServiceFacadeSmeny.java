@@ -1,6 +1,7 @@
 package cz.cvut.fel.restauracefel.smeny_service;
 
 import cz.cvut.fel.restauracefel.hibernate.Role;
+import cz.cvut.fel.restauracefel.hibernate.Template;
 import cz.cvut.fel.restauracefel.hibernate.User;
 import cz.cvut.fel.restauracefel.hibernate.UserRole;
 import cz.cvut.fel.restauracefel.hibernate.Typeworkshift;
@@ -23,8 +24,13 @@ public interface IServiceFacadeSmeny extends Remote  {
     public Typeworkshift findTypeworkshiftByName(String name) throws RemoteException;                
     public void createNewTypewWorkShift(String name, Date fromTime, Date toTime, int status, int idWorkshiftRole, int isDeleted) throws RemoteException;     
     public void createNewTypewWorkShift(Typeworkshift typeWorkshift) throws RemoteException;
-            
-     
+    
+    //TEMPLATES
+    public void creatNewTemplate(Template template)throws RemoteException;
+    public Template findTemplateByName(String name) throws RemoteException;
+    public void createNewTemplateList(int idTemplate, int idTypeWorkShift) throws RemoteException;            
+    public List getTemplates() throws RemoteException;      
+    
     //USER methods
     public List getAllUsers() throws RemoteException;
     public boolean createUser(String name, String surname, String pid, String username, String passwd) throws RemoteException;
