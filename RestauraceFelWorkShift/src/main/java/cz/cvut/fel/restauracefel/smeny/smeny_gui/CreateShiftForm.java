@@ -87,7 +87,7 @@ public class CreateShiftForm extends AbstractForm {
      */
     protected void loadAllData() throws RemoteException, FileNotFoundException, NotBoundException {
         SmenyController.getInstance().generateTableDataTypeShifts();
-        SmenyController.getInstance().generateComboBoxRoles();
+        SmenyController.getInstance().generateComboBoxRoles(ServiceFacade.getInstance().getAllRoles());
         
         
         /*try {

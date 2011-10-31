@@ -5,6 +5,8 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import javax.swing.JTextField;
 import cz.cvut.fel.restauracefel.library.service.EmptyListException;
+import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
+import javax.swing.JTable;
 //import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
 
 /**
@@ -14,7 +16,8 @@ import cz.cvut.fel.restauracefel.library.service.EmptyListException;
  */
 public class ChooseShiftDialog extends AbstractDialog {
 
-    private JTextField target = null;
+    private JTextField target = null;    
+    private JTable targetTable = null;
 
     /**
      * Konstruktor tridy ChooseTableDialog
@@ -27,9 +30,10 @@ public class ChooseShiftDialog extends AbstractDialog {
      * @throws java.rmi.NotBoundException
      * @throws java.io.FileNotFoundException
      */
-    public ChooseShiftDialog(MainFrame parent, boolean modal, JTextField target) throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {
+    public ChooseShiftDialog(MainFrame parent, boolean modal, JTable targetTable) throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {
         super(parent, modal);
-        this.target = target;
+        this.target = target; 
+        this.targetTable = targetTable;
         initComponents();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         refresh();
@@ -166,6 +170,8 @@ public class ChooseShiftDialog extends AbstractDialog {
     private void clicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clicked
         // TODO add your handling code here:
         target.setText((String) jList1.getSelectedValue());
+        SmenyController.getInstance().addWorkShift((String) jList1.getSelectedValue());
+        targetTable.setModel(SmenyController.getInstance().getModelWorkShift());        
         dispose();
     }//GEN-LAST:event_clicked
 

@@ -25,9 +25,15 @@ public class SmenyController /*implements IModuleInteface */ {
     private SmenyViewController view;
     public User user;
     public String[] prava;
+    
     private Object[][] tableData = null;
-    private String[] headerNames = new String[]{"Název", "Od", "Do", "Role", "Status"}; //Header of table
+    private String[] headerNames = new String[]{"Název", "Od", "Do", "Role", "Status"}; //Header of table    
     private ResultTableModel modelTypeWorkShift = null;
+    
+    //form CreateTemplateForm
+    private Object[][] tableWorkShiftData = new Object[10][1]; //inicializace
+    private ResultTableModel modelWorkShift = new ResultTableModel(new String[]{"Směna"}, tableWorkShiftData);
+    
     private DefaultComboBoxModel modelRoles = null;
     
 
@@ -92,8 +98,7 @@ public class SmenyController /*implements IModuleInteface */ {
     /**
      * Generate model for ComboBox for CreateShiftForm
      */
-    public void generateComboBoxRoles() throws FileNotFoundException, NotBoundException, RemoteException {
-        List rolesList = ServiceFacade.getInstance().getAllRoles();
+    public void generateComboBoxRoles(List<Role> rolesList) throws FileNotFoundException, NotBoundException, RemoteException {        
         String[] roles = new String[rolesList.size()];
         int iter = 0;
         for (Object obj : rolesList) {
@@ -102,12 +107,43 @@ public class SmenyController /*implements IModuleInteface */ {
         }
         modelRoles = new javax.swing.DefaultComboBoxModel(roles);
     }
-
+    
+    /**
+     * Add workshift to table with Workshifts
+     * @param nameWorkShift 
+     */
+    public void addWorkShift(String nameWorkShift){
+        int j = 0;
+        //TODO osetrit preteceni - resp. realokaci  noveho pole
+        for(int i=0;i<tableWorkShiftData.length;i++){
+            if(tableWorkShiftData[i][j]==null){
+                tableWorkShiftData[i][j]=nameWorkShift;
+                break;
+            }
+        }        
+    }
+    
+    /**
+     * Print content of array of Work Shifts names. 
+     * For testing purposes.
+     */
+    public void printTestTableWorkShiftData(){
+       int j = 0;
+        //TODO osetrit preteceni - resp. realokaci  noveho pole
+        for(int i=0;i<tableWorkShiftData.length;i++){
+            System.out.println(tableWorkShiftData[i][j]);
+        }
+    }
+      
     /**
      * @return the modelTypeWorkShift
      */
     public ResultTableModel getModelTypeWorkShift() {
         return modelTypeWorkShift;
+    }
+    
+    public ResultTableModel getModelWorkShift() {
+        return modelWorkShift;
     }
 
     /**

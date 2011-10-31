@@ -437,7 +437,7 @@ private void jButtonCreateName1ActionPerformed(java.awt.event.ActionEvent evt) {
 
 private void jButtonCreateName2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateName2ActionPerformed
     try {
-        chooseShiftDialog = new ChooseShiftDialog(parent, true, jTextFieldName);
+        chooseShiftDialog = new ChooseShiftDialog(parent, true, jTable3);
         chooseShiftDialog.setLocation(point);
         chooseShiftDialog.setVisible(true);
     } catch (EmptyListException ex) {
