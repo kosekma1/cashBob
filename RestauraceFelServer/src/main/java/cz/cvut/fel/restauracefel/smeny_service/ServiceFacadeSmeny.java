@@ -3,10 +3,12 @@ package cz.cvut.fel.restauracefel.smeny_service;
 import cz.cvut.fel.restauracefel.hibernate.Typeworkshift;
 import cz.cvut.fel.restauracefel.library.service.ConfigParser;
 import cz.cvut.fel.restauracefel.hibernate.Role;
+import cz.cvut.fel.restauracefel.hibernate.Template;
 import cz.cvut.fel.restauracefel.hibernate.User;
 import cz.cvut.fel.restauracefel.hibernate.UserRole;
 import cz.cvut.fel.restauracefel.server.service.controllers.RoleController;
 import cz.cvut.fel.restauracefel.server.service.controllers.ShiftTypeController;
+import cz.cvut.fel.restauracefel.server.service.controllers.TemplateController;
 import cz.cvut.fel.restauracefel.server.service.controllers.UserController;
 import cz.cvut.fel.restauracefel.server.service.controllers.UserRoleController;
 import java.io.FileNotFoundException;
@@ -78,6 +80,26 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
         return ShiftTypeController.getInstance().findTypeworkshiftByName(name);
     }
     
+    //TEMPLATES
+    @Override
+    public void creatNewTemplate(Template template)throws RemoteException {
+        TemplateController.getInstance().createTemplate(template);
+    }
+    
+    @Override
+    public Template findTemplateByName(String name) throws RemoteException {
+        return TemplateController.getInstance().findTemplateByName(name);
+    }
+    
+    @Override
+    public void createNewTemplateList(int idTemplate, int idTypeWorkShift) throws RemoteException {
+        TemplateController.getInstance().createNewTemplateList(idTemplate, idTypeWorkShift);
+    }
+    
+    @Override
+    public List getTemplates() throws RemoteException {
+        return TemplateController.getInstance().getTemplates();
+    }  
     
     
      //USER

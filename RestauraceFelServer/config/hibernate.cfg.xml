@@ -43,5 +43,7 @@
     <mapping resource="cz/cvut/fel/restauracefel/hibernate/Right.hbm.xml"/>
     <mapping resource="cz/cvut/fel/restauracefel/hibernate/RoleRight.hbm.xml"/>
 	<mapping resource="cz/cvut/fel/restauracefel/hibernate/Typeworkshift.hbm.xml"/>
+	<mapping resource="cz/cvut/fel/restauracefel/hibernate/Template.hbm.xml"/>
+	<mapping resource="cz/cvut/fel/restauracefel/hibernate/TemplateList.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>

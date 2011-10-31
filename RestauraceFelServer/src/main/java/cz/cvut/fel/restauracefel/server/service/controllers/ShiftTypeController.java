@@ -11,7 +11,7 @@ import java.util.List;
 public class ShiftTypeController {
     
     protected static ShiftTypeController instance = null;
-    protected ShiftTypeController shiftType = null;
+    protected Typeworkshift shiftType = null;
     
     private ShiftTypeController(){
         
