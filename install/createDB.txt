@@ -806,6 +806,33 @@ INSERT INTO `typeworkshift` (`name`, `idTypeWorkshift`, `fromTime`, `toTime`, `s
 ('Třetí směna', 31, '11:00:00', '00:00:00', 1, 3, 0),
 ('Druhá směna', 30, '04:00:00', '09:00:00', 1, 2, 0);
 
+--
+-- Struktura tabulky `template`
+--
+
+CREATE TABLE IF NOT EXISTS `template` (
+  `idTemplate` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8_czech_ci NOT NULL,
+  `status` int(11) NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`idTemplate`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Struktura tabulky `templatelist`
+--
+
+CREATE TABLE IF NOT EXISTS `templatelist` (
+  `idTemplatelist` int(11) NOT NULL AUTO_INCREMENT,
+  `idTemplate` int(11) NOT NULL,
+  `idTypeworkshift` int(11) NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`idTemplatelist`),
+  KEY `id_template` (`idTemplate`),
+  KEY `id_type_workshift` (`idTypeworkshift`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+
 
 CREATE USER 'restfel'@'localhost' IDENTIFIED BY 'restfel';
 GRANT ALL ON db_rest_fel.* TO 'restfel'@'localhost';
