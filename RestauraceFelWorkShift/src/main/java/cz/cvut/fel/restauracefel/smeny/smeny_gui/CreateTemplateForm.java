@@ -348,52 +348,9 @@ public class CreateTemplateForm extends AbstractForm {
 
     private void saveTemplate() throws FileNotFoundException, NotBoundException, RemoteException {
         String templateName = templateNameTextField.getText();
-
-        if (templateName.trim().equals("")) {
-            JOptionPane.showMessageDialog(null, "Zadejte název šablony.", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (templateName.trim().length() > 50) {
-            JOptionPane.showMessageDialog(null, "Příliš dlouhý název šablony (max. 50 znaků).", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if (ServiceFacade.getInstance().findTemplateByName(templateName) != null) {
-            JOptionPane.showMessageDialog(null, "Šablona stejného názvu již existuje.", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        Object[][] table = SmenyController.getInstance().getTableWorkShiftData();
-        int j = 0;
-        boolean empty = true;
-        for (int i = 0; i < table.length; i++) {
-            if (table[i][j] != null) {
-                empty = false;
-                break;
-            }
-        }
-
-        if (empty) {
-            JOptionPane.showMessageDialog(null, "Vložte alespoň jednu směnu.", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        //save name of the template
-        Template template = new Template();
-        template.setName(templateName);
-        ServiceFacade.getInstance().creatNewTemplate(template);
-
-        //save workshifts connected with saved template
-        template = ServiceFacade.getInstance().findTemplateByName(templateName);
-        int idTemplate = template.getIdTemplate();
-
-        Typeworkshift tws = null;
-        for (int i = 0; i < table.length; i++) {
-            if (table[i][j] != null) {
-                tws = ServiceFacade.getInstance().findTypeworkshiftByName((String) table[i][j]);
-                ServiceFacade.getInstance().createNewTemplateList(idTemplate, tws.getIdTypeWorkshift());
-            }
-        }
+        SmenyController.getInstance().saveTemplate(templateName);
         JOptionPane.showMessageDialog(null, "Šablona uložena.", "Úspěšné uložení.", JOptionPane.INFORMATION_MESSAGE);
+        
         clearFields();
         SmenyController.getInstance().clearTableWorkShiftData();
         

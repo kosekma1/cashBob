@@ -29,7 +29,6 @@ public class SmenyController /*implements IModuleInteface */ {
     private Object[][] tableData = null;
     private String[] headerNames = new String[]{"Název", "Od", "Do", "Role", "Status"}; //Header of table    
     private ResultTableModel modelTypeWorkShift = null;
-    
     //form CreateTemplateForm
     final int INIT_SIZE = 10;
     final int COUNT_PARAMETERS = 1;
@@ -37,16 +36,12 @@ public class SmenyController /*implements IModuleInteface */ {
     private Object[][] tableWorkShiftData = new Object[INIT_SIZE][COUNT_PARAMETERS]; //inicializace
     private ResultTableModel modelWorkShift = new ResultTableModel(new String[]{"Směna"}, tableWorkShiftData);
     private DefaultComboBoxModel modelRoles = null;
-    
     private String[] dataList = null; //for ChooseShiftDialog
     private String[] dataListForDelete = null; //for ChooseDeleteShiftDialog
-    
     private Object[][] tableTemplateData = null;
-    private String [] headerNameTemplate = new String[]{"Šablona"};
-    private ResultTableModel modelTemplate = null;            
-    
-    
-    
+    private String[] headerNameTemplate = new String[]{"Šablona"};
+    private ResultTableModel modelTemplate = null;
+
     public SmenyController() {
         view = SmenyViewController.getInstance();
     }
@@ -131,7 +126,7 @@ public class SmenyController /*implements IModuleInteface */ {
             dataList[i] = ((Typeworkshift) (listTypeWorkshifts.get(i))).getName();
         }
     }
-    
+
     /**
      * Generate table with names of shifts for DeleteShiftDialog
      */
@@ -144,7 +139,7 @@ public class SmenyController /*implements IModuleInteface */ {
     }
 
     /**
-     * Add workshift to table with Workshifts
+     * Add workshift to table with Workshifts in CreateTemplateForm
      * @param nameWorkShift 
      */
     public void addWorkShift(String nameWorkShift) {
@@ -165,14 +160,14 @@ public class SmenyController /*implements IModuleInteface */ {
             modelWorkShift = new ResultTableModel(new String[]{"Směna"}, tableWorkShiftData); //create new model only if table is extended
         }
     }
-    
+
     /**
-     * Delete workshift from list.
+     * Delete workshift from list in ChooseDeleteShiftDialog
      * @param index 
      */
     public void deleteWorkShift(int index) {
         int j = 0;
-        tableWorkShiftData[index][j] = null;         
+        tableWorkShiftData[index][j] = null;
         for (int i = 0; i < tableWorkShiftData.length; i++) {
             if (tableWorkShiftData[i][j] == null) {
                 if ((i + 1) < tableWorkShiftData.length) {
@@ -180,16 +175,23 @@ public class SmenyController /*implements IModuleInteface */ {
                     tableWorkShiftData[i + 1][j] = null;
                 }
             }
-        }               
-    }
-    
-    public void clearTableWorkShiftData(){
-        int j = 0;                
-        for (int i = 0; i < tableWorkShiftData.length; i++) {
-            tableWorkShiftData[i][j] = null;            
         }
     }
-    
+
+    /**
+     * 
+     */
+    public void clearTableWorkShiftData() {
+        int j = 0;
+        for (int i = 0; i < tableWorkShiftData.length; i++) {
+            tableWorkShiftData[i][j] = null;
+        }
+    }
+
+    /**
+     * 
+     * @return 
+     */
     public Object[][] getTableWorkShiftData() {
         return this.tableWorkShiftData;
     }
@@ -205,21 +207,33 @@ public class SmenyController /*implements IModuleInteface */ {
             System.out.println(tableWorkShiftData[i][j]);
         }
     }
-    
-    public void generateTableTemplateData() throws FileNotFoundException, NotBoundException, RemoteException{
-        List templates = ServiceFacade.getInstance().getTemplates();
-        tableTemplateData = new String[templates.size()][COUNT_PARAMETERS];
-        int j=0;
-        for(int i=0;i<tableTemplateData.length;i++){
-            tableTemplateData[i][j] = ((Template)templates.get(i)).getName();
-        }
-        modelTemplate = new ResultTableModel(new String[]{"Šablona"}, tableTemplateData);        
-    }
 
     /**
-     * @return the modelTypeWorkShift
+     * Generate data for Table with templates names for CreateTemplateForm
+     * @throws FileNotFoundException
+     * @throws NotBoundException
+     * @throws RemoteException 
      */
-    public ResultTableModel getModelTypeWorkShift() {
+    public void generateTableTemplateData() throws FileNotFoundException, NotBoundException, RemoteException {
+        List templates = ServiceFacade.getInstance().getTemplates();
+        if (templates != null) {
+            tableTemplateData = new String[templates.size()][COUNT_PARAMETERS];
+            int j = 0;
+            for (int i = 0; i < tableTemplateData.length; i++) {
+                tableTemplateData[i][j] = ((Template) templates.get(i)).getName();
+            }            
+        } else {                        
+            tableTemplateData = new String[1][1];
+            tableTemplateData[0][0] = null; //empty table
+        }
+        
+        modelTemplate = new ResultTableModel(new String[]{"Šablona"}, tableTemplateData);
+    }
+
+/**
+ * @return the modelTypeWorkShift
+ */
+public ResultTableModel getModelTypeWorkShift() {
         return modelTypeWorkShift;
     }
 
@@ -244,5 +258,59 @@ public class SmenyController /*implements IModuleInteface */ {
 
     public String[] getDataListForDelete() {
         return this.dataListForDelete;
+    }
+    
+    /**
+     * Save template in CreateTemplateForm
+     * @param templateName
+     * @throws FileNotFoundException
+     * @throws NotBoundException
+     * @throws RemoteException 
+     */
+    public void saveTemplate(String templateName) throws FileNotFoundException, NotBoundException, RemoteException{
+        if (templateName.trim().equals("")) {
+            JOptionPane.showMessageDialog(null, "Zadejte název šablony.", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (templateName.trim().length() > 50) {
+            JOptionPane.showMessageDialog(null, "Příliš dlouhý název šablony (max. 50 znaků).", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (ServiceFacade.getInstance().findTemplateByName(templateName) != null) {
+            JOptionPane.showMessageDialog(null, "Šablona stejného názvu již existuje.", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Object[][] table = SmenyController.getInstance().getTableWorkShiftData();
+        int j = 0;
+        boolean empty = true;
+        for (int i = 0; i < table.length; i++) {
+            if (table[i][j] != null) {
+                empty = false;
+                break;
+            }
+        }
+
+        if (empty) {
+            JOptionPane.showMessageDialog(null, "Vložte alespoň jednu směnu.", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        //save name of the template
+        Template template = new Template();
+        template.setName(templateName);
+        ServiceFacade.getInstance().creatNewTemplate(template);
+
+        //save workshifts connected with saved template
+        template = ServiceFacade.getInstance().findTemplateByName(templateName);
+        int idTemplate = template.getIdTemplate();
+
+        Typeworkshift tws = null;
+        for (int i = 0; i < table.length; i++) {
+            if (table[i][j] != null) {
+                tws = ServiceFacade.getInstance().findTypeworkshiftByName((String) table[i][j]);
+                ServiceFacade.getInstance().createNewTemplateList(idTemplate, tws.getIdTypeWorkshift());
+            }
+        }
     }
 }
