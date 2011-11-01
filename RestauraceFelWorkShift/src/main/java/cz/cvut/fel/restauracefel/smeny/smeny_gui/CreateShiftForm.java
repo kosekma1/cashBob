@@ -296,43 +296,12 @@ public class CreateShiftForm extends AbstractForm {
         );
     }// </editor-fold>//GEN-END:initComponents
     private void saveTypeWorkshift() throws FileNotFoundException, NotBoundException, RemoteException{
-        String name = this.shiftNameTextField.getText();
-        if(name.trim().equals("")) {
-            JOptionPane.showMessageDialog(null, "Zadejte název směny.", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        if(name.trim().length()>50) {
-            JOptionPane.showMessageDialog(null, "Příliš dlouhý název směny (max. 50 znaků).", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        if(ServiceFacade.getInstance().findTypeworkshiftByName(name)!=null){
-            JOptionPane.showMessageDialog(null, "Typ směny stejného názvu již existuje.", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
-            return;
-        };
-        String roleString = (String)this.workRoleComboBox.getSelectedItem();
-        
-        Typeworkshift tw = new Typeworkshift();
-        tw.setName(name);
+        String shiftName = this.shiftNameTextField.getText();                
+        String roleName = (String)this.workRoleComboBox.getSelectedItem();                                
+        Date dateFrom = (Date) fromSpinner.getValue();                                
+        Date dateTo = (Date) toSpinner.getValue();
+        SmenyController.getInstance().saveTypeWorkshift(shiftName, roleName, dateFrom, dateTo);
                         
-        Date date = (Date) fromSpinner.getValue();                
-        tw.setFromTime(date);
-        
-        date = (Date) toSpinner.getValue();
-        tw.setToTime(date);   
-        
-        if(tw.getFromTime().equals(tw.getToTime())) {
-            JOptionPane.showMessageDialog(null, "Čas \"Od\" musí být různý \"Do.\"", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-        tw.setStatus(1);       
-        //List l =  Test.executeHQLQuery("from Role r where r.name='" + roleString + "'");
-        Role role = ServiceFacade.getInstance().getRoleByName(roleString);
-        tw.setIdWorkshiftRole(role.getRoleId());
-        System.out.println("TW: " + tw.getName() + " " + tw.getFromTime() + " " + tw.getToTime());
-        //Test.saveToDb(tw);        
-        ServiceFacade.getInstance().createNewTypewWorkShift(tw);
         this.loadAllData();
         this.shiftTable.setModel(SmenyController.getInstance().getModelTypeWorkShift());
                

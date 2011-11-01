@@ -11,6 +11,7 @@ import java.io.FileNotFoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -312,5 +313,48 @@ public ResultTableModel getModelTypeWorkShift() {
                 ServiceFacade.getInstance().createNewTemplateList(idTemplate, tws.getIdTypeWorkshift());
             }
         }
+    }
+    
+    /**
+     * Save Typeworkshift to database entred from CreateShiftForm
+     * @param shiftName
+     * @param roleName
+     * @param dateFrom
+     * @param dateTo
+     * @throws FileNotFoundException
+     * @throws NotBoundException
+     * @throws RemoteException 
+     */
+    public void saveTypeWorkshift(String shiftName, String roleName, Date dateFrom, Date dateTo ) throws FileNotFoundException, NotBoundException, RemoteException{
+        if(shiftName.trim().equals("")) {
+            JOptionPane.showMessageDialog(null, "Zadejte název směny.", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if(shiftName.trim().length()>50) {
+            JOptionPane.showMessageDialog(null, "Příliš dlouhý název směny (max. 50 znaků).", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        if(ServiceFacade.getInstance().findTypeworkshiftByName(shiftName)!=null){
+            JOptionPane.showMessageDialog(null, "Typ směny stejného názvu již existuje.", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+                
+        Typeworkshift tw = new Typeworkshift();
+        tw.setName(shiftName);
+        
+        tw.setFromTime(dateFrom);
+        tw.setToTime(dateTo);
+        
+        if(tw.getFromTime().equals(tw.getToTime())) {
+            JOptionPane.showMessageDialog(null, "Čas \"Od\" musí být různý \"Do.\"", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+        tw.setStatus(1);               
+        Role role = ServiceFacade.getInstance().getRoleByName(roleName);
+        tw.setIdWorkshiftRole(role.getRoleId());
+        System.out.println("TW: " + tw.getName() + " " + tw.getFromTime() + " " + tw.getToTime());        
+        ServiceFacade.getInstance().createNewTypewWorkShift(tw);        
     }
 }
