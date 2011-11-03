@@ -1,13 +1,12 @@
 package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 
-import cz.cvut.fel.restauracefel.hibernate.User;
+import com.toedter.calendar.JDateChooser;
+import java.awt.Component;
 import java.awt.Insets;
 import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import javax.swing.JOptionPane;
-import cz.cvut.fel.restauracefel.library.service.ConfigParser;
 import cz.cvut.fel.restauracefel.library.service.EmptyListException;
 //import cz.cvut.fel.restauracefel.pokladna_service.ServiceFacade;
 import cz.cvut.fel.restauracefel.library.service.Validator;
@@ -30,6 +29,8 @@ public class WorkShiftPlanForm extends AbstractForm {
     private StatusBar statusBar = null;
     private MainFrame parent = null;
     private Point point = new Point(550, 210);
+    
+    private static JDateChooser dateChooser;
 
     /**
      * Konstruktor tridy CreateShiftForm.
@@ -44,10 +45,18 @@ public class WorkShiftPlanForm extends AbstractForm {
         this.parent = parent;
         this.statusBar = bar;
         initComponents();
+        initCalendar();
         refresh();
         clearFields();
     }
 
+    public void initCalendar(){
+        dateChooser = new JDateChooser();
+        dateChooser.setSize(100, 30);        
+        dateChooser.setBounds(0, 0, 150, 31);                                                
+        jPanelDateChooser.add(dateChooser, null); 
+    }
+    
     /**
      * Metoda prenastavuje statusBar.
      */
@@ -113,14 +122,19 @@ public class WorkShiftPlanForm extends AbstractForm {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroup2 = new javax.swing.ButtonGroup();
+        buttonGroup3 = new javax.swing.ButtonGroup();
+        buttonGroup4 = new javax.swing.ButtonGroup();
         billPanel = new BackgroundPanel();
         jTextFieldName = new javax.swing.JTextField();
         jLabelInfoText = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jButtonCreateName = new javax.swing.JButton();
-        jButtonCreateName1 = new javax.swing.JButton();
-        jButtonCreateName2 = new javax.swing.JButton();
+        jButtonSavePlanWorkShift = new javax.swing.JButton();
+        jButtonAddFromTemplate = new javax.swing.JButton();
+        jButtonAddWorkShift = new javax.swing.JButton();
+        jComboBox1 = new javax.swing.JComboBox();
         jTextFieldName1 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
@@ -128,10 +142,12 @@ public class WorkShiftPlanForm extends AbstractForm {
         jTable3 = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
-        jButtonCreateName3 = new javax.swing.JButton();
+        jButtonDeleteWorkShift = new javax.swing.JButton();
+        jPanelDateChooser = new javax.swing.JPanel();
         jLabelTitle = new javax.swing.JLabel();
 
         setBackground(javax.swing.UIManager.getDefaults().getColor("CheckBox.light"));
@@ -140,6 +156,7 @@ public class WorkShiftPlanForm extends AbstractForm {
         billPanel.setBackground(javax.swing.UIManager.getDefaults().getColor("CheckBox.light"));
         billPanel.setOpaque(false);
 
+        jTextFieldName.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jTextFieldName.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         jTextFieldName.setMargin(new Insets(10, 10, 10, 10));
 
@@ -152,32 +169,35 @@ public class WorkShiftPlanForm extends AbstractForm {
 
         jPanel2.setOpaque(false);
 
-        jButtonCreateName.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
-        jButtonCreateName.setText("Uložit");
-        jButtonCreateName.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jButtonCreateName.addActionListener(new java.awt.event.ActionListener() {
+        jButtonSavePlanWorkShift.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
+        jButtonSavePlanWorkShift.setText("Uložit");
+        jButtonSavePlanWorkShift.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonSavePlanWorkShift.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCreateNameActionPerformed(evt);
+                jButtonSavePlanWorkShiftActionPerformed(evt);
             }
         });
 
-        jButtonCreateName1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
-        jButtonCreateName1.setText("Přidat ze šablony");
-        jButtonCreateName1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jButtonCreateName1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonAddFromTemplate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
+        jButtonAddFromTemplate.setText("Přidat ze šablony");
+        jButtonAddFromTemplate.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonAddFromTemplate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCreateName1ActionPerformed(evt);
+                jButtonAddFromTemplateActionPerformed(evt);
             }
         });
 
-        jButtonCreateName2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
-        jButtonCreateName2.setText("Přidat směnu");
-        jButtonCreateName2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jButtonCreateName2.addActionListener(new java.awt.event.ActionListener() {
+        jButtonAddWorkShift.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
+        jButtonAddWorkShift.setText("Přidat směnu");
+        jButtonAddWorkShift.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonAddWorkShift.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCreateName2ActionPerformed(evt);
+                jButtonAddWorkShiftActionPerformed(evt);
             }
         });
+
+        jComboBox1.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "všední dny i víkendy", "všední dny", "víkendy" }));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -186,25 +206,29 @@ public class WorkShiftPlanForm extends AbstractForm {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonCreateName, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
-                    .addComponent(jButtonCreateName1, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
-                    .addComponent(jButtonCreateName2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
+                    .addComponent(jButtonSavePlanWorkShift, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+                    .addComponent(jButtonAddFromTemplate, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+                    .addComponent(jButtonAddWorkShift, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+                    .addComponent(jComboBox1, 0, 163, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(150, Short.MAX_VALUE)
-                .addComponent(jButtonCreateName1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap()
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
+                .addComponent(jButtonAddFromTemplate, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButtonCreateName2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonAddWorkShift, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(36, 36, 36)
-                .addComponent(jButtonCreateName, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonSavePlanWorkShift, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        jButtonCreateName.getAccessibleContext().setAccessibleName("Přidat směnu");
+        jButtonSavePlanWorkShift.getAccessibleContext().setAccessibleName("Přidat směnu");
 
+        jTextFieldName1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jTextFieldName1.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         jTextFieldName1.setMargin(new Insets(10, 10, 10, 10));
 
@@ -230,17 +254,13 @@ public class WorkShiftPlanForm extends AbstractForm {
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 223, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 236, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jLabel5.setFont(new java.awt.Font("Calibri", 1, 22));
@@ -278,31 +298,32 @@ public class WorkShiftPlanForm extends AbstractForm {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 358, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
         jPanel3.setOpaque(false);
 
-        jButtonCreateName3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
-        jButtonCreateName3.setText("Odstranit plánovanou směnu");
-        jButtonCreateName3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jButtonCreateName3.addActionListener(new java.awt.event.ActionListener() {
+        jButtonDeleteWorkShift.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
+        jButtonDeleteWorkShift.setText("Odstranit");
+        jButtonDeleteWorkShift.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonDeleteWorkShift.setPreferredSize(new java.awt.Dimension(149, 39));
+        jButtonDeleteWorkShift.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCreateName3ActionPerformed(evt);
+                jButtonDeleteWorkShiftActionPerformed(evt);
             }
         });
 
@@ -312,14 +333,53 @@ public class WorkShiftPlanForm extends AbstractForm {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButtonCreateName3, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE))
+                .addComponent(jButtonDeleteWorkShift, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jButtonCreateName3, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonDeleteWorkShift, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
+        );
+
+        javax.swing.GroupLayout jPanelDateChooserLayout = new javax.swing.GroupLayout(jPanelDateChooser);
+        jPanelDateChooser.setLayout(jPanelDateChooserLayout);
+        jPanelDateChooserLayout.setHorizontalGroup(
+            jPanelDateChooserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 148, Short.MAX_VALUE)
+        );
+        jPanelDateChooserLayout.setVerticalGroup(
+            jPanelDateChooserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 68, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jPanelDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(223, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanelDateChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout billPanelLayout = new javax.swing.GroupLayout(billPanel);
@@ -327,63 +387,59 @@ public class WorkShiftPlanForm extends AbstractForm {
         billPanelLayout.setHorizontalGroup(
             billPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(billPanelLayout.createSequentialGroup()
-                .addGap(24, 24, 24)
+                .addGap(33, 33, 33)
                 .addGroup(billPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelInfoText, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
-                    .addComponent(jLabel3)
-                    .addGroup(billPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(jTextFieldName, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jTextFieldName1, javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(billPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 180, Short.MAX_VALUE)))
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(billPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jTextFieldName, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                        .addComponent(jTextFieldName1, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                        .addComponent(jLabelInfoText, javax.swing.GroupLayout.DEFAULT_SIZE, 243, Short.MAX_VALUE)
+                        .addComponent(jLabel3)
+                        .addGroup(billPanelLayout.createSequentialGroup()
+                            .addComponent(jLabel4)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 180, Short.MAX_VALUE))))
                 .addGroup(billPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(billPanelLayout.createSequentialGroup()
                         .addGap(45, 45, 45)
                         .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(17, 17, 17)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(billPanelLayout.createSequentialGroup()
                         .addGap(235, 235, 235)
                         .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(44, 44, 44))
+                .addContainerGap())
         );
         billPanelLayout.setVerticalGroup(
             billPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(billPanelLayout.createSequentialGroup()
+                .addGap(19, 19, 19)
                 .addGroup(billPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(billPanelLayout.createSequentialGroup()
-                        .addGap(19, 19, 19)
-                        .addGroup(billPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(billPanelLayout.createSequentialGroup()
-                                .addComponent(jLabelInfoText)
-                                .addGap(11, 11, 11)
-                                .addComponent(jLabel3)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextFieldName, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextFieldName1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(19, 19, 19)
-                                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE))
-                            .addGroup(billPanelLayout.createSequentialGroup()
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(billPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(billPanelLayout.createSequentialGroup()
-                        .addGap(76, 76, 76)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jLabelInfoText)
+                        .addGap(11, 11, 11)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldName, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextFieldName1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 208, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(billPanelLayout.createSequentialGroup()
+                        .addGap(48, 48, 48)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
         jLabelTitle.setBackground(new java.awt.Color(255, 255, 255));
-        jLabelTitle.setFont(new java.awt.Font("Tahoma", 0, 18));
+        jLabelTitle.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         jLabelTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelTitle.setText("Plán směn");
         jLabelTitle.setOpaque(true);
@@ -393,11 +449,11 @@ public class WorkShiftPlanForm extends AbstractForm {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabelTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 1217, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(31, 31, 31)
-                .addComponent(billPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jLabelTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 1218, Short.MAX_VALUE)
+                .addComponent(billPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 1176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -405,11 +461,11 @@ public class WorkShiftPlanForm extends AbstractForm {
                 .addComponent(jLabelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(billPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(105, Short.MAX_VALUE))
+                .addContainerGap(106, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonCreateNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateNameActionPerformed
+    private void jButtonSavePlanWorkShiftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSavePlanWorkShiftActionPerformed
         /*
         KeyboardDialog keyboard = new KeyboardDialog(parent, true);
         keyboard.setLocation(point);
@@ -417,9 +473,9 @@ public class WorkShiftPlanForm extends AbstractForm {
         keyboard.setVisible(true);
          *
          */
-    }//GEN-LAST:event_jButtonCreateNameActionPerformed
+    }//GEN-LAST:event_jButtonSavePlanWorkShiftActionPerformed
 
-private void jButtonCreateName1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateName1ActionPerformed
+private void jButtonAddFromTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddFromTemplateActionPerformed
    try {
         chooseTemplateDialog = new ChooseTemplateDialog(parent, true, jTextFieldName);
         chooseTemplateDialog.setLocation(point);
@@ -433,9 +489,9 @@ private void jButtonCreateName1ActionPerformed(java.awt.event.ActionEvent evt) {
     } catch (FileNotFoundException ex) {
         Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
     }
-}//GEN-LAST:event_jButtonCreateName1ActionPerformed
+}//GEN-LAST:event_jButtonAddFromTemplateActionPerformed
 
-private void jButtonCreateName2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateName2ActionPerformed
+private void jButtonAddWorkShiftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddWorkShiftActionPerformed
     try {
         chooseShiftDialog = new ChooseShiftDialog(parent, true, jTable3);
         chooseShiftDialog.setLocation(point);
@@ -449,17 +505,23 @@ private void jButtonCreateName2ActionPerformed(java.awt.event.ActionEvent evt) {
     } catch (FileNotFoundException ex) {
         Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
     }
-}//GEN-LAST:event_jButtonCreateName2ActionPerformed
+}//GEN-LAST:event_jButtonAddWorkShiftActionPerformed
 
-private void jButtonCreateName3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateName3ActionPerformed
+private void jButtonDeleteWorkShiftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteWorkShiftActionPerformed
 // TODO add your handling code here:
-}//GEN-LAST:event_jButtonCreateName3ActionPerformed
+}//GEN-LAST:event_jButtonDeleteWorkShiftActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel billPanel;
-    private javax.swing.JButton jButtonCreateName;
-    private javax.swing.JButton jButtonCreateName1;
-    private javax.swing.JButton jButtonCreateName2;
-    private javax.swing.JButton jButtonCreateName3;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.ButtonGroup buttonGroup3;
+    private javax.swing.ButtonGroup buttonGroup4;
+    private javax.swing.JButton jButtonAddFromTemplate;
+    private javax.swing.JButton jButtonAddWorkShift;
+    private javax.swing.JButton jButtonDeleteWorkShift;
+    private javax.swing.JButton jButtonSavePlanWorkShift;
+    private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -468,7 +530,9 @@ private void jButtonCreateName3ActionPerformed(java.awt.event.ActionEvent evt) {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanelDateChooser;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;

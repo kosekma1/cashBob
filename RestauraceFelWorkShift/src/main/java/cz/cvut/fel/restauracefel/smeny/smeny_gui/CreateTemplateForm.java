@@ -130,6 +130,8 @@ public class CreateTemplateForm extends AbstractForm {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableTemplates = new javax.swing.JTable();
         jLabelSavedTemplates = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jButtonEditTemplate = new javax.swing.JButton();
         jButtonDeleteTemplate = new javax.swing.JButton();
         jLabelTitleCreateDeleteTemplate = new javax.swing.JLabel();
 
@@ -139,7 +141,7 @@ public class CreateTemplateForm extends AbstractForm {
         newTemplatePanel.setBackground(javax.swing.UIManager.getDefaults().getColor("CheckBox.light"));
         newTemplatePanel.setOpaque(false);
 
-        templateNameTextField.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        templateNameTextField.setFont(new java.awt.Font("Tahoma", 0, 12));
         templateNameTextField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         templateNameTextField.setMargin(new Insets(10, 10, 10, 10));
         templateNameTextField.addActionListener(new java.awt.event.ActionListener() {
@@ -210,11 +212,11 @@ public class CreateTemplateForm extends AbstractForm {
 
         jButtonSaveTemplate.getAccessibleContext().setAccessibleName("Přidat směnu");
 
-        jTableWorkShifts.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        jTableWorkShifts.setFont(new java.awt.Font("Calibri", 0, 14));
         jTableWorkShifts.setModel(SmenyController.getInstance().getModelWorkShift());
         jScrollPane2.setViewportView(jTableWorkShifts);
 
-        jTableTemplates.setFont(new java.awt.Font("Calibri", 0, 14));
+        jTableTemplates.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
         jTableTemplates.setModel(SmenyController.getInstance().getModelTemplate());
         jScrollPane1.setViewportView(jTableTemplates);
 
@@ -238,14 +240,46 @@ public class CreateTemplateForm extends AbstractForm {
         jLabelSavedTemplates.setFont(new java.awt.Font("Calibri", 1, 22));
         jLabelSavedTemplates.setText("Uložené šablony");
 
+        jPanel2.setOpaque(false);
+
+        jButtonEditTemplate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
+        jButtonEditTemplate.setText("Upravit");
+        jButtonEditTemplate.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonEditTemplate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonEditTemplateActionPerformed(evt);
+            }
+        });
+
         jButtonDeleteTemplate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
-        jButtonDeleteTemplate.setText("Smazat šablonu");
+        jButtonDeleteTemplate.setText("Smazat");
         jButtonDeleteTemplate.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jButtonDeleteTemplate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonDeleteTemplateActionPerformed(evt);
             }
         });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButtonEditTemplate, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+                    .addComponent(jButtonDeleteTemplate, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jButtonEditTemplate, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jButtonDeleteTemplate, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
         javax.swing.GroupLayout newTemplatePanelLayout = new javax.swing.GroupLayout(newTemplatePanel);
         newTemplatePanel.setLayout(newTemplatePanelLayout);
@@ -267,8 +301,8 @@ public class CreateTemplateForm extends AbstractForm {
                 .addGroup(newTemplatePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(newTemplatePanelLayout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(jButtonDeleteTemplate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabelSavedTemplates))
                 .addContainerGap())
         );
@@ -294,15 +328,15 @@ public class CreateTemplateForm extends AbstractForm {
                             .addGap(18, 18, 18)
                             .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(newTemplatePanelLayout.createSequentialGroup()
-                        .addGap(86, 86, 86)
-                        .addComponent(jButtonDeleteTemplate, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(73, 73, 73)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(28, Short.MAX_VALUE))
         );
 
         jLabelTitleCreateDeleteTemplate.setBackground(new java.awt.Color(255, 255, 255));
         jLabelTitleCreateDeleteTemplate.setFont(new java.awt.Font("Tahoma", 0, 18));
         jLabelTitleCreateDeleteTemplate.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabelTitleCreateDeleteTemplate.setText("Vytvořit/Smazat šablonu");
+        jLabelTitleCreateDeleteTemplate.setText("Správa šablon");
         jLabelTitleCreateDeleteTemplate.setOpaque(true);
         jLabelTitleCreateDeleteTemplate.setPreferredSize(new java.awt.Dimension(193, 22));
 
@@ -310,11 +344,11 @@ public class CreateTemplateForm extends AbstractForm {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabelTitleCreateDeleteTemplate, javax.swing.GroupLayout.DEFAULT_SIZE, 1117, Short.MAX_VALUE)
+            .addComponent(jLabelTitleCreateDeleteTemplate, javax.swing.GroupLayout.DEFAULT_SIZE, 1146, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addGap(33, 33, 33)
                 .addComponent(newTemplatePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(10, 10, 10))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -392,7 +426,7 @@ private void jButtonRemoveWorkShiftActionPerformed(java.awt.event.ActionEvent ev
     }
 }//GEN-LAST:event_jButtonRemoveWorkShiftActionPerformed
 
-private void jButtonDeleteTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteTemplateActionPerformed
+private void jButtonEditTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditTemplateActionPerformed
     try {
         ChooseDeleteTemplateDialog chooseDeleteTemplateDialog = new ChooseDeleteTemplateDialog(parent, true, templateNameTextField);
         chooseDeleteTemplateDialog.setLocation(point);
@@ -407,14 +441,20 @@ private void jButtonDeleteTemplateActionPerformed(java.awt.event.ActionEvent evt
         Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
     }
 
-}//GEN-LAST:event_jButtonDeleteTemplateActionPerformed
+}//GEN-LAST:event_jButtonEditTemplateActionPerformed
 
 private void templateNameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_templateNameTextFieldActionPerformed
 // TODO add your handling code here:
 }//GEN-LAST:event_templateNameTextFieldActionPerformed
+
+private void jButtonDeleteTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteTemplateActionPerformed
+// TODO add your handling code here:
+}//GEN-LAST:event_jButtonDeleteTemplateActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAddWorkShift;
     private javax.swing.JButton jButtonDeleteTemplate;
+    private javax.swing.JButton jButtonEditTemplate;
     private javax.swing.JButton jButtonRemoveWorkShift;
     private javax.swing.JButton jButtonSaveTemplate;
     private javax.swing.JLabel jLabelNameTemplate;
@@ -422,6 +462,7 @@ private void templateNameTextFieldActionPerformed(java.awt.event.ActionEvent evt
     private javax.swing.JLabel jLabelSavedTemplates;
     private javax.swing.JLabel jLabelTitleCreateDeleteTemplate;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanelNewTemplateButtons;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
