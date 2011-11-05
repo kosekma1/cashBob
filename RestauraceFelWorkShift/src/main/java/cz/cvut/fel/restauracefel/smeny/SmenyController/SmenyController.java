@@ -42,6 +42,7 @@ public class SmenyController /*implements IModuleInteface */ {
     private Object[][] tableTemplateData = null;
     private String[] headerNameTemplate = new String[]{"Šablona"};
     private ResultTableModel modelTemplate = null;
+    public static final String ERROR_ENTERED_DATA = "Chybně zadaná data";
 
     public SmenyController() {
         view = SmenyViewController.getInstance();
@@ -222,19 +223,19 @@ public class SmenyController /*implements IModuleInteface */ {
             int j = 0;
             for (int i = 0; i < tableTemplateData.length; i++) {
                 tableTemplateData[i][j] = ((Template) templates.get(i)).getName();
-            }            
-        } else {                        
+            }
+        } else {
             tableTemplateData = new String[1][1];
             tableTemplateData[0][0] = null; //empty table
         }
-        
+
         modelTemplate = new ResultTableModel(new String[]{"Šablona"}, tableTemplateData);
     }
 
-/**
- * @return the modelTypeWorkShift
- */
-public ResultTableModel getModelTypeWorkShift() {
+    /**
+     * @return the modelTypeWorkShift
+     */
+    public ResultTableModel getModelTypeWorkShift() {
         return modelTypeWorkShift;
     }
 
@@ -248,7 +249,7 @@ public ResultTableModel getModelTypeWorkShift() {
     public DefaultComboBoxModel getModelRoles() {
         return modelRoles;
     }
-    
+
     public ResultTableModel getModelTemplate() {
         return modelTemplate;
     }
@@ -260,7 +261,7 @@ public ResultTableModel getModelTypeWorkShift() {
     public String[] getDataListForDelete() {
         return this.dataListForDelete;
     }
-    
+
     /**
      * Save template in CreateTemplateForm
      * @param templateName
@@ -268,18 +269,18 @@ public ResultTableModel getModelTypeWorkShift() {
      * @throws NotBoundException
      * @throws RemoteException 
      */
-    public void saveTemplate(String templateName) throws FileNotFoundException, NotBoundException, RemoteException{
+    public boolean saveTemplate(String templateName) throws FileNotFoundException, NotBoundException, RemoteException {
         if (templateName.trim().equals("")) {
-            JOptionPane.showMessageDialog(null, "Zadejte název šablony.", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
-            return;
+            showErrorMessage("Zadejte název šablony.", SmenyController.ERROR_ENTERED_DATA);
+            return false;
         }
         if (templateName.trim().length() > 50) {
-            JOptionPane.showMessageDialog(null, "Příliš dlouhý název šablony (max. 50 znaků).", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
-            return;
+            showErrorMessage("Příliš dlouhý název šablony (max. 50 znaků).", SmenyController.ERROR_ENTERED_DATA);
+            return false;
         }
         if (ServiceFacade.getInstance().findTemplateByName(templateName) != null) {
-            JOptionPane.showMessageDialog(null, "Šablona stejného názvu již existuje.", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
-            return;
+            showErrorMessage("Šablona stejného názvu již existuje.", SmenyController.ERROR_ENTERED_DATA);
+            return false;
         }
 
         Object[][] table = SmenyController.getInstance().getTableWorkShiftData();
@@ -293,8 +294,8 @@ public ResultTableModel getModelTypeWorkShift() {
         }
 
         if (empty) {
-            JOptionPane.showMessageDialog(null, "Vložte alespoň jednu směnu.", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
-            return;
+            showErrorMessage("Vložte alespoň jednu směnu.", SmenyController.ERROR_ENTERED_DATA);
+            return false;
         }
 
         //save name of the template
@@ -313,8 +314,10 @@ public ResultTableModel getModelTypeWorkShift() {
                 ServiceFacade.getInstance().createNewTemplateList(idTemplate, tws.getIdTypeWorkshift());
             }
         }
+        showInformationMessage("Šablona uložena.", "Úspěšné uložení.");
+        return true;
     }
-    
+
     /**
      * Save Typeworkshift to database entred from CreateShiftForm
      * @param shiftName
@@ -325,36 +328,73 @@ public ResultTableModel getModelTypeWorkShift() {
      * @throws NotBoundException
      * @throws RemoteException 
      */
-    public void saveTypeWorkshift(String shiftName, String roleName, Date dateFrom, Date dateTo ) throws FileNotFoundException, NotBoundException, RemoteException{
-        if(shiftName.trim().equals("")) {
-            JOptionPane.showMessageDialog(null, "Zadejte název směny.", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
-            return;
+    public boolean saveTypeWorkshift(String shiftName, String roleName, Date dateFrom, Date dateTo) throws FileNotFoundException, NotBoundException, RemoteException {
+        if (shiftName.trim().equals("")) {
+            this.showErrorMessage("Zadejte název směny.", SmenyController.ERROR_ENTERED_DATA);
+            return false;
         }
-        if(shiftName.trim().length()>50) {
-            JOptionPane.showMessageDialog(null, "Příliš dlouhý název směny (max. 50 znaků).", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
-            return;
+        if (shiftName.trim().length() > 50) {
+            showErrorMessage("Příliš dlouhý název směny (max. 50 znaků).", SmenyController.ERROR_ENTERED_DATA);
+            return false;
         }
-        
-        if(ServiceFacade.getInstance().findTypeworkshiftByName(shiftName)!=null){
-            JOptionPane.showMessageDialog(null, "Typ směny stejného názvu již existuje.", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
-            return;
+
+        if (ServiceFacade.getInstance().findTypeworkshiftByName(shiftName) != null) {
+            showErrorMessage("Typ směny stejného názvu již existuje.", SmenyController.ERROR_ENTERED_DATA);
+            return false;
         }
-                
+
         Typeworkshift tw = new Typeworkshift();
         tw.setName(shiftName);
-        
+
         tw.setFromTime(dateFrom);
         tw.setToTime(dateTo);
-        
-        if(tw.getFromTime().equals(tw.getToTime())) {
-            JOptionPane.showMessageDialog(null, "Čas \"Od\" musí být různý \"Do.\"", "Chybně zadaná data", JOptionPane.ERROR_MESSAGE);
-            return;
+
+        if (tw.getFromTime().equals(tw.getToTime())) {
+            showErrorMessage("Čas \"Od\" musí být různý \"Do.\"", SmenyController.ERROR_ENTERED_DATA);
+            return false;
         }
-        
-        tw.setStatus(1);               
+
+        tw.setStatus(1);
         Role role = ServiceFacade.getInstance().getRoleByName(roleName);
         tw.setIdWorkshiftRole(role.getRoleId());
-        System.out.println("TW: " + tw.getName() + " " + tw.getFromTime() + " " + tw.getToTime());        
-        ServiceFacade.getInstance().createNewTypewWorkShift(tw);        
+        System.out.println("TW: " + tw.getName() + " " + tw.getFromTime() + " " + tw.getToTime());
+        ServiceFacade.getInstance().createNewTypewWorkShift(tw);
+        
+        showInformationMessage("Typ směny byl uložen.", "Úspěšné uložení.");
+        return true;
+    }
+
+    /**
+     * Save workshift to the plan of workshifts.
+     * @param dateFrom
+     * @param dateTo 
+     */
+    public void saveWorkShifts(Date dateFrom, Date dateTo) {
+        if (dateFrom == null || dateTo == null) {
+            showErrorMessage("Zadejte obě data.", SmenyController.ERROR_ENTERED_DATA);
+            return;
+        }
+        if (dateFrom.after(dateTo)) {
+            showErrorMessage("Datum do musí být větší než datum od", SmenyController.ERROR_ENTERED_DATA);
+            return;
+        }
+    }
+
+    /**
+     * Show error message in stand-alone dialog window.
+     * @param error
+     * @param title 
+     */
+    public void showErrorMessage(String error, String title) {
+        JOptionPane.showMessageDialog(null, error, title, JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Show information message in stand-alone dialog window.
+     * @param error
+     * @param title 
+     */
+    public void showInformationMessage(String error, String title) {
+        JOptionPane.showMessageDialog(null, error, title, JOptionPane.INFORMATION_MESSAGE);
     }
 }

@@ -47,7 +47,7 @@ public class CreateTemplateForm extends AbstractForm {
         this.parent = parent;
         this.statusBar = bar;
         loadAllData();
-        initComponents();        
+        initComponents();
         refresh();
         clearFields();
     }
@@ -103,10 +103,12 @@ public class CreateTemplateForm extends AbstractForm {
         }
          */
     }
-    private void loadAllData() throws FileNotFoundException, NotBoundException, RemoteException{       
-       SmenyController.getInstance().generateTableTemplateData();
-       
+
+    private void loadAllData() throws FileNotFoundException, NotBoundException, RemoteException {
+        SmenyController.getInstance().generateTableTemplateData();
+
     }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -382,16 +384,15 @@ public class CreateTemplateForm extends AbstractForm {
 
     private void saveTemplate() throws FileNotFoundException, NotBoundException, RemoteException {
         String templateName = templateNameTextField.getText();
-        SmenyController.getInstance().saveTemplate(templateName);
-        JOptionPane.showMessageDialog(null, "Šablona uložena.", "Úspěšné uložení.", JOptionPane.INFORMATION_MESSAGE);
-        
-        clearFields();
-        SmenyController.getInstance().clearTableWorkShiftData();
-        
-        loadAllData(); //aktualizace tabulky sablon
-        jTableTemplates.setModel(SmenyController.getInstance().getModelTemplate());
-        
-        this.repaint();
+        Boolean result = SmenyController.getInstance().saveTemplate(templateName);
+        if (result) {
+            clearFields();
+            SmenyController.getInstance().clearTableWorkShiftData();
+
+            loadAllData(); //aktualizace tabulky sablon
+            jTableTemplates.setModel(SmenyController.getInstance().getModelTemplate());
+            this.repaint();
+        }
     }
 
     private void jButtonAddWorkShiftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddWorkShiftActionPerformed
@@ -450,7 +451,6 @@ private void templateNameTextFieldActionPerformed(java.awt.event.ActionEvent evt
 private void jButtonDeleteTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteTemplateActionPerformed
 // TODO add your handling code here:
 }//GEN-LAST:event_jButtonDeleteTemplateActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAddWorkShift;
     private javax.swing.JButton jButtonDeleteTemplate;

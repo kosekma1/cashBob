@@ -25,10 +25,10 @@ import javax.swing.SpinnerDateModel;
  * @author Martin Kosek
  */
 public class CreateShiftForm extends AbstractForm {
-    
+
     private StatusBar statusBar = null;
-    private MainFrame parent = null;            
-    
+    private MainFrame parent = null;
+
     /**
      * Konstruktor tridy CreateShiftForm.
      *
@@ -45,16 +45,16 @@ public class CreateShiftForm extends AbstractForm {
         initComponents();
         clearFields();
         refresh();
-        
+
     }
-    
+
     /**
      * Metoda prenastavuje statusBar.
      */
     @Override
     protected void refresh() {
         statusBar.setMessage("Tento formulář slouží k vytváření nového typu směny.");
-        this.repaint();        
+        this.repaint();
     }
 
     /**
@@ -70,14 +70,13 @@ public class CreateShiftForm extends AbstractForm {
     }
     return EnumSpravnost.JeToSpravne;
     } */
-    
     /**
      * Metoda cisti vsechny vstupni pole formulare.
      */
     //@Override
     protected void clearFields() {
         Validator.clearTextField(shiftNameTextField);
-        this.workRoleComboBox.setSelectedIndex(0);        
+        this.workRoleComboBox.setSelectedIndex(0);
     }
 
     /**
@@ -88,8 +87,8 @@ public class CreateShiftForm extends AbstractForm {
     protected void loadAllData() throws RemoteException, FileNotFoundException, NotBoundException {
         SmenyController.getInstance().generateTableDataTypeShifts();
         SmenyController.getInstance().generateComboBoxRoles(ServiceFacade.getInstance().getAllRoles());
-        
-        
+
+
         /*try {
         CreateOrderForm createOrderForm = new CreateOrderForm(parent, statusBar, accountId, MainFrame.loggedUser.getUserId());
         parent.panel.getViewport().add(createOrderForm);
@@ -295,24 +294,27 @@ public class CreateShiftForm extends AbstractForm {
                 .addGap(82, 82, 82))
         );
     }// </editor-fold>//GEN-END:initComponents
-    private void saveTypeWorkshift() throws FileNotFoundException, NotBoundException, RemoteException{
-        String shiftName = this.shiftNameTextField.getText();                
-        String roleName = (String)this.workRoleComboBox.getSelectedItem();                                
-        Date dateFrom = (Date) fromSpinner.getValue();                                
+
+    private void saveTypeWorkshift() throws FileNotFoundException, NotBoundException, RemoteException {
+        String shiftName = this.shiftNameTextField.getText();
+        String roleName = (String) this.workRoleComboBox.getSelectedItem();
+        Date dateFrom = (Date) fromSpinner.getValue();
         Date dateTo = (Date) toSpinner.getValue();
-        SmenyController.getInstance().saveTypeWorkshift(shiftName, roleName, dateFrom, dateTo);
-                        
-        this.loadAllData();
-        this.shiftTable.setModel(SmenyController.getInstance().getModelTypeWorkShift());
-               
-        //nastavení implicitních hodnot
-        this.clearFields();
+        boolean result = SmenyController.getInstance().saveTypeWorkshift(shiftName, roleName, dateFrom, dateTo);
+        if (result) {
+
+            this.loadAllData();
+            this.shiftTable.setModel(SmenyController.getInstance().getModelTypeWorkShift());
+
+            //nastavení implicitních hodnot
+            this.clearFields();
+        }
     }
-    
+
     private void jButtonSaveShiftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveShiftActionPerformed
         try {
-            saveTypeWorkshift();                       
-            
+            saveTypeWorkshift();
+
             /* TODO - Keybord???
             KeyboardDialog keyboard = new KeyboardDialog(parent, true);
             keyboard.setLocation(point);
@@ -337,7 +339,6 @@ public class CreateShiftForm extends AbstractForm {
 private void shiftNameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shiftNameTextFieldActionPerformed
 // TODO add your handling code here:
 }//GEN-LAST:event_shiftNameTextFieldActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel billPanel;
     private javax.swing.JSpinner fromSpinner;

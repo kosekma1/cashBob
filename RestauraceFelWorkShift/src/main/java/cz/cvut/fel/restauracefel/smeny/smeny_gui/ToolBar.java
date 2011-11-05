@@ -21,8 +21,8 @@ public class ToolBar extends JToolBar {
     public JButton planOfShifts = new JButton(new ImageIcon("images/plan-of-workshifts.png"));
     public JButton statistics = new JButton(new ImageIcon("images/statistics.png"));    
     public JButton information = new JButton(new ImageIcon("images/information.png"));    
-    public JButton overviewShift = new JButton(new ImageIcon("images/maintenance-of-workshifts.png"));
-    public JButton overviewEmpShift = new JButton(new ImageIcon("images/maintenance-of-workshifts.png"));
+    public JButton overviewShift = new JButton(new ImageIcon("images/edit-leader.png"));
+    public JButton overviewEmpShift = new JButton(new ImageIcon("images/edit-employees.png"));
     public JButton close = new JButton(new ImageIcon("images/exit.png"));
     private JPanel panel = new JPanel();
     public final String ADD_TYPE_OF_WORKSHIFT = "Přidat typ směny";
