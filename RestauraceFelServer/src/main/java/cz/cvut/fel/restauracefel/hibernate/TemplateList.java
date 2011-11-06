@@ -86,4 +86,25 @@ public class TemplateList extends DBEntity implements java.io.Serializable {
      public void create() {
         create(this);
     }
+     
+    public static List getTemplateListByTemplateId(Integer idTemplate){
+        String[] paramNames = {"id"};
+        String[] paramTypes = {"Integer"};
+        Object[] paramValues = {idTemplate};
+        
+        String className = "TemplateList";
+        
+        //String idParamName = className.substring(0, 1).toLowerCase() + className.substring(1) + "ID";
+        String idParamName = "idTemplate";
+
+        // POZOR, tady parametrem neni nazev tabulky a sloupecku, ale nazev tridy a jejich atributu
+        List res = executeQuery("from " + className + " x where x." + idParamName + " = :id", paramNames, paramTypes, paramValues);
+
+        if (res == null || res.isEmpty()) {
+            return null;
+        }
+
+        return res;
+        
+    } 
 }

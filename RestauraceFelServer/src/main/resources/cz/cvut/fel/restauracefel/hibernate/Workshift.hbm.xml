@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 17.7.2011 22:33:15 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class catalog="db_rest_fel" name="cz.cvut.fel.restauracefel.hibernate.Workshift" table="workshift">
+    <id name="idWorkshift" type="int">
+      <column name="idWorkshift"/>
+      <generator class="native"/>
+    </id>
+    <property name="idTypeWorkshift" type="int">
+      <column name="idTypeWorkshift" not-null="true"/>
+    </property>
+    <property name="idUser" type="java.lang.Integer">
+      <column name="idUser"/>
+    </property>
+    <property name="leaderSubmit" type="java.lang.Byte">
+      <column name="leaderSubmit"/>
+    </property>
+    <property name="userSubmit" type="string">
+      <column length="65535" name="userSubmit"/>
+    </property>
+    <property name="cancelled" type="string">
+      <column length="65535" name="cancelled"/>
+    </property>
+    <property name="idTemplate" type="int">
+      <column name="idTemplate"/>
+    </property>
+    <property name="dateShift" type="date">
+      <column length="10" name="date_shift" not-null="true"/>
+    </property>
+    <property name="status" type="int">
+      <column name="status" not-null="true"/>
+    </property>
+    <property name="isDeleted" type="int">
+      <column name="isDeleted" not-null="true"/>
+    </property>
+  </class>
+</hibernate-mapping>

@@ -1,6 +1,7 @@
 package cz.cvut.fel.restauracefel.smeny_service;
 
 import cz.cvut.fel.restauracefel.hibernate.Typeworkshift;
+import cz.cvut.fel.restauracefel.hibernate.Workshift;
 import cz.cvut.fel.restauracefel.library.service.ConfigParser;
 import cz.cvut.fel.restauracefel.hibernate.Role;
 import cz.cvut.fel.restauracefel.hibernate.Template;
@@ -11,6 +12,7 @@ import cz.cvut.fel.restauracefel.server.service.controllers.ShiftTypeController;
 import cz.cvut.fel.restauracefel.server.service.controllers.TemplateController;
 import cz.cvut.fel.restauracefel.server.service.controllers.UserController;
 import cz.cvut.fel.restauracefel.server.service.controllers.UserRoleController;
+import cz.cvut.fel.restauracefel.server.service.controllers.WorkShiftController;
 import java.io.FileNotFoundException;
 import java.net.InetAddress;
 import java.rmi.RMISecurityManager;
@@ -80,6 +82,11 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
         return ShiftTypeController.getInstance().findTypeworkshiftByName(name);
     }
     
+    @Override
+    public Typeworkshift getTypeWorkShiftById(int idTypeWorkshift) throws RemoteException {
+        return ShiftTypeController.getInstance().getTypeWorkShiftById(idTypeWorkshift);
+    }
+    
     //TEMPLATES
     @Override
     public void creatNewTemplate(Template template)throws RemoteException {
@@ -97,9 +104,35 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
     }
     
     @Override
+    public List getTemplateListByTemplateId(int idTemplate) throws RemoteException {        
+        return TemplateController.getInstance().getTemplateListByTemplateId(idTemplate);
+    }
+    
+    @Override
     public List getTemplates() throws RemoteException {
         return TemplateController.getInstance().getTemplates();
     }  
+
+    //WORKSHIFTS
+    @Override
+    public void createNewWorkshift(Date date, int idTypeWorkShift) throws RemoteException {
+        WorkShiftController.getInstance().createNewWorkshift(date, idTypeWorkShift);
+    }
+
+    @Override
+    public Workshift getWorkshiftById(int idWorkshift) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List getWorkshiftByUserId(int idUser) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List getWorkshiftByTypeWorkshiftId(int idTypeWorkshift) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
     
     
      //USER
@@ -247,5 +280,6 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
     @Override
     public boolean isUserRole(int userId, int roleId) throws RemoteException {
         return UserRoleController.getInstance().isUserRole(userId, roleId);
-    }
+    }   
+   
 }

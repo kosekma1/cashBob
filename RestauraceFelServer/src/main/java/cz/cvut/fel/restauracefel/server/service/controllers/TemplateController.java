@@ -41,4 +41,8 @@ public class TemplateController {
     public Template findTemplateByName(String name) {
         return Template.findByName(name);
     }
+    
+    public List getTemplateListByTemplateId(int idTemplate) {
+        return TemplateList.getTemplateListByTemplateId(idTemplate);        
+    }
 }

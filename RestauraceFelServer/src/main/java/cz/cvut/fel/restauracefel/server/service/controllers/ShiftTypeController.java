@@ -35,6 +35,10 @@ public class ShiftTypeController {
      public Typeworkshift findTypeworkshiftByName(String name){
          return Typeworkshift.findByName(name);
      }
+     
+     public Typeworkshift getTypeWorkShiftById(int idTypeWorkshift){
+         return (Typeworkshift)Typeworkshift.findById("Typeworkshift", "idTypeWorkshift", idTypeWorkshift);
+     }
     
  
 }
