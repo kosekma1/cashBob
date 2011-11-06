@@ -3,14 +3,13 @@ package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 import java.io.FileNotFoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import javax.swing.JTextField;
 import cz.cvut.fel.restauracefel.library.service.EmptyListException;
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
 import javax.swing.JTable;
 //import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
 
 /**
- * Trida vytvarejici dialog pro vyber stolu, k nemuz bude ucet nalezet.
+ * Trida vytvarejici dialog pro vyber smeny pro smazani.
  *
  * @author Tomas Hnizdil
  */

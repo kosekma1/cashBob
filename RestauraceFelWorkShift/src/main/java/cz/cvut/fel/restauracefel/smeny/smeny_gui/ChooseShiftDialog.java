@@ -1,17 +1,10 @@
 package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 
-import cz.cvut.fel.restauracefel.hibernate.Typeworkshift;
 import java.io.FileNotFoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JTextField;
 import cz.cvut.fel.restauracefel.library.service.EmptyListException;
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
-import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
-import java.util.List;
-import javax.swing.JPanel;
 import javax.swing.JTable;
 //import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
 
@@ -54,8 +47,8 @@ public class ChooseShiftDialog extends AbstractDialog {
         //String[] tables = ServiceFacade.getInstance().getTableNames();
         //if (tables==null) throw new EmptyListException("Žádné stoly", "V systému nejsou momentálně evidovány žádné stoly.");
         //String[] tables = new String[]{"První směna", "Druhá směna", "Třetí směna", "Čtvrtá směna", "Pátá směna", "Šestá směna", "Sedmá směna", "Osmá směna"};
-        SmenyController.getInstance().generateDataList();        
-        jList1.setListData(SmenyController.getInstance().getDataList());
+        SmenyController.getInstance().generateDataListWorkShifts();        
+        jList1.setListData(SmenyController.getInstance().getDataListWorkShifts());
     }
 
     /** This method is called from within the constructor to
@@ -173,7 +166,7 @@ public class ChooseShiftDialog extends AbstractDialog {
     }//GEN-LAST:event_jButtonBackActionPerformed
 
     private void clicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clicked
-        // TODO add your handling code here:        
+        
         SmenyController.getInstance().addWorkShift((String) jList1.getSelectedValue());
         targetTable.setModel(SmenyController.getInstance().getModelWorkShift());                
         dispose();

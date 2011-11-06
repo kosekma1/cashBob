@@ -6,10 +6,8 @@ package cz.cvut.fel.restauracefel.smeny.SmenyController;
 
 import cz.cvut.fel.restauracefel.hibernate.Role;
 import cz.cvut.fel.restauracefel.hibernate.User;
-import cz.cvut.fel.restauracefel.smeny.smeny_main.ResultTableModel;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.DefaultComboBoxModel;
 import junit.framework.TestCase;
 
 /**
@@ -54,7 +52,9 @@ public class SmenyControllerTest extends TestCase {
         
         boolean expResult = true;
         boolean result = false;
-        if(instance.prava==prava && instance.user == user) result = true;
+        if(instance.prava==prava && instance.user == user) {
+            result = true;
+        }
         assertEquals(expResult, result);              
     }
 

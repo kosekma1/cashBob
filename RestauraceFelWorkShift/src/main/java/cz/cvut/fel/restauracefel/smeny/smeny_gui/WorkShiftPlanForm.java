@@ -11,7 +11,10 @@ import cz.cvut.fel.restauracefel.library.service.EmptyListException;
 //import cz.cvut.fel.restauracefel.pokladna_service.ServiceFacade;
 import cz.cvut.fel.restauracefel.library.service.Validator;
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JTextField;
@@ -28,11 +31,11 @@ public class WorkShiftPlanForm extends AbstractForm {
     private ChooseDiscountTypeDialog chooseDiscountTypeDialog = null;
     private ChooseAccountCategoryDialog chooseAccountCategoryDialog = null;*/
     private ChooseShiftDialog chooseShiftDialog = null;
+    private ChooseDeleteShiftDialog chooseDeleteShiftDialog = null;
     private ChooseTemplateDialog chooseTemplateDialog = null;
     private StatusBar statusBar = null;
     private MainFrame parent = null;
     private Point point = new Point(550, 210);
-    
     private JDateChooser dateChooserFrom;
     private JDateChooser dateChooserTo;
 
@@ -54,14 +57,20 @@ public class WorkShiftPlanForm extends AbstractForm {
         clearFields();
     }
 
-    private void initCalendars(){
-        dateChooserFrom = new JDateChooser();        
-        dateChooserFrom.setBounds(0, 0, 218, 43);        
+    private void initCalendars() {
+        dateChooserFrom = new JDateChooser();
+        dateChooserFrom.setMinSelectableDate(Calendar.getInstance().getTime());
+        dateChooserFrom.setBounds(0, 0, 218, 43);
         jPanelDateChooserFrom.add(dateChooserFrom, null);
-        
-        dateChooserTo = new JDateChooser();                
-        dateChooserTo.setBounds(0, 0, 218, 43);                                                
+
+        dateChooserTo = new JDateChooser();
+        dateChooserTo.setMinSelectableDate(Calendar.getInstance().getTime());
+        dateChooserTo.setBounds(0, 0, 218, 43);
         jPanelDateChooserTo.add(dateChooserTo, null);
+
+    }
+    
+    private void loadAllData(){
         
     }
     
@@ -70,7 +79,7 @@ public class WorkShiftPlanForm extends AbstractForm {
      */
     @Override
     protected void refresh() {
-        statusBar.setMessage("Tento formulář slouží k vytváření nového účtu.");
+        statusBar.setMessage("Tento formulář slouží k plánování směn.");
     }
 
     /**
@@ -138,10 +147,11 @@ public class WorkShiftPlanForm extends AbstractForm {
         jButtonAddFromTemplate = new javax.swing.JButton();
         jButtonAddWorkShift = new javax.swing.JButton();
         jComboBoxSelectRange = new javax.swing.JComboBox();
+        jButtonAddWorkShift1 = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        jTableWorkShifts = new javax.swing.JTable();
         jLabel5 = new javax.swing.JLabel();
         jPanelDateChooserFrom = new javax.swing.JPanel();
         jPanelDateChooserTo = new javax.swing.JPanel();
@@ -197,6 +207,15 @@ public class WorkShiftPlanForm extends AbstractForm {
         jComboBoxSelectRange.setFont(new java.awt.Font("Tahoma", 0, 12));
         jComboBoxSelectRange.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "všední dny i víkendy", "všední dny", "víkendy" }));
 
+        jButtonAddWorkShift1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
+        jButtonAddWorkShift1.setText("Odebrat směnu");
+        jButtonAddWorkShift1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonAddWorkShift1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonAddWorkShift1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelButtonForPlanLayout = new javax.swing.GroupLayout(jPanelButtonForPlan);
         jPanelButtonForPlan.setLayout(jPanelButtonForPlanLayout);
         jPanelButtonForPlanLayout.setHorizontalGroup(
@@ -204,24 +223,27 @@ public class WorkShiftPlanForm extends AbstractForm {
             .addGroup(jPanelButtonForPlanLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanelButtonForPlanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonSavePlanWorkShift, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+                    .addComponent(jComboBoxSelectRange, 0, 163, Short.MAX_VALUE)
                     .addComponent(jButtonAddFromTemplate, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
                     .addComponent(jButtonAddWorkShift, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
-                    .addComponent(jComboBoxSelectRange, 0, 163, Short.MAX_VALUE))
+                    .addComponent(jButtonAddWorkShift1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE)
+                    .addComponent(jButtonSavePlanWorkShift, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanelButtonForPlanLayout.setVerticalGroup(
             jPanelButtonForPlanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanelButtonForPlanLayout.createSequentialGroup()
+            .addGroup(jPanelButtonForPlanLayout.createSequentialGroup()
                 .addGap(19, 19, 19)
                 .addComponent(jComboBoxSelectRange, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jButtonAddFromTemplate, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonAddWorkShift, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(36, 36, 36)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jButtonAddWorkShift1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jButtonSavePlanWorkShift, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jButtonSavePlanWorkShift.getAccessibleContext().setAccessibleName("Přidat směnu");
@@ -230,8 +252,8 @@ public class WorkShiftPlanForm extends AbstractForm {
         jLabel4.setForeground(new java.awt.Color(0, 102, 102));
         jLabel4.setText("Datum do:");
 
-        jTable3.setFont(new java.awt.Font("Calibri", 0, 14));
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        jTableWorkShifts.setFont(new java.awt.Font("Calibri", 0, 14));
+        jTableWorkShifts.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null},
                 {null},
@@ -242,7 +264,7 @@ public class WorkShiftPlanForm extends AbstractForm {
                 "Směna"
             }
         ));
-        jScrollPane3.setViewportView(jTable3);
+        jScrollPane3.setViewportView(jTableWorkShifts);
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -386,9 +408,18 @@ public class WorkShiftPlanForm extends AbstractForm {
         );
         billPanelLayout.setVerticalGroup(
             billPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, billPanelLayout.createSequentialGroup()
+                .addContainerGap(78, Short.MAX_VALUE)
+                .addGroup(billPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanelDeleteWorkshift, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
             .addGroup(billPanelLayout.createSequentialGroup()
                 .addGap(20, 20, 20)
                 .addGroup(billPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(billPanelLayout.createSequentialGroup()
+                        .addGap(47, 47, 47)
+                        .addComponent(jPanelButtonForPlan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(billPanelLayout.createSequentialGroup()
                         .addGroup(billPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabelInfoText)
@@ -402,17 +433,8 @@ public class WorkShiftPlanForm extends AbstractForm {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanelDateChooserTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(16, 16, 16)
-                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(billPanelLayout.createSequentialGroup()
-                        .addGap(47, 47, 47)
-                        .addComponent(jPanelButtonForPlan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(22, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, billPanelLayout.createSequentialGroup()
-                .addContainerGap(78, Short.MAX_VALUE)
-                .addGroup(billPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanelDeleteWorkshift, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(32, Short.MAX_VALUE))
         );
 
         jLabelTitle.setBackground(new java.awt.Color(255, 255, 255));
@@ -442,14 +464,36 @@ public class WorkShiftPlanForm extends AbstractForm {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-private void saveWorkShifts(){
-    Date dateFrom = dateChooserFrom.getDate();
-    Date dateTo = dateChooserTo.getDate();
-    SmenyController.getInstance().saveWorkShifts(dateFrom, dateTo);
-}    
-    
+    private void saveWorkShifts() throws FileNotFoundException, NotBoundException, RemoteException {
+        Date dateFrom = dateChooserFrom.getDate();
+        Date dateTo = dateChooserTo.getDate();
+                
+        boolean result = SmenyController.getInstance().saveWorkShifts(dateFrom, dateTo);
+        
+        if(result){
+            clearFields();
+            SmenyController.getInstance().clearTableWorkShiftData();
+            dateChooserFrom.setDate(null);
+            dateChooserTo.setDate(null);
+            
+            loadAllData(); //aktualizace tabulky sablon
+            
+            //TODO - nacist smeny do tabulky - uplne predelat
+            //jTable1.setModel(SmenyController.getInstance().getModelWorkShift();
+            this.repaint();
+        }
+    }
+
     private void jButtonSavePlanWorkShiftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSavePlanWorkShiftActionPerformed
-        saveWorkShifts();
+        try {
+            saveWorkShifts();                                        
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(WorkShiftPlanForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            Logger.getLogger(WorkShiftPlanForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(WorkShiftPlanForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
         /*
         KeyboardDialog keyboard = new KeyboardDialog(parent, true);
         keyboard.setLocation(point);
@@ -457,11 +501,13 @@ private void saveWorkShifts(){
         keyboard.setVisible(true);
          *
          */
+        
+        
     }//GEN-LAST:event_jButtonSavePlanWorkShiftActionPerformed
 
 private void jButtonAddFromTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddFromTemplateActionPerformed
-   try {
-        chooseTemplateDialog = new ChooseTemplateDialog(parent, true, new JTextField());
+    try {
+        chooseTemplateDialog = new ChooseTemplateDialog(parent, true, jTableWorkShifts);
         chooseTemplateDialog.setLocation(point);
         chooseTemplateDialog.setVisible(true);
     } catch (EmptyListException ex) {
@@ -477,7 +523,7 @@ private void jButtonAddFromTemplateActionPerformed(java.awt.event.ActionEvent ev
 
 private void jButtonAddWorkShiftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddWorkShiftActionPerformed
     try {
-        chooseShiftDialog = new ChooseShiftDialog(parent, true, jTable3);
+        chooseShiftDialog = new ChooseShiftDialog(parent, true, jTableWorkShifts);
         chooseShiftDialog.setLocation(point);
         chooseShiftDialog.setVisible(true);
     } catch (EmptyListException ex) {
@@ -495,10 +541,26 @@ private void jButtonDeleteWorkShiftActionPerformed(java.awt.event.ActionEvent ev
 // TODO add your handling code here:
 }//GEN-LAST:event_jButtonDeleteWorkShiftActionPerformed
 
+private void jButtonAddWorkShift1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddWorkShift1ActionPerformed
+   try {
+        chooseDeleteShiftDialog = new ChooseDeleteShiftDialog(parent, true, jTableWorkShifts);
+        chooseDeleteShiftDialog.setLocation(point);
+        chooseDeleteShiftDialog.setVisible(true);
+    } catch (EmptyListException ex) {
+        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (RemoteException ex) {
+        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (NotBoundException ex) {
+        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (FileNotFoundException ex) {
+        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+    }
+}//GEN-LAST:event_jButtonAddWorkShift1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel billPanel;
     private javax.swing.JButton jButtonAddFromTemplate;
     private javax.swing.JButton jButtonAddWorkShift;
+    private javax.swing.JButton jButtonAddWorkShift1;
     private javax.swing.JButton jButtonDeleteWorkShift;
     private javax.swing.JButton jButtonSavePlanWorkShift;
     private javax.swing.JComboBox jComboBoxSelectRange;
@@ -516,6 +578,6 @@ private void jButtonDeleteWorkShiftActionPerformed(java.awt.event.ActionEvent ev
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable3;
+    private javax.swing.JTable jTableWorkShifts;
     // End of variables declaration//GEN-END:variables
 }

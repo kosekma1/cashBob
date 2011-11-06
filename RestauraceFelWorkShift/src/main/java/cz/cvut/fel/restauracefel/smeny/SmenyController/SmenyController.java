@@ -2,8 +2,10 @@ package cz.cvut.fel.restauracefel.smeny.SmenyController;
 
 import cz.cvut.fel.restauracefel.hibernate.Role;
 import cz.cvut.fel.restauracefel.hibernate.Template;
+import cz.cvut.fel.restauracefel.hibernate.TemplateList;
 import cz.cvut.fel.restauracefel.hibernate.Typeworkshift;
 import cz.cvut.fel.restauracefel.hibernate.User;
+import cz.cvut.fel.restauracefel.hibernate.Workshift;
 import cz.cvut.fel.restauracefel.smeny.smeny_gui.SmenyViewController;
 import cz.cvut.fel.restauracefel.smeny.smeny_main.ResultTableModel;
 import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
@@ -39,10 +41,13 @@ public class SmenyController /*implements IModuleInteface */ {
     private DefaultComboBoxModel modelRoles = null;
     private String[] dataList = null; //for ChooseShiftDialog
     private String[] dataListForDelete = null; //for ChooseDeleteShiftDialog
+    private String[] dataListTemplates = null; //for ChooseTemplateDialog
     private Object[][] tableTemplateData = null;
     private String[] headerNameTemplate = new String[]{"Šablona"};
     private ResultTableModel modelTemplate = null;
     public static final String ERROR_ENTERED_DATA = "Chybně zadaná data";
+    public static final long MAX_LENGTH_DAYS = 90;
+    public static final long DAY_IN_MILLISECONDS = 3600 * 1000 * 24; //day in milliseconds
 
     public SmenyController() {
         view = SmenyViewController.getInstance();
@@ -121,7 +126,7 @@ public class SmenyController /*implements IModuleInteface */ {
      * @throws RemoteException
      * @throws NotBoundException 
      */
-    public void generateDataList() throws FileNotFoundException, RemoteException, NotBoundException {
+    public void generateDataListWorkShifts() throws FileNotFoundException, RemoteException, NotBoundException {
         List listTypeWorkshifts = ServiceFacade.getInstance().getTypeWorkShifts();
         dataList = new String[listTypeWorkshifts.size()];
         for (int i = 0; i < dataList.length; i++) {
@@ -160,6 +165,19 @@ public class SmenyController /*implements IModuleInteface */ {
             tableWorkShiftData = newTable;
             addWorkShift(nameWorkShift);
             modelWorkShift = new ResultTableModel(new String[]{"Směna"}, tableWorkShiftData); //create new model only if table is extended
+        }
+    }
+
+    public void addWorkShiftFromTemplate(String templateName) throws FileNotFoundException, RemoteException, NotBoundException {
+        Template template = ServiceFacade.getInstance().findTemplateByName(templateName);
+        int templateId = template.getIdTemplate();
+        List templateList = ServiceFacade.getInstance().getTemplateListByTemplateId(templateId);
+        TemplateList tl = null;
+        Typeworkshift tw = null;
+        for (int i = 0; i < templateList.size(); i++) {
+            tl = (TemplateList) templateList.get(i);
+            tw = ServiceFacade.getInstance().getTypeWorkShiftById(tl.getIdTypeworkshift());
+            addWorkShift(tw.getName());
         }
     }
 
@@ -229,7 +247,24 @@ public class SmenyController /*implements IModuleInteface */ {
             tableTemplateData[0][0] = null; //empty table
         }
 
-        modelTemplate = new ResultTableModel(new String[]{"Šablona"}, tableTemplateData);
+        modelTemplate = new ResultTableModel(headerNameTemplate, tableTemplateData);
+    }
+
+    public void generateDataListTemplates() throws FileNotFoundException, NotBoundException, RemoteException {
+        List templates = ServiceFacade.getInstance().getTemplates();
+        if (templates != null) {
+            dataListTemplates = new String[templates.size()];
+            for (int i = 0; i < dataListTemplates.length; i++) {
+                dataListTemplates[i] = ((Template) templates.get(i)).getName();
+            }
+        } else {
+            dataListTemplates = new String[1];
+            dataListTemplates[0] = null; //empty table
+        }
+    }
+
+    public String[] getDataListTemplates() {
+        return this.dataListTemplates;
     }
 
     /**
@@ -254,12 +289,24 @@ public class SmenyController /*implements IModuleInteface */ {
         return modelTemplate;
     }
 
-    public String[] getDataList() {
+    public String[] getDataListWorkShifts() {
         return this.dataList;
     }
 
     public String[] getDataListForDelete() {
         return this.dataListForDelete;
+    }
+
+    public boolean isTableEmpty(Object[][] table) {
+        int j = 0;
+        boolean empty = true;
+        for (int i = 0; i < table.length; i++) {
+            if (table[i][j] != null) {
+                empty = false;
+                break;
+            }
+        }
+        return empty;
     }
 
     /**
@@ -270,52 +317,48 @@ public class SmenyController /*implements IModuleInteface */ {
      * @throws RemoteException 
      */
     public boolean saveTemplate(String templateName) throws FileNotFoundException, NotBoundException, RemoteException {
+        boolean process = true;
         if (templateName.trim().equals("")) {
             showErrorMessage("Zadejte název šablony.", SmenyController.ERROR_ENTERED_DATA);
-            return false;
+            process = false;
         }
         if (templateName.trim().length() > 50) {
             showErrorMessage("Příliš dlouhý název šablony (max. 50 znaků).", SmenyController.ERROR_ENTERED_DATA);
-            return false;
+            process = false;
         }
         if (ServiceFacade.getInstance().findTemplateByName(templateName) != null) {
             showErrorMessage("Šablona stejného názvu již existuje.", SmenyController.ERROR_ENTERED_DATA);
-            return false;
+            process = false;
         }
 
         Object[][] table = SmenyController.getInstance().getTableWorkShiftData();
-        int j = 0;
-        boolean empty = true;
-        for (int i = 0; i < table.length; i++) {
-            if (table[i][j] != null) {
-                empty = false;
-                break;
-            }
-        }
 
-        if (empty) {
+        if (isTableEmpty(table)) {
             showErrorMessage("Vložte alespoň jednu směnu.", SmenyController.ERROR_ENTERED_DATA);
-            return false;
+            process = false;
         }
 
-        //save name of the template
-        Template template = new Template();
-        template.setName(templateName);
-        ServiceFacade.getInstance().creatNewTemplate(template);
+        if (process) {
+            //save name of the template
+            Template template = new Template();
+            template.setName(templateName);
+            ServiceFacade.getInstance().creatNewTemplate(template);
 
-        //save workshifts connected with saved template
-        template = ServiceFacade.getInstance().findTemplateByName(templateName);
-        int idTemplate = template.getIdTemplate();
+            //save workshifts connected with saved template
+            template = ServiceFacade.getInstance().findTemplateByName(templateName);
+            int idTemplate = template.getIdTemplate();
 
-        Typeworkshift tws = null;
-        for (int i = 0; i < table.length; i++) {
-            if (table[i][j] != null) {
-                tws = ServiceFacade.getInstance().findTypeworkshiftByName((String) table[i][j]);
-                ServiceFacade.getInstance().createNewTemplateList(idTemplate, tws.getIdTypeWorkshift());
+            Typeworkshift tws = null;
+            int j = 0;
+            for (int i = 0; i < table.length; i++) {
+                if (table[i][j] != null) {
+                    tws = ServiceFacade.getInstance().findTypeworkshiftByName((String) table[i][j]);
+                    ServiceFacade.getInstance().createNewTemplateList(idTemplate, tws.getIdTypeWorkshift());
+                }
             }
+            showInformationMessage("Šablona uložena.", "Úspěšné uložení.");
         }
-        showInformationMessage("Šablona uložena.", "Úspěšné uložení.");
-        return true;
+        return process;
     }
 
     /**
@@ -329,55 +372,114 @@ public class SmenyController /*implements IModuleInteface */ {
      * @throws RemoteException 
      */
     public boolean saveTypeWorkshift(String shiftName, String roleName, Date dateFrom, Date dateTo) throws FileNotFoundException, NotBoundException, RemoteException {
+        boolean process = true;
         if (shiftName.trim().equals("")) {
             this.showErrorMessage("Zadejte název směny.", SmenyController.ERROR_ENTERED_DATA);
-            return false;
+            process = false;
         }
         if (shiftName.trim().length() > 50) {
             showErrorMessage("Příliš dlouhý název směny (max. 50 znaků).", SmenyController.ERROR_ENTERED_DATA);
-            return false;
+            process = false;
         }
 
         if (ServiceFacade.getInstance().findTypeworkshiftByName(shiftName) != null) {
             showErrorMessage("Typ směny stejného názvu již existuje.", SmenyController.ERROR_ENTERED_DATA);
-            return false;
+            process = false;
         }
 
-        Typeworkshift tw = new Typeworkshift();
-        tw.setName(shiftName);
-
-        tw.setFromTime(dateFrom);
-        tw.setToTime(dateTo);
-
-        if (tw.getFromTime().equals(tw.getToTime())) {
+        if (dateFrom.equals(dateTo)) {
             showErrorMessage("Čas \"Od\" musí být různý \"Do.\"", SmenyController.ERROR_ENTERED_DATA);
-            return false;
+            process = false;
         }
 
-        tw.setStatus(1);
-        Role role = ServiceFacade.getInstance().getRoleByName(roleName);
-        tw.setIdWorkshiftRole(role.getRoleId());
-        System.out.println("TW: " + tw.getName() + " " + tw.getFromTime() + " " + tw.getToTime());
-        ServiceFacade.getInstance().createNewTypewWorkShift(tw);
-        
-        showInformationMessage("Typ směny byl uložen.", "Úspěšné uložení.");
-        return true;
+        if (process) {
+            Typeworkshift tw = new Typeworkshift();
+            tw.setName(shiftName);
+
+            tw.setFromTime(dateFrom);
+            tw.setToTime(dateTo);
+
+            tw.setStatus(1);
+            Role role = ServiceFacade.getInstance().getRoleByName(roleName);
+            tw.setIdWorkshiftRole(role.getRoleId());
+            //System.out.println("TW: " + tw.getName() + " " + tw.getFromTime() + " " + tw.getToTime());
+            ServiceFacade.getInstance().createNewTypewWorkShift(tw);
+
+            showInformationMessage("Typ směny byl uložen.", "Úspěšné uložení.");
+        }
+
+        return process;
     }
 
     /**
-     * Save workshift to the plan of workshifts.
-     * @param dateFrom
-     * @param dateTo 
+     * Count days from milliseconds
+     * @param time (in milliseconds)
+     * @return days
      */
-    public void saveWorkShifts(Date dateFrom, Date dateTo) {
+    private long getDays(long time) {
+        return time / 1000 / 3600 / 24;
+    }
+
+    /**
+     * 
+     * @param dateFrom
+     * @param dateTo
+     * @param typeWorkShifts
+     * @return
+     * @throws FileNotFoundException
+     * @throws NotBoundException
+     * @throws RemoteException 
+     */
+    public boolean saveWorkShifts(Date dateFrom, Date dateTo) throws FileNotFoundException, NotBoundException, RemoteException {
+        boolean process = true;
         if (dateFrom == null || dateTo == null) {
             showErrorMessage("Zadejte obě data.", SmenyController.ERROR_ENTERED_DATA);
-            return;
+            process = false;
         }
         if (dateFrom.after(dateTo)) {
             showErrorMessage("Datum do musí být větší než datum od", SmenyController.ERROR_ENTERED_DATA);
-            return;
+            process = false;
         }
+
+        long resultDays = getDays(dateTo.getTime() - dateFrom.getTime());
+        if (resultDays > MAX_LENGTH_DAYS) {
+            showErrorMessage("Maximální doba na plánování jsou 3 měsíce.", SmenyController.ERROR_ENTERED_DATA);
+            process = false;
+        }
+
+        Object[][] table = SmenyController.getInstance().getTableWorkShiftData();
+
+        if (isTableEmpty(table)) {
+            showErrorMessage("Vložte alespoň jednu směnu.", SmenyController.ERROR_ENTERED_DATA);
+            process = false;
+        }
+
+        if (process) {
+            Typeworkshift tws = null;
+            int idTypeWorkShift = 0;
+            long dateFromMills = dateFrom.getTime();
+            long dateToMills = dateTo.getTime();
+            Date tempDate = null;
+            int j = 0;
+            for (int i = 0; i < table.length; i++) {
+                if (table[i][j] != null) {
+                    tws = ServiceFacade.getInstance().findTypeworkshiftByName((String) table[i][j]);
+                    idTypeWorkShift = tws.getIdTypeWorkshift();
+                    this.showInformationMessage("Smena: " + tws.getName() + " : ID " + idTypeWorkShift, "TEST");
+                    //save workshift to each day
+                    do {
+                        tempDate = new Date(dateFromMills);
+                        showInformationMessage("Datum: " + tempDate, "TEST");
+                        ServiceFacade.getInstance().createNewWorkshift(tempDate, idTypeWorkShift);
+                        dateFromMills += DAY_IN_MILLISECONDS;
+                    } while (dateFromMills <= dateToMills);
+                    dateFromMills = dateFrom.getTime();                    
+                }
+            }
+            showInformationMessage("Pracovní směny uloženy.", "Úspěšné uložení dat");
+        }
+
+        return process;
     }
 
     /**

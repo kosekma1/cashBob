@@ -3,8 +3,12 @@ package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 import java.io.FileNotFoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JTextField;
 import cz.cvut.fel.restauracefel.library.service.EmptyListException;
+import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
+import javax.swing.JTable;
 //import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
 
 /**
@@ -14,7 +18,7 @@ import cz.cvut.fel.restauracefel.library.service.EmptyListException;
  */
 public class ChooseTemplateDialog extends AbstractDialog {
 
-    private JTextField target = null;
+    private JTable targetTable = null;
 
     /**
      * Konstruktor tridy ChooseTableDialog
@@ -27,9 +31,9 @@ public class ChooseTemplateDialog extends AbstractDialog {
      * @throws java.rmi.NotBoundException
      * @throws java.io.FileNotFoundException
      */
-    public ChooseTemplateDialog(MainFrame parent, boolean modal, JTextField target) throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {
+    public ChooseTemplateDialog(MainFrame parent, boolean modal, JTable targetTable) throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {
         super(parent, modal);
-        this.target = target;
+        this.targetTable = targetTable;
         initComponents();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         refresh();
@@ -45,10 +49,15 @@ public class ChooseTemplateDialog extends AbstractDialog {
     protected void refresh() throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {
         //String[] tables = ServiceFacade.getInstance().getTableNames();
         //if (tables==null) throw new EmptyListException("Žádné stoly", "V systému nejsou momentálně evidovány žádné stoly.");
-        
+
         //shifts for delete - odkaz na pole nebo list by mel byt predan konstruktorem nebo nejakou set metodou
-        String[] tables = new String[]{"První šablona", "Druhá šablona", "Třetí šablona", "Čtvrtá šablona", "Pátá šablona", "Šestá šablona", "Sedmá šablona", "Osmá šablona"};
-        jList1.setListData(tables);
+        //String[] tables = new String[]{"První šablona", "Druhá šablona", "Třetí šablona", "Čtvrtá šablona", "Pátá šablona", "Šestá šablona", "Sedmá šablona", "Osmá šablona"};
+        //jList1.setListData(tables);
+
+        SmenyController.getInstance().generateDataListTemplates();
+        jList1.setListData(SmenyController.getInstance().getDataListTemplates());
+        
+
     }
 
     /** This method is called from within the constructor to
@@ -161,16 +170,26 @@ public class ChooseTemplateDialog extends AbstractDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBackActionPerformed
-        target.setText("");
+        //target.setText("");
         dispose();
     }//GEN-LAST:event_jButtonBackActionPerformed
 
     private void clicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clicked
-        // TODO add your handling code here:
-        target.setText((String) jList1.getSelectedValue());
+        try {
+            //TODO: implement adding workshifts to table - select all workshifts from template
+            //SmenyController.getInstance().addWorkShift((String) jList1.getSelectedValue());
+            //targetTable.setModel(SmenyController.getInstance().getModelWorkShift());
+            SmenyController.getInstance().addWorkShiftFromTemplate((String)jList1.getSelectedValue());
+            targetTable.setModel(SmenyController.getInstance().getModelWorkShift());                
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ChooseTemplateDialog.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(ChooseTemplateDialog.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            Logger.getLogger(ChooseTemplateDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
         dispose();
     }//GEN-LAST:event_clicked
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonBack;
     private javax.swing.JLabel jLabel1;

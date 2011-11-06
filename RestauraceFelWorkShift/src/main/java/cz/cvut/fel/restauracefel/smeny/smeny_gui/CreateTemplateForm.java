@@ -429,7 +429,8 @@ private void jButtonRemoveWorkShiftActionPerformed(java.awt.event.ActionEvent ev
 
 private void jButtonEditTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditTemplateActionPerformed
     try {
-        ChooseDeleteTemplateDialog chooseDeleteTemplateDialog = new ChooseDeleteTemplateDialog(parent, true, templateNameTextField);
+        //TODO - implementovat smazání šablon
+        chooseDeleteTemplateDialog = new ChooseDeleteTemplateDialog(parent, true, templateNameTextField);
         chooseDeleteTemplateDialog.setLocation(point);
         chooseDeleteTemplateDialog.setVisible(true);
     } catch (EmptyListException ex) {
