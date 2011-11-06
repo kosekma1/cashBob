@@ -832,6 +832,27 @@ CREATE TABLE IF NOT EXISTS `templatelist` (
   KEY `id_type_workshift` (`idTypeworkshift`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
 
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `workshift`
+--
+CREATE TABLE IF NOT EXISTS `workshift` (
+  `idWorkshift` int(11) NOT NULL AUTO_INCREMENT,
+  `idTypeWorkshift` int(11) NOT NULL,
+  `idUser` int(11) DEFAULT NULL,
+  `leaderSubmit` tinyint(4) DEFAULT NULL,
+  `userSubmit` text COLLATE utf8_czech_ci,
+  `cancelled` text COLLATE utf8_czech_ci,
+  `idTemplate` int(11) DEFAULT NULL,
+  `date_shift` date NOT NULL,
+  `status` int(11) NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`idWorkshift`),
+  KEY `id_type_workshift` (`idTypeWorkshift`),
+  KEY `fk_user_workshift` (`idUser`),
+  KEY `id_template` (`idTemplate`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
 
 
 CREATE USER 'restfel'@'localhost' IDENTIFIED BY 'restfel';
