@@ -121,7 +121,7 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
 
     @Override
     public Workshift getWorkshiftById(int idWorkshift) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return WorkShiftController.getInstance().getWorkshiftById(idWorkshift);
     }
 
     @Override
@@ -131,6 +131,11 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
 
     @Override
     public List getWorkshiftByTypeWorkshiftId(int idTypeWorkshift) throws RemoteException {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+    
+     @Override
+    public List getAllActiveWorkShifts(Date dateFrom) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
     
@@ -280,6 +285,6 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
     @Override
     public boolean isUserRole(int userId, int roleId) throws RemoteException {
         return UserRoleController.getInstance().isUserRole(userId, roleId);
-    }   
-   
+    }
+ 
 }

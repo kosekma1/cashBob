@@ -40,6 +40,7 @@ public interface IServiceFacadeSmeny extends Remote  {
     public Workshift getWorkshiftById(int idWorkshift) throws RemoteException;
     public List getWorkshiftByUserId(int idUser) throws RemoteException;
     public List getWorkshiftByTypeWorkshiftId(int idTypeWorkshift) throws RemoteException;
+    public List getAllActiveWorkShifts(Date dateFrom) throws RemoteException;
     
     
     //USER methods

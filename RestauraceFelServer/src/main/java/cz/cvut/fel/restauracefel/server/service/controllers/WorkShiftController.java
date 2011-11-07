@@ -41,10 +41,14 @@ public class WorkShiftController {
     }
     
     public List getWorkshiftByUserId(int idUser) {
-        return new ArrayList();
+        return new ArrayList(); //TODO - implement
     }
     
     public List getWorkshiftByTypeWorkshiftId(int idTypeWorkshift) {
-        return new ArrayList();
+        return new ArrayList(); //TODO - implement
+    }
+    
+    public List getAllActiveWorkShifts(Date dateFrom) {
+        return Workshift.getAllActiveWorkShifts(dateFrom);
     }
 }
