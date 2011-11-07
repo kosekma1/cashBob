@@ -157,7 +157,7 @@ public class WorkShiftPlanForm extends AbstractForm {
         jPanelDateChooserTo = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTableWorkShiftPlan = new javax.swing.JTable();
         jPanelDeleteWorkshift = new javax.swing.JPanel();
         jButtonDeleteWorkShift = new javax.swing.JButton();
         jLabelTitle = new javax.swing.JLabel();
@@ -278,7 +278,7 @@ public class WorkShiftPlanForm extends AbstractForm {
         );
 
         jLabel5.setFont(new java.awt.Font("Calibri", 1, 22));
-        jLabel5.setText("Plánované směny");
+        jLabel5.setText("Plánované směny (neproběhlé)");
 
         javax.swing.GroupLayout jPanelDateChooserFromLayout = new javax.swing.GroupLayout(jPanelDateChooserFrom);
         jPanelDateChooserFrom.setLayout(jPanelDateChooserFromLayout);
@@ -304,8 +304,8 @@ public class WorkShiftPlanForm extends AbstractForm {
             .addGap(0, 43, Short.MAX_VALUE)
         );
 
-        jTable1.setFont(new java.awt.Font("Calibri", 0, 14));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTableWorkShiftPlan.setFont(new java.awt.Font("Calibri", 0, 14));
+        jTableWorkShiftPlan.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"14.4.2011", "Double Barman"},
                 {"16.4.2011", "Triple Číšník"},
@@ -332,7 +332,7 @@ public class WorkShiftPlanForm extends AbstractForm {
                 "Datum", "Směna"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(jTableWorkShiftPlan);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -403,7 +403,7 @@ public class WorkShiftPlanForm extends AbstractForm {
                         .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(39, 39, 39)
                         .addComponent(jPanelDeleteWorkshift, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 294, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         billPanelLayout.setVerticalGroup(
@@ -577,7 +577,7 @@ private void jButtonAddWorkShift1ActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.JPanel jPanelDeleteWorkshift;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTableWorkShiftPlan;
     private javax.swing.JTable jTableWorkShifts;
     // End of variables declaration//GEN-END:variables
 }

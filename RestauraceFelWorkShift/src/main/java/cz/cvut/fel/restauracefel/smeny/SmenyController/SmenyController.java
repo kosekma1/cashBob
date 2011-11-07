@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -262,6 +263,59 @@ public class SmenyController /*implements IModuleInteface */ {
             dataListTemplates[0] = null; //empty table
         }
     }
+    
+    public void generateTableDataPlannedWorkShifts() throws FileNotFoundException, NotBoundException, RemoteException {        
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.MILLISECOND, 0);        
+        
+        /*int month = cal.get(Calendar.MONTH);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int year = cal.get(Calendar.YEAR);
+         * 
+         */
+        
+        List workShifts = ServiceFacade.getInstance().getAllActiveWorkShifts(cal.getTime());
+        
+        
+        List typeWorkshifts = ServiceFacade.getInstance().getTypeWorkShifts();
+        List rolesList = ServiceFacade.getInstance().getAllRoles();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+
+        if (typeWorkshifts != null) {
+            tableData = new Object[typeWorkshifts.size()][5];
+            int i = 0, j = 0;
+            for (Object o : typeWorkshifts) {
+                Typeworkshift shift = (Typeworkshift) o;
+                tableData[i][j++] = shift.getName();
+                tableData[i][j++] = sdf.format(shift.getFromTime());
+                tableData[i][j++] = sdf.format(shift.getToTime());
+
+                for (Object obj : rolesList) {
+                    Role role = (Role) obj;
+                    if (role.getRoleId() == shift.getIdWorkshiftRole()) {
+                        tableData[i][j++] = role.getName();
+                        break;
+                    }
+                }
+                tableData[i][j++] = shift.getStatus();
+
+                System.out.println(shift.getName() + " "
+                        + shift.getFromTime() + " "
+                        + shift.getToTime() + " "
+                        + shift.getIdWorkshiftRole() + " "
+                        + shift.getStatus());
+                j = 0;
+
+                i++;
+            }
+        }
+        modelTypeWorkShift = new ResultTableModel(this.headerNames, this.tableData);
+    }
+    
+    
 
     public String[] getDataListTemplates() {
         return this.dataListTemplates;

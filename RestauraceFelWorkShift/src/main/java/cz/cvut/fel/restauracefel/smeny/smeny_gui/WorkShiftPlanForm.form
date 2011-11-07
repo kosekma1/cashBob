@@ -80,7 +80,7 @@
                           <EmptySpace min="-2" pref="39" max="-2" attributes="0"/>
                           <Component id="jPanelDeleteWorkshift" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="jLabel5" min="-2" pref="239" max="-2" attributes="0"/>
+                      <Component id="jLabel5" min="-2" pref="294" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -318,7 +318,7 @@
             <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
               <Font name="Calibri" size="22" style="1"/>
             </Property>
-            <Property name="text" type="java.lang.String" value="Pl&#xe1;novan&#xe9; sm&#x11b;ny"/>
+            <Property name="text" type="java.lang.String" value="Pl&#xe1;novan&#xe9; sm&#x11b;ny (neprob&#x11b;hl&#xe9;)"/>
           </Properties>
         </Component>
         <Container class="javax.swing.JPanel" name="jPanelDateChooserFrom">
@@ -386,7 +386,7 @@
 
               <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
               <SubComponents>
-                <Component class="javax.swing.JTable" name="jTable1">
+                <Component class="javax.swing.JTable" name="jTableWorkShiftPlan">
                   <Properties>
                     <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                       <Font name="Calibri" size="14" style="0"/>
