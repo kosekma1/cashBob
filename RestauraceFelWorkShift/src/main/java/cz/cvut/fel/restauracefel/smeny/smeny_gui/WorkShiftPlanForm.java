@@ -53,6 +53,7 @@ public class WorkShiftPlanForm extends AbstractForm {
         this.statusBar = bar;
         initComponents();
         initCalendars();
+        loadAllData();
         refresh();
         clearFields();
     }
@@ -71,7 +72,15 @@ public class WorkShiftPlanForm extends AbstractForm {
     }
     
     private void loadAllData(){
-        
+        try {
+            SmenyController.getInstance().generateTableDataPlannedWorkShifts();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(WorkShiftPlanForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            Logger.getLogger(WorkShiftPlanForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(WorkShiftPlanForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     /**

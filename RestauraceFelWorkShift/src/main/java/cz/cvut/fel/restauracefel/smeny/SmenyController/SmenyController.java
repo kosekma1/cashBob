@@ -264,12 +264,7 @@ public class SmenyController /*implements IModuleInteface */ {
         }
     }
     
-    public void generateTableDataPlannedWorkShifts() throws FileNotFoundException, NotBoundException, RemoteException {        
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.MILLISECOND, 0);        
+    public void generateTableDataPlannedWorkShifts() throws FileNotFoundException, NotBoundException, RemoteException {                        
         
         /*int month = cal.get(Calendar.MONTH);
         int day = cal.get(Calendar.DAY_OF_MONTH);
@@ -277,9 +272,14 @@ public class SmenyController /*implements IModuleInteface */ {
          * 
          */
         
-        List workShifts = ServiceFacade.getInstance().getAllActiveWorkShifts(cal.getTime());
+        List workShifts = ServiceFacade.getInstance().getAllActiveWorkShifts(new Date());
+        if(workShifts==null || workShifts.isEmpty()) {
+            this.showErrorMessage("Prázdný list", "Chyba");
+        } else {
+            this.showInformationMessage("Size: " + String.valueOf(workShifts.size()), "Uspesny select");
+        }
         
-        
+        /*
         List typeWorkshifts = ServiceFacade.getInstance().getTypeWorkShifts();
         List rolesList = ServiceFacade.getInstance().getAllRoles();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
@@ -312,7 +312,8 @@ public class SmenyController /*implements IModuleInteface */ {
                 i++;
             }
         }
-        modelTypeWorkShift = new ResultTableModel(this.headerNames, this.tableData);
+        modelTypeWorkShift = new ResultTableModel(this.headerNames, this.tableData);         
+         */
     }
     
     
