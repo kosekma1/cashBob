@@ -136,7 +136,7 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
     
      @Override
     public List getAllActiveWorkShifts(Date dateFrom) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return Workshift.getAllActiveWorkShifts(dateFrom);
     }
     
     
