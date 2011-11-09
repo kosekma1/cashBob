@@ -854,6 +854,30 @@ CREATE TABLE IF NOT EXISTS `workshift` (
   KEY `id_template` (`idTemplate`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
 
+--
+-- Struktura tabulky `requestcancelled`
+--
+
+CREATE TABLE IF NOT EXISTS `requestcancelled` (
+  `idRequestCancelled` int(11) NOT NULL AUTO_INCREMENT,
+  `result` int(11) NOT NULL,
+  `idWorkshift` int(11) NOT NULL,
+  `dateCancelled` date DEFAULT NULL,
+  `reason` varchar(200) COLLATE utf8_czech_ci DEFAULT NULL,
+  PRIMARY KEY (`idRequestCancelled`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Struktura tabulky `attendance`
+--
+
+CREATE TABLE IF NOT EXISTS `attendance` (
+  `idAttendance` int(11) NOT NULL AUTO_INCREMENT,
+  `idUser` int(11) NOT NULL,
+  `idWorkshift` int(11) NOT NULL,
+  PRIMARY KEY (`idAttendance`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
 
 CREATE USER 'restfel'@'localhost' IDENTIFIED BY 'restfel';
 GRANT ALL ON db_rest_fel.* TO 'restfel'@'localhost';
