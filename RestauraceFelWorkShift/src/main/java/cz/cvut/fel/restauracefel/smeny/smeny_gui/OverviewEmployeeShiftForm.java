@@ -228,7 +228,7 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
         jTextField4.setFont(new java.awt.Font("Calibri", 0, 14));
         jTextField4.setText("14");
 
-        jComboBox1.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        jComboBox1.setFont(new java.awt.Font("Calibri", 0, 14));
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Vše", "Moje role", "Přihlášené" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -278,7 +278,7 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
                 {null, null, null, null, null}
             },
             new String [] {
-                "Den", "Typ směny", "Nahlášení", "Obsazení", "Potvrzení"
+                "Datum a čas", "Typ směny", "Nahlášení", "Obsazení", "Potvrzení"
             }
         ));
         jTable1.setRowHeight(25);

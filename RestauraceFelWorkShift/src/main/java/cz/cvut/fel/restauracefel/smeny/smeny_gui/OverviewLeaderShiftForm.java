@@ -218,7 +218,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
             }
         });
 
-        jTextField5.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        jTextField5.setFont(new java.awt.Font("Calibri", 0, 14));
         jTextField5.setText("9.5.2011-14.5.2011");
         jTextField5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -226,13 +226,13 @@ public class OverviewLeaderShiftForm extends AbstractForm {
             }
         });
 
-        jLabel8.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Calibri", 1, 14));
         jLabel8.setText("Týden:");
 
-        jTextField4.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        jTextField4.setFont(new java.awt.Font("Calibri", 0, 14));
         jTextField4.setText("14");
 
-        jComboBox1.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        jComboBox1.setFont(new java.awt.Font("Calibri", 0, 14));
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Vše", "Obsazené", "Neobsazené", "Potvrzené", "Žádosti o zrušení" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -242,7 +242,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 292, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
                 .addComponent(jLabel8)
                 .addGap(18, 18, 18)
                 .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -282,7 +282,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
                 {null, null, null, null, null}
             },
             new String [] {
-                "Den", "Typ směny", "Nahlášení", "Obsazení", "Potvrzení"
+                "Datum a čas", "Typ směny", "Nahlášení", "Obsazení", "Potvrzení"
             }
         ));
         jTable1.setRowHeight(25);
@@ -294,7 +294,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 764, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 600, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -362,11 +362,11 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabelTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 1112, Short.MAX_VALUE)
+            .addComponent(jLabelTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 948, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel5)
-                .addContainerGap(976, Short.MAX_VALUE))
+                .addContainerGap(812, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)

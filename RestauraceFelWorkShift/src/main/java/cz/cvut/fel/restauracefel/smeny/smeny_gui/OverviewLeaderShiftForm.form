@@ -28,11 +28,11 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jLabelTitle" alignment="0" pref="1112" max="32767" attributes="0"/>
+          <Component id="jLabelTitle" alignment="0" pref="948" max="32767" attributes="0"/>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jLabel5" min="-2" max="-2" attributes="1"/>
-              <EmptySpace pref="976" max="32767" attributes="0"/>
+              <EmptySpace pref="812" max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
@@ -97,7 +97,7 @@
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jComboBox1" min="-2" pref="93" max="-2" attributes="0"/>
-                  <EmptySpace pref="292" max="32767" attributes="0"/>
+                  <EmptySpace pref="128" max="32767" attributes="0"/>
                   <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="jTextField4" min="-2" pref="32" max="-2" attributes="0"/>
@@ -196,7 +196,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="764" max="32767" attributes="1"/>
+                  <Component id="jScrollPane1" pref="600" max="32767" attributes="1"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -227,7 +227,7 @@
                 </Property>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="5" rowCount="8">
-                    <Column editable="true" title="Den" type="java.lang.Object">
+                    <Column editable="true" title="Datum a &#x10d;as" type="java.lang.Object">
                       <Data value="14.4.2011 16:00-22:00"/>
                       <Data value="14.4.2011 16:00-22:00"/>
                       <Data value="16.4.2011 16:00-22:00"/>
