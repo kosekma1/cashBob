@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!-- Generated 17.7.2011 22:33:15 by Hibernate Tools 3.2.1.GA -->
+<hibernate-mapping>
+  <class catalog="db_rest_fel" name="cz.cvut.fel.restauracefel.hibernat.RequestCancelled" table="requestcancelled">
+    <id name="idRequestCancelled" type="int">
+      <column name="idRequestCancelled"/>
+      <generator class="native"/>
+    </id>
+    <property name="result" type="int">
+      <column name="result" not-null="true"/>
+    </property>
+    <property name="idWorkshift" type="int">
+      <column name="idWorkshift" not-null="true"/>
+    </property>
+    <property name="dateCancelled" type="date">
+      <column length="10" name="dateCancelled"/>
+    </property>
+    <property name="reason" type="string">
+      <column length="200" name="reason"/>
+    </property>
+  </class>
+</hibernate-mapping>

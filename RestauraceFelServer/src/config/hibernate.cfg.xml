@@ -46,5 +46,7 @@
 	  <mapping resource="cz/cvut/fel/restauracefel/hibernate/Template.hbm.xml"/>
 	  <mapping resource="cz/cvut/fel/restauracefel/hibernate/TemplateList.hbm.xml"/>
 	  <mapping resource="cz/cvut/fel/restauracefel/hibernate/Workshift.hbm.xml"/>
+	  <mapping resource="cz/cvut/fel/restauracefel/hibernate/Attendance.hbm.xml"/>
+	  <mapping resource="cz/cvut/fel/restauracefel/hibernate/RequestCancelled.hbm.xml"/>
   </session-factory>
 </hibernate-configuration>
