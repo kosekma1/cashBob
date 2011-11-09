@@ -51,9 +51,9 @@ public class WorkShiftPlanForm extends AbstractForm {
     public WorkShiftPlanForm(MainFrame parent, StatusBar bar) throws FileNotFoundException, NotBoundException, RemoteException {
         this.parent = parent;
         this.statusBar = bar;
-        initComponents();
-        initCalendars();
         loadAllData();
+        initComponents();
+        initCalendars();        
         refresh();
         clearFields();
     }
@@ -314,33 +314,7 @@ public class WorkShiftPlanForm extends AbstractForm {
         );
 
         jTableWorkShiftPlan.setFont(new java.awt.Font("Calibri", 0, 14));
-        jTableWorkShiftPlan.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"14.4.2011", "Double Barman"},
-                {"16.4.2011", "Triple Číšník"},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null},
-                {null, null}
-            },
-            new String [] {
-                "Datum", "Směna"
-            }
-        ));
+        jTableWorkShiftPlan.setModel(SmenyController.getInstance().getModelPlannedWorkShift());
         jScrollPane1.setViewportView(jTableWorkShiftPlan);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -485,10 +459,9 @@ public class WorkShiftPlanForm extends AbstractForm {
             dateChooserFrom.setDate(null);
             dateChooserTo.setDate(null);
             
-            loadAllData(); //aktualizace tabulky sablon
+            loadAllData(); //aktualizace tabulky sablon                        
+            this.jTableWorkShiftPlan.setModel(SmenyController.getInstance().getModelPlannedWorkShift());
             
-            //TODO - nacist smeny do tabulky - uplne predelat
-            //jTable1.setModel(SmenyController.getInstance().getModelWorkShift();
             this.repaint();
         }
     }

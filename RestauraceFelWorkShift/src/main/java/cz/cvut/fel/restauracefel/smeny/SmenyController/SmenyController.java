@@ -49,6 +49,8 @@ public class SmenyController /*implements IModuleInteface */ {
     public static final String ERROR_ENTERED_DATA = "Chybně zadaná data";
     public static final long MAX_LENGTH_DAYS = 90;
     public static final long DAY_IN_MILLISECONDS = 3600 * 1000 * 24; //day in milliseconds
+    private Object[][] tablePlannedWorkShift = null;
+    private ResultTableModel modelPlannedWorkShift = null;
 
     public SmenyController() {
         view = SmenyViewController.getInstance();
@@ -264,59 +266,51 @@ public class SmenyController /*implements IModuleInteface */ {
         }
     }
     
-    public void generateTableDataPlannedWorkShifts() throws FileNotFoundException, NotBoundException, RemoteException {                        
-        
-        /*int month = cal.get(Calendar.MONTH);
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        int year = cal.get(Calendar.YEAR);
-         * 
-         */
-        
-        List workShifts = ServiceFacade.getInstance().getAllActiveWorkShifts(new Date());
-        if(workShifts==null || workShifts.isEmpty()) {
-            this.showErrorMessage("Prázdný list", "Chyba");
+    /**
+     * Generate table and set model for planned workshifts.
+     * Planned workshifts from current date.
+     * @throws FileNotFoundException
+     * @throws NotBoundException
+     * @throws RemoteException 
+     */
+    
+    public void generateTableDataPlannedWorkShifts() throws FileNotFoundException, NotBoundException, RemoteException {
+
+        Date actualDate = new Date();
+        List workShifts = ServiceFacade.getInstance().getAllActiveWorkShifts(new Date());              
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        if (workShifts == null || workShifts.isEmpty()) {
+            tablePlannedWorkShift = new Object[0][2];
+            tablePlannedWorkShift[0][0] = "";
+            tablePlannedWorkShift[0][1] = "";
+                    
         } else {
-            this.showInformationMessage("Size: " + String.valueOf(workShifts.size()), "Uspesny select");
-        }
-        
-        /*
-        List typeWorkshifts = ServiceFacade.getInstance().getTypeWorkShifts();
-        List rolesList = ServiceFacade.getInstance().getAllRoles();
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-
-        if (typeWorkshifts != null) {
-            tableData = new Object[typeWorkshifts.size()][5];
+            tablePlannedWorkShift = new Object[workShifts.size()][2];
+            Workshift workShift = null;
             int i = 0, j = 0;
-            for (Object o : typeWorkshifts) {
-                Typeworkshift shift = (Typeworkshift) o;
-                tableData[i][j++] = shift.getName();
-                tableData[i][j++] = sdf.format(shift.getFromTime());
-                tableData[i][j++] = sdf.format(shift.getToTime());
+            List typeWorkshifts = ServiceFacade.getInstance().getTypeWorkShifts();
+            
+            for (Object o : workShifts) { //set Date of planned workshift
+                workShift = (Workshift) o;
+                tablePlannedWorkShift[i][j++] = sdf.format(workShift.getDateShift());
 
-                for (Object obj : rolesList) {
-                    Role role = (Role) obj;
-                    if (role.getRoleId() == shift.getIdWorkshiftRole()) {
-                        tableData[i][j++] = role.getName();
+                Typeworkshift typeWorkShift = null;
+                int idTypeWorkShift = workShift.getIdTypeWorkshift();
+                for (Object ot : typeWorkshifts) { //set name of Workshift
+                    typeWorkShift = (Typeworkshift) ot;
+                    if (typeWorkShift.getIdTypeWorkshift() == idTypeWorkShift) {
+                        tablePlannedWorkShift[i][j++] = typeWorkShift.getName();
                         break;
                     }
+
                 }
-                tableData[i][j++] = shift.getStatus();
-
-                System.out.println(shift.getName() + " "
-                        + shift.getFromTime() + " "
-                        + shift.getToTime() + " "
-                        + shift.getIdWorkshiftRole() + " "
-                        + shift.getStatus());
                 j = 0;
-
                 i++;
-            }
-        }
-        modelTypeWorkShift = new ResultTableModel(this.headerNames, this.tableData);         
-         */
+            }                        
+        }       
+        modelPlannedWorkShift = new ResultTableModel(new String[]{"Datum", "Směna"}, tablePlannedWorkShift);
     }
-    
-    
 
     public String[] getDataListTemplates() {
         return this.dataListTemplates;
@@ -342,6 +336,10 @@ public class SmenyController /*implements IModuleInteface */ {
 
     public ResultTableModel getModelTemplate() {
         return modelTemplate;
+    }
+    
+    public ResultTableModel getModelPlannedWorkShift() {
+        return this.modelPlannedWorkShift;
     }
 
     public String[] getDataListWorkShifts() {
@@ -528,7 +526,7 @@ public class SmenyController /*implements IModuleInteface */ {
                         ServiceFacade.getInstance().createNewWorkshift(tempDate, idTypeWorkShift);
                         dateFromMills += DAY_IN_MILLISECONDS;
                     } while (dateFromMills <= dateToMills);
-                    dateFromMills = dateFrom.getTime();                    
+                    dateFromMills = dateFrom.getTime();
                 }
             }
             showInformationMessage("Pracovní směny uloženy.", "Úspěšné uložení dat");
