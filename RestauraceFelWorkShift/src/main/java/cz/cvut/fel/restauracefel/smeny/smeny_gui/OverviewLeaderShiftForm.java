@@ -14,6 +14,9 @@ import cz.cvut.fel.restauracefel.library.service.Validator;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -71,7 +74,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
             }
         });
 
-        jTable1.addMouseListener(new MouseAdapter() {
+        jTableOverView.addMouseListener(new MouseAdapter() {
 
             @Override
             public void mousePressed(MouseEvent me) {
@@ -83,7 +86,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
                     ///System.exit(1);
                     //Component comp = SwingUtilities.getDeepestComponentAt(me.getComponent(), me.getX(), me.getY()); 
                     //JTextComponent tc = (JTextComponent)comp;                
-                    contextMenu.show(jTable1, x, y);
+                    contextMenu.show(jTableOverView, x, y);
                 }
                 osf.repaint(); //always redisplay screen
             }
@@ -189,11 +192,11 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         jComboBox1 = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTableOverView = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jButtonCreateName1 = new javax.swing.JButton();
         jButtonCreateName2 = new javax.swing.JButton();
-        jButtonCreateName3 = new javax.swing.JButton();
+        jButtonLoginEmployee = new javax.swing.JButton();
 
         setBackground(javax.swing.UIManager.getDefaults().getColor("CheckBox.light"));
         setPreferredSize(new java.awt.Dimension(948, 577));
@@ -269,8 +272,8 @@ public class OverviewLeaderShiftForm extends AbstractForm {
                 .addContainerGap())
         );
 
-        jTable1.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTableOverView.setFont(new java.awt.Font("Calibri", 0, 14));
+        jTableOverView.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {"14.4.2011 16:00-22:00", "číšník", "Karel, David", "", ""},
                 {"14.4.2011 16:00-22:00", "barman", null, "Eda", "10.4.2011, Eda (potvrdil)"},
@@ -285,8 +288,8 @@ public class OverviewLeaderShiftForm extends AbstractForm {
                 "Datum a čas", "Typ směny", "Nahlášení", "Obsazení", "Potvrzení"
             }
         ));
-        jTable1.setRowHeight(25);
-        jScrollPane1.setViewportView(jTable1);
+        jTableOverView.setRowHeight(25);
+        jScrollPane1.setViewportView(jTableOverView);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -325,12 +328,12 @@ public class OverviewLeaderShiftForm extends AbstractForm {
             }
         });
 
-        jButtonCreateName3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
-        jButtonCreateName3.setText("Přihlásit");
-        jButtonCreateName3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jButtonCreateName3.addActionListener(new java.awt.event.ActionListener() {
+        jButtonLoginEmployee.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
+        jButtonLoginEmployee.setText("Přihlásit");
+        jButtonLoginEmployee.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonLoginEmployee.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCreateName3ActionPerformed(evt);
+                jButtonLoginEmployeeActionPerformed(evt);
             }
         });
 
@@ -343,7 +346,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonCreateName1, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
                     .addComponent(jButtonCreateName2, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
-                    .addComponent(jButtonCreateName3, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
+                    .addComponent(jButtonLoginEmployee, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -354,7 +357,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonCreateName2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButtonCreateName3, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonLoginEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -401,7 +404,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
     }//GEN-LAST:event_jButton3ActionPerformed
 
 private void jButtonCreateName1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateName1ActionPerformed
-          try {
+    try {
         chooseOcuppyEmployeeDialog = new ChooseOcuppyEmployeeDialog(parent, true, jTextField);
         chooseOcuppyEmployeeDialog.setLocation(point);
         chooseOcuppyEmployeeDialog.setVisible(true);
@@ -420,29 +423,49 @@ private void jButtonCreateName2ActionPerformed(java.awt.event.ActionEvent evt) {
 // TODO add your handling code here:
 }//GEN-LAST:event_jButtonCreateName2ActionPerformed
 
-private void jButtonCreateName3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateName3ActionPerformed
-     try {
-        chooseEmployeeDialog = new ChooseEmployeeDialog(parent, true, jTextField);
+private void jButtonLoginEmployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoginEmployeeActionPerformed
+    try {
+        chooseEmployeeDialog = new ChooseEmployeeDialog(parent, true, jTableOverView);
         chooseEmployeeDialog.setLocation(point);
         chooseEmployeeDialog.setVisible(true);
     } catch (EmptyListException ex) {
+        logError(ex);
         Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
     } catch (RemoteException ex) {
+        logError(ex);
         Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
     } catch (NotBoundException ex) {
+        logError(ex);
         Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
     } catch (FileNotFoundException ex) {
+        logError(ex);
         Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (Exception ex) {
+        logError(ex);
     }
-}//GEN-LAST:event_jButtonCreateName3ActionPerformed
+}//GEN-LAST:event_jButtonLoginEmployeeActionPerformed
 
+    private void logError(Exception ex) {
+        try {
+            PrintWriter vystup = new PrintWriter(new FileWriter("log-chyb.txt"));
+            StackTraceElement[] el = ex.getStackTrace();
+            for (StackTraceElement els : el) {
+                vystup.println(els.toString());
+            }
+            vystup.println(ex.getMessage());
+            vystup.close();
+
+        } catch (IOException ex1) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex1);
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButtonCreateName1;
     private javax.swing.JButton jButtonCreateName2;
-    private javax.swing.JButton jButtonCreateName3;
+    private javax.swing.JButton jButtonLoginEmployee;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel8;
@@ -451,7 +474,7 @@ private void jButtonCreateName3ActionPerformed(java.awt.event.ActionEvent evt) {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable jTableOverView;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JTextField jTextField5;
     // End of variables declaration//GEN-END:variables

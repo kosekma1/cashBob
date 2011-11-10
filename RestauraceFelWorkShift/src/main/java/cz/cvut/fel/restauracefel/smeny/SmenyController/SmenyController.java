@@ -49,8 +49,11 @@ public class SmenyController /*implements IModuleInteface */ {
     public static final String ERROR_ENTERED_DATA = "Chybně zadaná data";
     public static final long MAX_LENGTH_DAYS = 90;
     public static final long DAY_IN_MILLISECONDS = 3600 * 1000 * 24; //day in milliseconds
+    //Planned workshifts
     private Object[][] tablePlannedWorkShift = null;
     private ResultTableModel modelPlannedWorkShift = null;
+    //Users
+    private String[] dataListEmployees = null; //for ChooseEmployeeDialog
 
     public SmenyController() {
         view = SmenyViewController.getInstance();
@@ -146,6 +149,35 @@ public class SmenyController /*implements IModuleInteface */ {
         for (int i = 0; i < dataListForDelete.length; i++) {
             dataListForDelete[i] = (String) tableWorkShiftData[i][j];
         }
+    }
+
+    public void generateDataListEmployees() throws FileNotFoundException, NotBoundException, RemoteException {
+        List users = ServiceFacade.getInstance().getAllUsers();
+        List rolesList = ServiceFacade.getInstance().getAllRoles();
+        //List userRole = ServiceFacade.getInstance().getUserRoleByUserId(id);
+        if (users == null || users.isEmpty()) {            
+            dataListEmployees = new String[0];
+        } else {
+            dataListEmployees = new String[users.size()];
+            int i = 0;
+            User userTemp = null;
+            for (Object o : users) {
+                userTemp = (User) o;                
+                dataListEmployees[i++] = userTemp.getFirstName() + " " + userTemp.getLastName();
+
+                /*for (Object obj : rolesList) {
+                Role role = (Role) obj;
+                if (role.getRoleId() == shift.getIdWorkshiftRole()) {
+                tableData[i][j++] = role.getName();
+                break;
+                }
+                }*/
+            }
+        }
+    }
+
+    public String[] getDataListEmployees() {
+        return dataListEmployees;
     }
 
     /**
@@ -265,7 +297,7 @@ public class SmenyController /*implements IModuleInteface */ {
             dataListTemplates[0] = null; //empty table
         }
     }
-    
+
     /**
      * Generate table and set model for planned workshifts.
      * Planned workshifts from current date.
@@ -273,24 +305,23 @@ public class SmenyController /*implements IModuleInteface */ {
      * @throws NotBoundException
      * @throws RemoteException 
      */
-    
     public void generateTableDataPlannedWorkShifts() throws FileNotFoundException, NotBoundException, RemoteException {
 
         Date actualDate = new Date();
-        List workShifts = ServiceFacade.getInstance().getAllActiveWorkShifts(new Date());              
+        List workShifts = ServiceFacade.getInstance().getAllActiveWorkShifts(new Date());
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         if (workShifts == null || workShifts.isEmpty()) {
             tablePlannedWorkShift = new Object[0][2];
             tablePlannedWorkShift[0][0] = "";
             tablePlannedWorkShift[0][1] = "";
-                    
+
         } else {
             tablePlannedWorkShift = new Object[workShifts.size()][2];
             Workshift workShift = null;
             int i = 0, j = 0;
             List typeWorkshifts = ServiceFacade.getInstance().getTypeWorkShifts();
-            
+
             for (Object o : workShifts) { //set Date of planned workshift
                 workShift = (Workshift) o;
                 tablePlannedWorkShift[i][j++] = sdf.format(workShift.getDateShift());
@@ -307,8 +338,8 @@ public class SmenyController /*implements IModuleInteface */ {
                 }
                 j = 0;
                 i++;
-            }                        
-        }       
+            }
+        }
         modelPlannedWorkShift = new ResultTableModel(new String[]{"Datum", "Směna"}, tablePlannedWorkShift);
     }
 
@@ -337,7 +368,7 @@ public class SmenyController /*implements IModuleInteface */ {
     public ResultTableModel getModelTemplate() {
         return modelTemplate;
     }
-    
+
     public ResultTableModel getModelPlannedWorkShift() {
         return this.modelPlannedWorkShift;
     }

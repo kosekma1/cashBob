@@ -220,7 +220,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JTable" name="jTable1">
+            <Component class="javax.swing.JTable" name="jTableOverView">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Calibri" size="14" style="0"/>
@@ -331,7 +331,7 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jButtonCreateName1" pref="149" max="32767" attributes="1"/>
                       <Component id="jButtonCreateName2" alignment="0" pref="149" max="32767" attributes="1"/>
-                      <Component id="jButtonCreateName3" alignment="0" pref="149" max="32767" attributes="1"/>
+                      <Component id="jButtonLoginEmployee" alignment="0" pref="149" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -345,7 +345,7 @@
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jButtonCreateName2" min="-2" pref="60" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="jButtonCreateName3" min="-2" pref="60" max="-2" attributes="0"/>
+                  <Component id="jButtonLoginEmployee" min="-2" pref="60" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
@@ -376,7 +376,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCreateName2ActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="jButtonCreateName3">
+        <Component class="javax.swing.JButton" name="jButtonLoginEmployee">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/cz/cvut/fel/restauracefel/buttons/left-red.png"/>
@@ -385,7 +385,7 @@
             <Property name="horizontalAlignment" type="int" value="2"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCreateName3ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonLoginEmployeeActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>
