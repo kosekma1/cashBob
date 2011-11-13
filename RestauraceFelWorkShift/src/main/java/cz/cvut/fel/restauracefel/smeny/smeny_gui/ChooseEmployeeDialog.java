@@ -79,16 +79,11 @@ public class ChooseEmployeeDialog extends AbstractDialog {
 
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        jListEmployees.setFont(new java.awt.Font("Tahoma", 1, 18));
-        jListEmployees.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
+        jListEmployees.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         jListEmployees.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jListEmployees.setAlignmentX(2.0F);
         jListEmployees.setFixedCellHeight(50);
-        jListEmployees.setFixedCellWidth(200);
+        jListEmployees.setFixedCellWidth(400);
         jListEmployees.setFocusCycleRoot(true);
         jListEmployees.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
         jListEmployees.setSelectionBackground(javax.swing.UIManager.getDefaults().getColor("InternalFrame.inactiveTitleGradient"));

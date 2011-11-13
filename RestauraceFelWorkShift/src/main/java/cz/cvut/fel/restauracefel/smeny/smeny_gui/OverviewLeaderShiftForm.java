@@ -11,6 +11,7 @@ import cz.cvut.fel.restauracefel.library.service.ConfigParser;
 import cz.cvut.fel.restauracefel.library.service.EmptyListException;
 //import cz.cvut.fel.restauracefel.pokladna_service.ServiceFacade;
 import cz.cvut.fel.restauracefel.library.service.Validator;
+import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -405,6 +406,9 @@ public class OverviewLeaderShiftForm extends AbstractForm {
 
 private void jButtonCreateName1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateName1ActionPerformed
     try {
+        int rowNumber = jTableOverView.getSelectedRow();
+        String value = (String)jTableOverView.getValueAt(rowNumber, 2);
+        SmenyController.getInstance().showInformationMessage(value, "Hodnota pole");
         chooseOcuppyEmployeeDialog = new ChooseOcuppyEmployeeDialog(parent, true, jTextField);
         chooseOcuppyEmployeeDialog.setLocation(point);
         chooseOcuppyEmployeeDialog.setVisible(true);

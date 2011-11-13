@@ -5,6 +5,7 @@ import cz.cvut.fel.restauracefel.hibernate.Template;
 import cz.cvut.fel.restauracefel.hibernate.TemplateList;
 import cz.cvut.fel.restauracefel.hibernate.Typeworkshift;
 import cz.cvut.fel.restauracefel.hibernate.User;
+import cz.cvut.fel.restauracefel.hibernate.UserRole;
 import cz.cvut.fel.restauracefel.hibernate.Workshift;
 import cz.cvut.fel.restauracefel.smeny.smeny_gui.SmenyViewController;
 import cz.cvut.fel.restauracefel.smeny.smeny_main.ResultTableModel;
@@ -13,7 +14,6 @@ import java.io.FileNotFoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -150,28 +150,33 @@ public class SmenyController /*implements IModuleInteface */ {
             dataListForDelete[i] = (String) tableWorkShiftData[i][j];
         }
     }
-
+    /*
+     * Generate list of employees for WorkShiftPlanForm
+     */
     public void generateDataListEmployees() throws FileNotFoundException, NotBoundException, RemoteException {
-        List users = ServiceFacade.getInstance().getAllUsers();
+        List usersList = ServiceFacade.getInstance().getAllUsers();
         List rolesList = ServiceFacade.getInstance().getAllRoles();
-        //List userRole = ServiceFacade.getInstance().getUserRoleByUserId(id);
-        if (users == null || users.isEmpty()) {            
-            dataListEmployees = new String[0];
-        } else {
-            dataListEmployees = new String[users.size()];
-            int i = 0;
-            User userTemp = null;
-            for (Object o : users) {
-                userTemp = (User) o;                
-                dataListEmployees[i++] = userTemp.getFirstName() + " " + userTemp.getLastName();
+        List userRoleList = null;
 
-                /*for (Object obj : rolesList) {
-                Role role = (Role) obj;
-                if (role.getRoleId() == shift.getIdWorkshiftRole()) {
-                tableData[i][j++] = role.getName();
-                break;
-                }
-                }*/
+        if (usersList == null || usersList.isEmpty()) {
+            dataListEmployees = new String[1];
+            dataListEmployees[1] = "";
+        } else {
+            dataListEmployees = new String[usersList.size()];            
+            User userTemp = null;
+            String userRolesText = "(";
+            Role role = null;
+            int i = 0;
+            for (Object o : usersList) {
+                userTemp = (User) o;
+                userRoleList = ServiceFacade.getInstance().getUserRoleByUserId(userTemp.getUserId());                
+                for (Object obUserRole : userRoleList) {
+                    role = ((UserRole)obUserRole).getRole();
+                    userRolesText += role.getName() + ",";                                        
+                }                
+                userRolesText = userRolesText.substring(0, userRolesText.length()-1);//remove ending comma
+                dataListEmployees[i++] = userTemp.getFirstName() + " " + userTemp.getLastName() + " " + userRolesText + ")";
+                userRolesText = "(";                
             }
         }
     }

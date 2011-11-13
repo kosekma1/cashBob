@@ -86,7 +86,7 @@ public class ChooseShiftDialog extends AbstractDialog {
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jList1.setAlignmentX(2.0F);
         jList1.setFixedCellHeight(50);
-        jList1.setFixedCellWidth(200);
+        jList1.setFixedCellWidth(400);
         jList1.setFocusCycleRoot(true);
         jList1.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
         jList1.setSelectionBackground(javax.swing.UIManager.getDefaults().getColor("InternalFrame.inactiveTitleGradient"));
