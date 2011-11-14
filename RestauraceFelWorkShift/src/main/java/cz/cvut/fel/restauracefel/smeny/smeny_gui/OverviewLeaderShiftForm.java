@@ -62,6 +62,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         osf = this;
         this.parent = parent;
         this.statusBar = bar;
+        loadAllData();
         initComponents();
         initMyComponents();
         this.addMouseMotionListener(new MouseAdapter() {
@@ -124,6 +125,11 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         statusBar.setMessage("x: " + this.x + " y: " + this.y);
     }
 
+    private void loadAllData() throws FileNotFoundException, RemoteException, NotBoundException{
+        SmenyController.getInstance().generateTableOverviewLeader();
+        //jTableOverView.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
+    }
+    
     /**
      * Metoda kontrolujici spravnost vyplnenych udaju.
      *
@@ -274,21 +280,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         );
 
         jTableOverView.setFont(new java.awt.Font("Calibri", 0, 14));
-        jTableOverView.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"14.4.2011 16:00-22:00", "číšník", "Karel, David", "", ""},
-                {"14.4.2011 16:00-22:00", "barman", null, "Eda", "10.4.2011, Eda (potvrdil)"},
-                {"16.4.2011 16:00-22:00", "kuchař", "Robert", "Hedvika", "15.4.2011, Hedvika, žádost o zrušení"},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "Datum a čas", "Typ směny", "Nahlášení", "Obsazení", "Potvrzení"
-            }
-        ));
+        jTableOverView.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
         jTableOverView.setRowHeight(25);
         jScrollPane1.setViewportView(jTableOverView);
 
@@ -406,7 +398,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
 
 private void jButtonCreateName1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateName1ActionPerformed
     try {
-        int rowNumber = jTableOverView.getSelectedRow();
+        int rowNumber = jTableOverView.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny
         String value = (String)jTableOverView.getValueAt(rowNumber, 2);
         SmenyController.getInstance().showInformationMessage(value, "Hodnota pole");
         chooseOcuppyEmployeeDialog = new ChooseOcuppyEmployeeDialog(parent, true, jTextField);
