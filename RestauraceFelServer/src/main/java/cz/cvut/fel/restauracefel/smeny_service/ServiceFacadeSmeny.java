@@ -1,5 +1,6 @@
 package cz.cvut.fel.restauracefel.smeny_service;
 
+import cz.cvut.fel.restauracefel.hibernate.Attendance;
 import cz.cvut.fel.restauracefel.hibernate.Typeworkshift;
 import cz.cvut.fel.restauracefel.hibernate.Workshift;
 import cz.cvut.fel.restauracefel.library.service.ConfigParser;
@@ -7,6 +8,7 @@ import cz.cvut.fel.restauracefel.hibernate.Role;
 import cz.cvut.fel.restauracefel.hibernate.Template;
 import cz.cvut.fel.restauracefel.hibernate.User;
 import cz.cvut.fel.restauracefel.hibernate.UserRole;
+import cz.cvut.fel.restauracefel.server.service.controllers.AttendanceController;
 import cz.cvut.fel.restauracefel.server.service.controllers.RoleController;
 import cz.cvut.fel.restauracefel.server.service.controllers.ShiftTypeController;
 import cz.cvut.fel.restauracefel.server.service.controllers.TemplateController;
@@ -135,10 +137,31 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
     }
     
      @Override
-    public List getAllActiveWorkShifts(Date dateFrom) throws RemoteException {
-        return Workshift.getAllActiveWorkShifts(dateFrom);
+    public List getAllActiveWorkShifts(Date dateFrom) throws RemoteException {        
+        return WorkShiftController.getInstance().getAllActiveWorkShifts(dateFrom);
     }
     
+    //ATTENDANCE      
+    @Override
+    public void createNewAttendance(int userId, int workShiftId) throws RemoteException {
+        AttendanceController.getInstance().createNewAttendance(userId, workShiftId);
+    }
+
+    @Override
+    public List getAttendaceByWorkShiftId(int workShiftId) throws RemoteException {
+        return AttendanceController.getInstance().findByWorkShiftId(workShiftId);
+    }
+            
+    @Override
+    public Attendance getAttendanceById(int attendanceId) throws RemoteException {
+        return AttendanceController.getInstance().findById(attendanceId);
+    }
+
+    @Override
+    public void deleteAttendanceById(int attendanceId) throws RemoteException {
+        AttendanceController.getInstance().deleteById(attendanceId);
+    }          
+     
     
      //USER
     @Override
@@ -286,5 +309,5 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
     public boolean isUserRole(int userId, int roleId) throws RemoteException {
         return UserRoleController.getInstance().isUserRole(userId, roleId);
     }
- 
+   
 }

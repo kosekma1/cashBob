@@ -4,7 +4,7 @@
 <hibernate-mapping>
   <class catalog="db_rest_fel" name="cz.cvut.fel.restauracefel.hibernate.Attendance" table="attendance">
     <id name="idAttendance" type="int">
-      <column name="id_attendance"/>
+      <column name="idAttendance"/>
       <generator class="native"/>
     </id>
     <property name="idUser" type="int">

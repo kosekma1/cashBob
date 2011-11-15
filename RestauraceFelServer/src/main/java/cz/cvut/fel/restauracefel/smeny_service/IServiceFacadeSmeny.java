@@ -1,5 +1,6 @@
 package cz.cvut.fel.restauracefel.smeny_service;
 
+import cz.cvut.fel.restauracefel.hibernate.Attendance;
 import cz.cvut.fel.restauracefel.hibernate.Role;
 import cz.cvut.fel.restauracefel.hibernate.Template;
 import cz.cvut.fel.restauracefel.hibernate.User;
@@ -42,6 +43,10 @@ public interface IServiceFacadeSmeny extends Remote  {
     public List getWorkshiftByTypeWorkshiftId(int idTypeWorkshift) throws RemoteException;
     public List getAllActiveWorkShifts(Date dateFrom) throws RemoteException;
     
+    public void createNewAttendance(int userId, int workShiftId) throws RemoteException;
+    public List getAttendaceByWorkShiftId(int workShiftId) throws RemoteException;
+    public Attendance getAttendanceById(int attendanceId)throws RemoteException;
+    public void deleteAttendanceById(int attendanceId)throws RemoteException;
     
     //USER methods
     public List getAllUsers() throws RemoteException;
