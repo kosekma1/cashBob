@@ -278,7 +278,7 @@
               <Group type="102" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="jButtonCreateName1" pref="149" max="32767" attributes="1"/>
+                      <Component id="jButtonOccupy" pref="149" max="32767" attributes="1"/>
                       <Component id="jButtonCreateName2" alignment="0" pref="149" max="32767" attributes="1"/>
                       <Component id="jButtonLoginEmployee" alignment="0" pref="149" max="32767" attributes="1"/>
                   </Group>
@@ -290,7 +290,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
-                  <Component id="jButtonCreateName1" min="-2" pref="60" max="-2" attributes="0"/>
+                  <Component id="jButtonOccupy" min="-2" pref="60" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jButtonCreateName2" min="-2" pref="60" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -301,7 +301,7 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="jButtonCreateName1">
+        <Component class="javax.swing.JButton" name="jButtonOccupy">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/cz/cvut/fel/restauracefel/buttons/left-red.png"/>
@@ -310,7 +310,7 @@
             <Property name="horizontalAlignment" type="int" value="2"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCreateName1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonOccupyActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButtonCreateName2">

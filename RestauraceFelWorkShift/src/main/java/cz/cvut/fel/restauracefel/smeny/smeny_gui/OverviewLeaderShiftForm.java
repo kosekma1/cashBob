@@ -1,5 +1,6 @@
 package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 
+import cz.cvut.fel.restauracefel.hibernate.Attendance;
 import cz.cvut.fel.restauracefel.hibernate.User;
 import java.awt.Insets;
 import java.awt.Point;
@@ -12,12 +13,14 @@ import cz.cvut.fel.restauracefel.library.service.EmptyListException;
 //import cz.cvut.fel.restauracefel.pokladna_service.ServiceFacade;
 import cz.cvut.fel.restauracefel.library.service.Validator;
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
+import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -41,6 +44,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
     private ChooseEmployeeDialog chooseEmployeeDialog = null;
     private ChooseOcuppyEmployeeDialog chooseOcuppyEmployeeDialog = null;
     private javax.swing.JTextField jTextField = new JTextField(); //jen pracovni bez ucelu
+    
     private StatusBar statusBar = null;
     private MainFrame parent = null;
     private Point point = new Point(550, 210);
@@ -201,7 +205,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableOverView = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
-        jButtonCreateName1 = new javax.swing.JButton();
+        jButtonOccupy = new javax.swing.JButton();
         jButtonCreateName2 = new javax.swing.JButton();
         jButtonLoginEmployee = new javax.swing.JButton();
 
@@ -303,12 +307,12 @@ public class OverviewLeaderShiftForm extends AbstractForm {
 
         jPanel3.setOpaque(false);
 
-        jButtonCreateName1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
-        jButtonCreateName1.setText("Obsadit");
-        jButtonCreateName1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jButtonCreateName1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonOccupy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
+        jButtonOccupy.setText("Obsadit");
+        jButtonOccupy.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonOccupy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCreateName1ActionPerformed(evt);
+                jButtonOccupyActionPerformed(evt);
             }
         });
 
@@ -337,7 +341,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonCreateName1, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+                    .addComponent(jButtonOccupy, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
                     .addComponent(jButtonCreateName2, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
                     .addComponent(jButtonLoginEmployee, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
                 .addContainerGap())
@@ -346,7 +350,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(49, 49, 49)
-                .addComponent(jButtonCreateName1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonOccupy, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonCreateName2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -396,24 +400,47 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         // TODO add your handling code here:
     }//GEN-LAST:event_jButton3ActionPerformed
 
-private void jButtonCreateName1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateName1ActionPerformed
+private void jButtonOccupyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOccupyActionPerformed
     try {
-        int rowNumber = jTableOverView.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny
-        String value = (String)jTableOverView.getValueAt(rowNumber, 2);
-        SmenyController.getInstance().showInformationMessage(value, "Hodnota pole");
+        ServiceFacade.getInstance().deleteAttendanceById(1);
+        List l = ServiceFacade.getInstance().getAttendaceByWorkShiftId(22);
+        SmenyController.getInstance().showInformationMessage("By id workshift " + l.size(), "Info");
+        Attendance att = ServiceFacade.getInstance().getAttendanceById(4);        
+        SmenyController.getInstance().showInformationMessage(att.getIdAttendance() + " " + att.getIdUser(), "Info");
+        /*int rowNumber = jTableOverView.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny        
+        String value = (String)jTableOverView.getValueAt(rowNumber, 2);        
         chooseOcuppyEmployeeDialog = new ChooseOcuppyEmployeeDialog(parent, true, jTextField);
         chooseOcuppyEmployeeDialog.setLocation(point);
-        chooseOcuppyEmployeeDialog.setVisible(true);
-    } catch (EmptyListException ex) {
-        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+        chooseOcuppyEmployeeDialog.setVisible(true);*/     
     } catch (RemoteException ex) {
-        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+        printError(ex);
+        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);        
     } catch (NotBoundException ex) {
+        printError(ex);
         Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
     } catch (FileNotFoundException ex) {
+        printError(ex);
         Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (Exception ex) {
+        printError(ex);
     }
-}//GEN-LAST:event_jButtonCreateName1ActionPerformed
+}//GEN-LAST:event_jButtonOccupyActionPerformed
+
+public void printError(Exception ex){
+    try {
+                
+                PrintWriter vystup = new PrintWriter(new FileWriter("log-chyb.txt"));
+                StackTraceElement[] el = ex.getStackTrace();
+                for (StackTraceElement els : el) {
+                    vystup.println(els.toString());
+                }
+                vystup.println(ex.getMessage());
+                vystup.close();                  
+                
+            } catch (IOException ex1) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+}
 
 private void jButtonCreateName2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateName2ActionPerformed
 // TODO add your handling code here:
@@ -421,7 +448,9 @@ private void jButtonCreateName2ActionPerformed(java.awt.event.ActionEvent evt) {
 
 private void jButtonLoginEmployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoginEmployeeActionPerformed
     try {
-        chooseEmployeeDialog = new ChooseEmployeeDialog(parent, true, jTableOverView);
+        int rowNumber = jTableOverView.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny        
+        
+        chooseEmployeeDialog = new ChooseEmployeeDialog(parent, true, rowNumber);
         chooseEmployeeDialog.setLocation(point);
         chooseEmployeeDialog.setVisible(true);
     } catch (EmptyListException ex) {
@@ -459,9 +488,9 @@ private void jButtonLoginEmployeeActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButtonCreateName1;
     private javax.swing.JButton jButtonCreateName2;
     private javax.swing.JButton jButtonLoginEmployee;
+    private javax.swing.JButton jButtonOccupy;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel8;

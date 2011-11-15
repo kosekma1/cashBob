@@ -54,10 +54,11 @@ public class SmenyController /*implements IModuleInteface */ {
     private ResultTableModel modelPlannedWorkShift = null;
     //Users
     private String[] dataListEmployees = null; //for ChooseEmployeeDialog
-    
+    private int[] userIds = null;
     //Leader overview
     private Object[][] tableWorkShiftOverview = null;
     private ResultTableModel modelOverviewLeaderWorkShift = null;
+    private int[] workShiftIds = null; //store workshift id`s that are viewed in table
 
     public SmenyController() {
         view = SmenyViewController.getInstance();
@@ -168,10 +169,11 @@ public class SmenyController /*implements IModuleInteface */ {
             dataListEmployees[1] = "";
         } else {
             dataListEmployees = new String[usersList.size()];
+            userIds = new int[usersList.size()];
             User userTemp = null;
             String userRolesText = "(";
             Role role = null;
-            int i = 0;
+            int i = 0, j = 0;
             for (Object o : usersList) {
                 userTemp = (User) o;
                 userRoleList = ServiceFacade.getInstance().getUserRoleByUserId(userTemp.getUserId());
@@ -181,6 +183,7 @@ public class SmenyController /*implements IModuleInteface */ {
                 }
                 userRolesText = userRolesText.substring(0, userRolesText.length() - 1);//remove ending comma
                 dataListEmployees[i++] = userTemp.getFirstName() + " " + userTemp.getLastName() + " " + userRolesText + ")";
+                userIds[j++] = userTemp.getUserId();
                 userRolesText = "(";
             }
         }
@@ -367,36 +370,53 @@ public class SmenyController /*implements IModuleInteface */ {
                 tableWorkShiftOverview[0][i] = "";
             }
         } else {
-            tableWorkShiftOverview = new Object[workShifts.size()][columns];            
+            tableWorkShiftOverview = new Object[workShifts.size()][columns];
             Workshift workShift = null;
-            int i = 0, j = 0;
+            workShiftIds = new int[workShifts.size()];
+
+            int i = 0, j = 0, k = 0;
             List typeWorkshifts = ServiceFacade.getInstance().getTypeWorkShifts();
             Typeworkshift typeWorkShift = null;
             for (Object o : workShifts) { //set Date of planned workshift
-                workShift = (Workshift) o;                               
+                workShift = (Workshift) o;
                 int idTypeWorkShift = workShift.getIdTypeWorkshift();
                 for (Object ot : typeWorkshifts) { //set name of Workshift
-                    typeWorkShift = (Typeworkshift) ot;                     
-                    if (typeWorkShift.getIdTypeWorkshift() == idTypeWorkShift) {                        
+                    typeWorkShift = (Typeworkshift) ot;
+                    if (typeWorkShift.getIdTypeWorkshift() == idTypeWorkShift) {
                         tableWorkShiftOverview[i][j++] = sdf.format(workShift.getDateShift()) + " " + typeWorkShift.getFromTime() + "-" + typeWorkShift.getToTime();
                         tableWorkShiftOverview[i][j++] = typeWorkShift.getName();
                         break;
                     }
-                }                
+                }
                 tableWorkShiftOverview[i][j++] = "Přihlášení uživatelé"; //TODO - nacist uzivatele z tabulky attendance
-                tableWorkShiftOverview[i][j++] = workShift.getIdUser()==null ? "" : workShift.getIdUser() ; //TODO - premenit na jmeno uzivatele, ktery je obsazeny
-                tableWorkShiftOverview[i][j++] = workShift.getUserSubmit()==null ? "" : workShift.getUserSubmit(); //TODO - premenit na jmeno uzivatele, ktery je obsazeny
+                tableWorkShiftOverview[i][j++] = workShift.getIdUser() == null ? "" : workShift.getIdUser(); //TODO - premenit na jmeno uzivatele, ktery je obsazeny
+                tableWorkShiftOverview[i][j++] = workShift.getUserSubmit() == null ? "" : workShift.getUserSubmit(); //TODO - premenit na jmeno uzivatele, ktery je obsazeny
+
+                workShiftIds[k++] = workShift.getIdWorkshift();
                 j = 0;
                 i++;
             }
         }
         modelOverviewLeaderWorkShift = new ResultTableModel(new String[]{"Datum a čas", "Typ směny", "Nahlášení", "Obsazení", "Potvrzení"}, tableWorkShiftOverview);
     }
-    
-    public ResultTableModel getModelOverviewWorkShift(){
+
+    /**
+     * Save user attendance to workshift. (to table Attendance)
+     * @param userId
+     * @param workShiftId 
+     */
+    public void saveUserToWorkShift(int userIndexId, int workShiftIndexId) throws FileNotFoundException, NotBoundException, RemoteException {
+        int userId = userIds[userIndexId];
+        int workShiftId = this.workShiftIds[workShiftIndexId];
+        this.showInformationMessage("User id = " + userId + " / Worksfhit id = " + workShiftId, "Test");
+        ServiceFacade.getInstance().createNewAttendance(userId, workShiftId);
+        
+    }
+
+    public ResultTableModel getModelOverviewWorkShift() {
         return this.modelOverviewLeaderWorkShift;
     }
-    
+
     public String[] getDataListTemplates() {
         return this.dataListTemplates;
     }
@@ -602,10 +622,10 @@ public class SmenyController /*implements IModuleInteface */ {
             for (int i = 0; i < table.length; i++) {
                 if (table[i][j] != null) {
                     tws = ServiceFacade.getInstance().findTypeworkshiftByName((String) table[i][j]);
-                    idTypeWorkShift = tws.getIdTypeWorkshift();                    
+                    idTypeWorkShift = tws.getIdTypeWorkshift();
                     //save workshift to each day
                     do {
-                        tempDate = new Date(dateFromMills);                        
+                        tempDate = new Date(dateFromMills);
                         ServiceFacade.getInstance().createNewWorkshift(tempDate, idTypeWorkShift);
                         dateFromMills += DAY_IN_MILLISECONDS;
                     } while (dateFromMills <= dateToMills);
