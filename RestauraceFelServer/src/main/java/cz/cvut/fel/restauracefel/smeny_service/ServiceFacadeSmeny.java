@@ -25,8 +25,9 @@ import java.util.Date;
 import java.util.List;
 
 /**
- *
- * @author kosekm
+ * Implementation of all methods declared in interface for RMI communication.
+ * 
+ * @author Martin Kosek
  */
 public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceFacadeSmeny {
 
@@ -45,7 +46,7 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
         String name = "ServiceFacadeSmeny";
         ConfigParser config = new ConfigParser();
         InetAddress inetAddress = InetAddress.getByName(config.getServerIP());
-        //Stub
+
         IServiceFacadeSmeny facade = ServiceFacadeSmeny.getInstance();
         reg.rebind(name, facade);
         System.out.println("Servisni fasada pro modul SMENY zaregistrovana pod jmenem \"ServiceFacadeSmeny\"");
@@ -53,7 +54,6 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
 
     }
 
-    //Vraci instanci tridy ServiceFacadeManager
     public static ServiceFacadeSmeny getInstance() throws RemoteException {
         if (instance == null) {
             instance = new ServiceFacadeSmeny();
@@ -64,7 +64,6 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
     //TYPEWORKSHIFT
     @Override
     public List getTypeWorkShifts() /* throws RemoteException */ {
-        //return SmenyController.getInstance().getTypeWorkShifts();
         return ShiftTypeController.getInstance().getTypeWorkShifts();
 
     }
@@ -77,43 +76,43 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
     @Override
     public void createNewTypewWorkShift(Typeworkshift typeWorkshift) {
         ShiftTypeController.getInstance().createWorkshiftType(typeWorkshift);
-    }    
+    }
 
     @Override
     public Typeworkshift findTypeworkshiftByName(String name) throws RemoteException {
         return ShiftTypeController.getInstance().findTypeworkshiftByName(name);
     }
-    
+
     @Override
     public Typeworkshift getTypeWorkShiftById(int idTypeWorkshift) throws RemoteException {
         return ShiftTypeController.getInstance().getTypeWorkShiftById(idTypeWorkshift);
     }
-    
+
     //TEMPLATES
     @Override
-    public void creatNewTemplate(Template template)throws RemoteException {
+    public void creatNewTemplate(Template template) throws RemoteException {
         TemplateController.getInstance().createTemplate(template);
     }
-    
+
     @Override
     public Template findTemplateByName(String name) throws RemoteException {
         return TemplateController.getInstance().findTemplateByName(name);
     }
-    
+
     @Override
     public void createNewTemplateList(int idTemplate, int idTypeWorkShift) throws RemoteException {
         TemplateController.getInstance().createNewTemplateList(idTemplate, idTypeWorkShift);
     }
-    
+
     @Override
-    public List getTemplateListByTemplateId(int idTemplate) throws RemoteException {        
+    public List getTemplateListByTemplateId(int idTemplate) throws RemoteException {
         return TemplateController.getInstance().getTemplateListByTemplateId(idTemplate);
     }
-    
+
     @Override
     public List getTemplates() throws RemoteException {
         return TemplateController.getInstance().getTemplates();
-    }  
+    }
 
     //WORKSHIFTS
     @Override
@@ -135,12 +134,17 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
     public List getWorkshiftByTypeWorkshiftId(int idTypeWorkshift) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-    
-     @Override
-    public List getAllActiveWorkShifts(Date dateFrom) throws RemoteException {        
+
+    @Override
+    public List getAllActiveWorkShifts(Date dateFrom) throws RemoteException {
         return WorkShiftController.getInstance().getAllActiveWorkShifts(dateFrom);
     }
-    
+
+    @Override
+    public boolean updateWorkshift(int workShiftId, Integer userId) throws RemoteException {
+        return WorkShiftController.getInstance().updateWorkshift(workShiftId, userId);
+    }
+
     //ATTENDANCE      
     @Override
     public void createNewAttendance(int userId, int workShiftId) throws RemoteException {
@@ -151,7 +155,7 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
     public List getAttendaceByWorkShiftId(int workShiftId) throws RemoteException {
         return AttendanceController.getInstance().findByWorkShiftId(workShiftId);
     }
-            
+
     @Override
     public Attendance getAttendanceById(int attendanceId) throws RemoteException {
         return AttendanceController.getInstance().findById(attendanceId);
@@ -160,10 +164,14 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
     @Override
     public void deleteAttendanceById(int attendanceId) throws RemoteException {
         AttendanceController.getInstance().deleteById(attendanceId);
-    }          
-     
-    
-     //USER
+    }
+
+    @Override
+    public Attendance getAttendaceByWorkShiftAndUser(int workShiftId, int userId) throws RemoteException {
+        return AttendanceController.getInstance().findByWorkShiftAndUser(workShiftId, userId);
+    }
+
+    //USER
     @Override
     public List getAllUsers() throws RemoteException {
         return UserController.getInstance().getAllUsers();
@@ -269,8 +277,8 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
     public Role getRoleByName(String name) throws RemoteException {
         return RoleController.getInstance().getRoleByName(name);
     }
-    
-     //USERROLE
+
+    //USERROLE
     @Override
     public boolean createUserRole(int userId, int roleId) throws RemoteException {
         return UserRoleController.getInstance().createUserRole(userId, roleId);
@@ -309,5 +317,4 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
     public boolean isUserRole(int userId, int roleId) throws RemoteException {
         return UserRoleController.getInstance().isUserRole(userId, roleId);
     }
-   
 }

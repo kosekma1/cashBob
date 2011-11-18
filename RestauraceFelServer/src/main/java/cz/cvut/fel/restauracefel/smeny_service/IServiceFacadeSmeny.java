@@ -42,11 +42,14 @@ public interface IServiceFacadeSmeny extends Remote  {
     public List getWorkshiftByUserId(int idUser) throws RemoteException;
     public List getWorkshiftByTypeWorkshiftId(int idTypeWorkshift) throws RemoteException;
     public List getAllActiveWorkShifts(Date dateFrom) throws RemoteException;
+    public boolean updateWorkshift(int workShiftId, Integer userId) throws RemoteException;
     
+    //ATTENDANCE
     public void createNewAttendance(int userId, int workShiftId) throws RemoteException;
     public List getAttendaceByWorkShiftId(int workShiftId) throws RemoteException;
     public Attendance getAttendanceById(int attendanceId)throws RemoteException;
     public void deleteAttendanceById(int attendanceId)throws RemoteException;
+    public Attendance getAttendaceByWorkShiftAndUser(int workShiftId, int userId) throws RemoteException;
     
     //USER methods
     public List getAllUsers() throws RemoteException;

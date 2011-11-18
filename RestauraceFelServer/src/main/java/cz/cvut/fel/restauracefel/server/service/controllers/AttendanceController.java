@@ -1,14 +1,12 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fel.restauracefel.server.service.controllers;
 
 import cz.cvut.fel.restauracefel.hibernate.Attendance;
 import java.util.List;
 
 /**
- *
+ * Controller for work with Attendance hibernate entity. It is used by
+ * ServiceFacade.
+ * 
  * @author Martin
  */
 public class AttendanceController {
@@ -35,11 +33,15 @@ public class AttendanceController {
     }
     
     public Attendance findById(int attendanceId){
-        return Attendance.findById(attendanceId);
+        return (Attendance)Attendance.findById("Attendance", "idAttendance", attendanceId);
     }
     
     public void deleteById(int attendanceId){
-        Attendance att = Attendance.findById(attendanceId);
+        Attendance att = findById(attendanceId);        
         att.delete();        
+    }
+    
+    public Attendance findByWorkShiftAndUser(int workShiftId, int userId)  {
+        return Attendance.findByWorkShiftAndUser(workShiftId, userId);
     }
 }

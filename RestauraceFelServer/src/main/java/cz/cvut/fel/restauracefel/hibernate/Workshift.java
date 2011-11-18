@@ -2,7 +2,6 @@ package cz.cvut.fel.restauracefel.hibernate;
 // Generated 17.7.2011 22:33:15 by Hibernate Tools 3.2.1.GA
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.hibernate.Query;
@@ -132,6 +131,10 @@ public class Workshift extends DBEntity implements java.io.Serializable {
      */
     public void setIsDeleted(int isDeleted) {
         this.isDeleted = isDeleted;
+    }
+    
+    public void update() {
+        update(this);
     }
 
     public static Workshift findByName(String name) {

@@ -1,17 +1,14 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fel.restauracefel.server.service.controllers;
 
 import cz.cvut.fel.restauracefel.hibernate.Workshift;
-import cz.cvut.fel.restauracefel.smeny_service.ServiceFacadeSmeny;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 /**
- *
+ * Controller for work with Workshift hibernate entity. It is used by
+ * ServiceFacade.
+ * 
  * @author Martin
  */
 public class WorkShiftController {
@@ -50,5 +47,13 @@ public class WorkShiftController {
     
     public List getAllActiveWorkShifts(Date dateFrom) {
         return Workshift.getAllActiveWorkShifts(dateFrom);
+    }
+
+    public boolean updateWorkshift(int workShiftId, Integer userId) {
+        Workshift ws = Workshift.findByIdNotDeleted(workShiftId);
+        if(ws==null) return false;
+        ws.setIdUser(userId);     
+        ws.update();
+        return true;
     }
 }
