@@ -3,50 +3,53 @@ package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 import java.io.FileNotFoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import javax.swing.JTextField;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import cz.cvut.fel.restauracefel.library.service.EmptyListException;
-//import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
+import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
+import javax.swing.JTable;
 
 /**
- * Trida vytvarejici dialog pro vyber stolu, k nemuz bude ucet nalezet.
+ * Trida vytvarejici dialog pro vyber prihlaseneho uzivatele, ktery bude obsazen ke smene.
  *
- * @author Tomas Hnizdil
+ * @author Martin Kosek
  */
 public class ChooseOcuppyEmployeeDialog extends AbstractDialog {
-
-    private JTextField target = null;
-
+    
+    private JTable table = null;
+    private int rowNumber = 0;
+    
     /**
-     * Konstruktor tridy ChooseTableDialog
+     * Konstruktor tridy ChooseOcuppyEmployeeDialog
      *
      * @param parent instance tridy MainFrame jenz vytvorila tento formular
      * @param modal
-     * @param target textove vstupni pole, do ktereho se bude zapisovat vysledek
+     * @param rowNumber radek, ktery vybral uzivatel z tabulky smen
+     * @param table Odkaz na tabulku se smenami.
      *
      * @throws java.rmi.RemoteException
      * @throws java.rmi.NotBoundException
      * @throws java.io.FileNotFoundException
      */
-    public ChooseOcuppyEmployeeDialog(MainFrame parent, boolean modal, JTextField target) throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {
+    public ChooseOcuppyEmployeeDialog(MainFrame parent, boolean modal, int rowNumber, JTable table) throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {
         super(parent, modal);
-        this.target = target;
+        this.table = table;
+        this.rowNumber = rowNumber;
         initComponents();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         refresh();
     }
 
     /**
-     * Metoda provadi aktualizaci seznamu vsech stolu.
+     * Metoda provadi aktualizaci seznamu vsech prihlasenych uzivatelu
      *
      * @throws java.rmi.RemoteException
      * @throws java.rmi.NotBoundException
      * @throws java.io.FileNotFoundException
      */
-    protected void refresh() throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {
-        //String[] tables = ServiceFacade.getInstance().getTableNames();
-        //if (tables==null) throw new EmptyListException("Žádné stoly", "V systému nejsou momentálně evidovány žádné stoly.");
-       String[] tables = new String[]{"První směna", "Druhá směna", "Třetí směna", "Čtvrtá směna", "Pátá směna", "Šestá směna", "Sedmá směna", "Osmá směna"};
-        jList1.setListData(tables);
+    protected void refresh() throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {       
+       SmenyController.getInstance().generateDataListLoginUsers(SmenyController.getInstance().getWorkShiftIdFromLeaderViewTable(rowNumber));        
+       jList1.setListData(SmenyController.getInstance().getDataListLoginUsers());
     }
 
     /** This method is called from within the constructor to
@@ -84,7 +87,7 @@ public class ChooseOcuppyEmployeeDialog extends AbstractDialog {
         jList1.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         jList1.setAlignmentX(2.0F);
         jList1.setFixedCellHeight(50);
-        jList1.setFixedCellWidth(200);
+        jList1.setFixedCellWidth(400);
         jList1.setFocusCycleRoot(true);
         jList1.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
         jList1.setSelectionBackground(javax.swing.UIManager.getDefaults().getColor("InternalFrame.inactiveTitleGradient"));
@@ -157,15 +160,30 @@ public class ChooseOcuppyEmployeeDialog extends AbstractDialog {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
+    
+    /**
+     * Close the window.
+     * @param evt 
+     */
     private void jButtonBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBackActionPerformed
-        target.setText("");
+        
         dispose();
     }//GEN-LAST:event_jButtonBackActionPerformed
 
     private void clicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clicked
-        // TODO add your handling code here:
-        target.setText((String) jList1.getSelectedValue());
+        int userIndexId = jList1.getSelectedIndex();        
+        int workShiftId = SmenyController.getInstance().getWorkShiftIdFromLeaderViewTable(rowNumber);        
+        try {            
+            SmenyController.getInstance().saveOccupyUser(userIndexId, workShiftId);
+            SmenyController.getInstance().generateTableOverviewLeader();
+            table.setModel(SmenyController.getInstance().getModelOverviewLeaderWorkShift());                        
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ChooseOcuppyEmployeeDialog.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            Logger.getLogger(ChooseOcuppyEmployeeDialog.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(ChooseOcuppyEmployeeDialog.class.getName()).log(Level.SEVERE, null, ex);
+        }
         dispose();
     }//GEN-LAST:event_clicked
 

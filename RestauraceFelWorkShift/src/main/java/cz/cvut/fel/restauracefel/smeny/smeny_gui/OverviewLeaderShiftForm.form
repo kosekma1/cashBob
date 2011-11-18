@@ -1,10 +1,6 @@
 <?xml version="1.1" encoding="UTF-8" ?>
 
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
-  <NonVisualComponents>
-    <Component class="javax.swing.ButtonGroup" name="buttonGroup1">
-    </Component>
-  </NonVisualComponents>
   <Properties>
     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
       <Color blue="e2" green="ef" id="CheckBox.light" palette="3" red="f1" type="palette"/>
@@ -226,7 +222,7 @@
                   <Font name="Calibri" size="14" style="0"/>
                 </Property>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="SmenyController.getInstance().getModelOverviewWorkShift()" type="code"/>
+                  <Connection code="SmenyController.getInstance().getModelOverviewLeaderWorkShift()" type="code"/>
                 </Property>
                 <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
                   <TableColumnModel selectionModel="0">
@@ -279,7 +275,7 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jButtonOccupy" pref="149" max="32767" attributes="1"/>
-                      <Component id="jButtonCreateName2" alignment="0" pref="149" max="32767" attributes="1"/>
+                      <Component id="jButtonCancelOccupy" alignment="0" pref="149" max="32767" attributes="1"/>
                       <Component id="jButtonLoginEmployee" alignment="0" pref="149" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -292,7 +288,7 @@
                   <EmptySpace min="-2" pref="49" max="-2" attributes="0"/>
                   <Component id="jButtonOccupy" min="-2" pref="60" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="jButtonCreateName2" min="-2" pref="60" max="-2" attributes="0"/>
+                  <Component id="jButtonCancelOccupy" min="-2" pref="60" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jButtonLoginEmployee" min="-2" pref="60" max="-2" attributes="0"/>
                   <EmptySpace max="32767" attributes="0"/>
@@ -313,7 +309,7 @@
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonOccupyActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="jButtonCreateName2">
+        <Component class="javax.swing.JButton" name="jButtonCancelOccupy">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/cz/cvut/fel/restauracefel/buttons/left-red.png"/>
@@ -322,7 +318,7 @@
             <Property name="horizontalAlignment" type="int" value="2"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCreateName2ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonCancelOccupyActionPerformed"/>
           </Events>
         </Component>
         <Component class="javax.swing.JButton" name="jButtonLoginEmployee">

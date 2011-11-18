@@ -5,52 +5,49 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JTextField;
 import cz.cvut.fel.restauracefel.library.service.EmptyListException;
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
 import javax.swing.JTable;
-//import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
 
 /**
- * Trida vytvarejici dialog pro vyber stolu, k nemuz bude ucet nalezet.
+ * Create dialog for choose User/Employee that will be login to workshift.
  *
- * @author Tomas Hnizdil
+ * @author Martin Kosek
  */
 public class ChooseEmployeeDialog extends AbstractDialog {
 
     private int rowNumber; //index of saved userId in table
+    private JTable table;
 
     /**
-     * Konstruktor tridy ChooseTableDialog
+     * Konstruktor tridy ChooseEmployeeDialog
      *
      * @param parent instance tridy MainFrame jenz vytvorila tento formular
-     * @param modal
-     * @param target textove vstupni pole, do ktereho se bude zapisovat vysledek
-     *
+     * @param modal     
+     * @param rowNumber cislo zvoleneho radku z tabulky se smenami
+     * @param table odkaz na tabulku se smenami
+     * 
      * @throws java.rmi.RemoteException
      * @throws java.rmi.NotBoundException
      * @throws java.io.FileNotFoundException
      */
-    public ChooseEmployeeDialog(MainFrame parent, boolean modal, int rowNumber) throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {
+    public ChooseEmployeeDialog(MainFrame parent, boolean modal, int rowNumber, JTable table) throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {
         super(parent, modal);
         this.rowNumber = rowNumber;
+        this.table = table;
         initComponents();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         refresh();
     }
 
     /**
-     * Metoda provadi aktualizaci seznamu vsech stolu.
+     * Metoda provadi aktualizaci seznamu vsech vsech zamestnancu.
      *
      * @throws java.rmi.RemoteException
      * @throws java.rmi.NotBoundException
      * @throws java.io.FileNotFoundException
      */
     protected void refresh() throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {
-        //String[] tables = ServiceFacade.getInstance().getTableNames();
-        //if (tables==null) throw new EmptyListException("Žádné stoly", "V systému nejsou momentálně evidovány žádné stoly.");
-        //String[] list = new String[]{"První směna", "Druhá směna", "Třetí směna", "Čtvrtá směna", "Pátá směna", "Šestá směna", "Sedmá směna", "Osmá směna"};
-
         SmenyController.getInstance().generateDataListEmployees();
         jListEmployees.setListData(SmenyController.getInstance().getDataListEmployees());
     }
@@ -163,11 +160,12 @@ public class ChooseEmployeeDialog extends AbstractDialog {
         dispose();
     }//GEN-LAST:event_jButtonBackActionPerformed
 
-    
     private void clicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clicked
         int userIndexId = jListEmployees.getSelectedIndex();
         try {
             SmenyController.getInstance().saveUserToWorkShift(userIndexId, this.rowNumber);
+            SmenyController.getInstance().generateTableOverviewLeader();
+            table.setModel(SmenyController.getInstance().getModelOverviewLeaderWorkShift());
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ChooseEmployeeDialog.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NotBoundException ex) {

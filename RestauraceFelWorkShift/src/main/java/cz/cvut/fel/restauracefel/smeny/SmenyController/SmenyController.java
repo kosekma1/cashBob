@@ -1,5 +1,6 @@
 package cz.cvut.fel.restauracefel.smeny.SmenyController;
 
+import cz.cvut.fel.restauracefel.hibernate.Attendance;
 import cz.cvut.fel.restauracefel.hibernate.Role;
 import cz.cvut.fel.restauracefel.hibernate.Template;
 import cz.cvut.fel.restauracefel.hibernate.TemplateList;
@@ -22,7 +23,7 @@ import javax.swing.JOptionPane;
 /**
  * Kontrolér pro Smeny. Spojuje gui a model.
  * 
- * @author kosekm
+ * @author Martin Kosek
  */
 public class SmenyController /*implements IModuleInteface */ {
 
@@ -59,6 +60,8 @@ public class SmenyController /*implements IModuleInteface */ {
     private Object[][] tableWorkShiftOverview = null;
     private ResultTableModel modelOverviewLeaderWorkShift = null;
     private int[] workShiftIds = null; //store workshift id`s that are viewed in table
+    private String[] datalListLoginUsers = null;     //for chooseEmployeeDialog
+    private int[] usersAttendaceIds = null; //for chooseEmployeeDialog - evidence of ids
 
     public SmenyController() {
         view = SmenyViewController.getInstance();
@@ -155,13 +158,16 @@ public class SmenyController /*implements IModuleInteface */ {
             dataListForDelete[i] = (String) tableWorkShiftData[i][j];
         }
     }
-    /*
-     * Generate list of employees for WorkShiftPlanForm
+    
+    
+    /**
+     * Generate list of employees for OverviewLeaderShiftForm.
+     * @throws FileNotFoundException
+     * @throws NotBoundException
+     * @throws RemoteException 
      */
-
     public void generateDataListEmployees() throws FileNotFoundException, NotBoundException, RemoteException {
-        List usersList = ServiceFacade.getInstance().getAllUsers();
-        List rolesList = ServiceFacade.getInstance().getAllRoles();
+        List usersList = ServiceFacade.getInstance().getAllUsers();        
         List userRoleList = null;
 
         if (usersList == null || usersList.isEmpty()) {
@@ -216,6 +222,14 @@ public class SmenyController /*implements IModuleInteface */ {
         }
     }
 
+    /**
+     * Add workshift that are stored in template with name templateName.
+     * Used in CreateTemplateForm.
+     * @param templateName
+     * @throws FileNotFoundException
+     * @throws RemoteException
+     * @throws NotBoundException 
+     */
     public void addWorkShiftFromTemplate(String templateName) throws FileNotFoundException, RemoteException, NotBoundException {
         Template template = ServiceFacade.getInstance().findTemplateByName(templateName);
         int templateId = template.getIdTemplate();
@@ -247,7 +261,7 @@ public class SmenyController /*implements IModuleInteface */ {
     }
 
     /**
-     * 
+     * Cleare table with workshifts that is showed in UI.
      */
     public void clearTableWorkShiftData() {
         int j = 0;
@@ -321,7 +335,7 @@ public class SmenyController /*implements IModuleInteface */ {
     public void generateTableDataPlannedWorkShifts() throws FileNotFoundException, NotBoundException, RemoteException {
 
         Date actualDate = new Date();
-        List workShifts = ServiceFacade.getInstance().getAllActiveWorkShifts(new Date());
+        List workShifts = ServiceFacade.getInstance().getAllActiveWorkShifts(actualDate);
         int columns = 2;
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
@@ -357,11 +371,17 @@ public class SmenyController /*implements IModuleInteface */ {
         modelPlannedWorkShift = new ResultTableModel(new String[]{"Datum", "Směna"}, tablePlannedWorkShift);
     }
 
+    /**
+     * Generate data for table that is displayed in OverviewLeaderShiftForm.
+     * @throws FileNotFoundException
+     * @throws NotBoundException
+     * @throws RemoteException 
+     */
     public void generateTableOverviewLeader() throws FileNotFoundException, NotBoundException, RemoteException {
         Date actualDate = new Date();
-        List workShifts = ServiceFacade.getInstance().getAllActiveWorkShifts(new Date());
+        List workShifts = ServiceFacade.getInstance().getAllActiveWorkShifts(actualDate); //get all planned workshift from today, not history
 
-        int columns = 5;
+        int columns = 5; //table has 5 columns
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         if (workShifts == null || workShifts.isEmpty()) {
@@ -380,7 +400,7 @@ public class SmenyController /*implements IModuleInteface */ {
             for (Object o : workShifts) { //set Date of planned workshift
                 workShift = (Workshift) o;
                 int idTypeWorkShift = workShift.getIdTypeWorkshift();
-                for (Object ot : typeWorkshifts) { //set name of Workshift
+                for (Object ot : typeWorkshifts) { //set date and name of Workshift
                     typeWorkShift = (Typeworkshift) ot;
                     if (typeWorkShift.getIdTypeWorkshift() == idTypeWorkShift) {
                         tableWorkShiftOverview[i][j++] = sdf.format(workShift.getDateShift()) + " " + typeWorkShift.getFromTime() + "-" + typeWorkShift.getToTime();
@@ -388,9 +408,36 @@ public class SmenyController /*implements IModuleInteface */ {
                         break;
                     }
                 }
-                tableWorkShiftOverview[i][j++] = "Přihlášení uživatelé"; //TODO - nacist uzivatele z tabulky attendance
-                tableWorkShiftOverview[i][j++] = workShift.getIdUser() == null ? "" : workShift.getIdUser(); //TODO - premenit na jmeno uzivatele, ktery je obsazeny
-                tableWorkShiftOverview[i][j++] = workShift.getUserSubmit() == null ? "" : workShift.getUserSubmit(); //TODO - premenit na jmeno uzivatele, ktery je obsazeny
+                List attendanceList = ServiceFacade.getInstance().getAttendaceByWorkShiftId(workShift.getIdWorkshift());
+                if (attendanceList == null) {
+                    tableWorkShiftOverview[i][j++] = "Nikdo není přihlášen";
+                } else { //read users from Attendance and add to table
+                    StringBuilder sb = new StringBuilder();
+                    User userTemp = null;
+                    for (Object att : attendanceList) {
+                        int idUser = ((Attendance) att).getIdUser();
+                        userTemp = ServiceFacade.getInstance().getUserById(idUser);
+                        sb.append(userTemp.getFirstName());
+                        sb.append(" ");
+                        sb.append(userTemp.getLastName());
+                        sb.append(",");
+                    }
+                    tableWorkShiftOverview[i][j++] = (sb.toString()).substring(0, sb.toString().length() - 1);//remove last comma
+                }
+
+                //occupy user
+                StringBuilder sb = new StringBuilder();
+                if (workShift.getIdUser() == null) {
+                    tableWorkShiftOverview[i][j++] = "Neobsazeno";
+                } else { //read user in workshit and add to table full name
+                    User userOccupy = ServiceFacade.getInstance().getUserById(workShift.getIdUser());
+                    sb.append(userOccupy.getFirstName());
+                    sb.append(" ");
+                    sb.append(userOccupy.getLastName());
+                    tableWorkShiftOverview[i][j++] = sb.toString();
+                }
+
+                tableWorkShiftOverview[i][j++] = workShift.getUserSubmit() == null ? "Nepotvrzeno" : workShift.getUserSubmit(); //TODO - premenit na jmeno uzivatele, ktery je obsazeny
 
                 workShiftIds[k++] = workShift.getIdWorkshift();
                 j = 0;
@@ -408,12 +455,98 @@ public class SmenyController /*implements IModuleInteface */ {
     public void saveUserToWorkShift(int userIndexId, int workShiftIndexId) throws FileNotFoundException, NotBoundException, RemoteException {
         int userId = userIds[userIndexId];
         int workShiftId = this.workShiftIds[workShiftIndexId];
-        this.showInformationMessage("User id = " + userId + " / Worksfhit id = " + workShiftId, "Test");
-        ServiceFacade.getInstance().createNewAttendance(userId, workShiftId);
-        
+        Attendance att = ServiceFacade.getInstance().getAttendaceByWorkShiftAndUser(workShiftId, userId);
+        if(att==null) {
+           ServiceFacade.getInstance().createNewAttendance(userId, workShiftId);    
+        } else {
+            this.showErrorMessage("Uživatel je již přihlášen", "Chyba");            
+        }        
+    }
+    
+    /**
+     * Generate list of login users for ChooseOcuppyEmployeeDialog
+     * @param workShiftId
+     * @throws FileNotFoundException
+     * @throws NotBoundException
+     * @throws RemoteException 
+     */
+    public void generateDataListLoginUsers(int workShiftId) throws FileNotFoundException, NotBoundException, RemoteException {
+        List attendanceList = ServiceFacade.getInstance().getAttendaceByWorkShiftId(workShiftId);
+        if (attendanceList == null || attendanceList.isEmpty()) {
+            this.showErrorMessage("Nikdo není přihlášen.", "Chyba");
+        } else {
+            Attendance attendance = null;
+            int userId = 0;
+            int i = 0;
+            StringBuilder sb = new StringBuilder();
+            User userTemp = null;
+            datalListLoginUsers = new String[attendanceList.size()];
+            usersAttendaceIds = new int[attendanceList.size()];
+            for (Object item : attendanceList) {
+                attendance = (Attendance) item;
+                userId = attendance.getIdUser();
+                userTemp = (User) ServiceFacade.getInstance().getUserById(userId);
+                sb.append(userTemp.getFirstName());
+                sb.append(" ");
+                sb.append(userTemp.getLastName());
+                datalListLoginUsers[i] = sb.toString();
+                sb.delete(0, sb.length());
+                usersAttendaceIds[i] = userTemp.getUserId();
+                i++;
+            }
+        }
+    }
+    
+    /**
+     * Save user to workshift to occupy workshift. From login state to occupy state.
+     * Delete from login state (from Attendance table)
+     * @param userIndexId
+     * @param workShiftId
+     * @throws FileNotFoundException
+     * @throws NotBoundException
+     * @throws RemoteException 
+     */
+    public void saveOccupyUser(int userIndexId, int workShiftId) throws FileNotFoundException, NotBoundException, RemoteException {
+        int userId = usersAttendaceIds[userIndexId];
+        Workshift ws = ServiceFacade.getInstance().getWorkshiftById(workShiftId);
+        if (ws.getIdUser() != null) {
+            this.showErrorMessage("Směna je již obsazena", "Chyba");
+        } else {
+            boolean result = ServiceFacade.getInstance().updateWorkshift(workShiftId, userId);
+            if (result) {
+                Attendance att = ServiceFacade.getInstance().getAttendaceByWorkShiftAndUser(workShiftId, userId);
+                ServiceFacade.getInstance().deleteAttendanceById(att.getIdAttendance());
+            }
+        }
+
     }
 
-    public ResultTableModel getModelOverviewWorkShift() {
+    /**
+     * Cancel occupation of workshift with user.
+     * @param workShiftId
+     * @throws FileNotFoundException
+     * @throws NotBoundException
+     * @throws RemoteException 
+     */
+    public void unOccupyWorkshift(int workShiftId) throws FileNotFoundException, NotBoundException, RemoteException {        
+        boolean result = ServiceFacade.getInstance().updateWorkshift(workShiftId, null);
+        if(result) {
+            this.showInformationMessage("Obsazení směny bylo uvolněno.", "Informace");
+        } else {
+            this.showErrorMessage("Nepodařilo se zrušit obsazení směny.", "Chyba");
+        }
+                
+    }
+    
+    public String[] getDataListLoginUsers() {
+        return this.datalListLoginUsers;
+    }
+
+    public int getWorkShiftIdFromLeaderViewTable(int row) {
+        return this.workShiftIds[row];
+    }
+
+    public ResultTableModel getModelOverviewLeaderWorkShift() {
         return this.modelOverviewLeaderWorkShift;
     }
 
@@ -563,7 +696,7 @@ public class SmenyController /*implements IModuleInteface */ {
             //System.out.println("TW: " + tw.getName() + " " + tw.getFromTime() + " " + tw.getToTime());
             ServiceFacade.getInstance().createNewTypewWorkShift(tw);
 
-            showInformationMessage("Typ směny byl uložen.", "Úspěšné uložení.");
+            showInformationMessage("Typ směny byl uložen.", "Informace");
         }
 
         return process;
@@ -579,7 +712,7 @@ public class SmenyController /*implements IModuleInteface */ {
     }
 
     /**
-     * 
+     * Save workshift to specified range of dates.
      * @param dateFrom
      * @param dateTo
      * @param typeWorkShifts

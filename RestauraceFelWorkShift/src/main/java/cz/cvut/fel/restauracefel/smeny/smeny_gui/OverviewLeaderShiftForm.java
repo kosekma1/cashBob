@@ -1,50 +1,29 @@
 package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 
-import cz.cvut.fel.restauracefel.hibernate.Attendance;
-import cz.cvut.fel.restauracefel.hibernate.User;
-import java.awt.Insets;
 import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import javax.swing.JOptionPane;
-import cz.cvut.fel.restauracefel.library.service.ConfigParser;
 import cz.cvut.fel.restauracefel.library.service.EmptyListException;
-//import cz.cvut.fel.restauracefel.pokladna_service.ServiceFacade;
-import cz.cvut.fel.restauracefel.library.service.Validator;
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
-import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
-import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
-import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.text.JTextComponent;
 
 /**
- * Trida reprezentujici GUI formular pro vytvareni noveho uctu.
+ * Trida reprezentujici GUI formular pro spravu planovanych smen.
  *  
- * @author Tomas Hnizdil
+ * @author Martin Kosek
  */
 public class OverviewLeaderShiftForm extends AbstractForm {
 
-    /*private ChooseTableDialog chooseTableDialog = null;
-    private ChoosePersonDialog choosePersonDialog = null;
-    private ChooseDiscountTypeDialog chooseDiscountTypeDialog = null;
-    private ChooseAccountCategoryDialog chooseAccountCategoryDialog = null;*/
     private ChooseEmployeeDialog chooseEmployeeDialog = null;
     private ChooseOcuppyEmployeeDialog chooseOcuppyEmployeeDialog = null;
-    private javax.swing.JTextField jTextField = new JTextField(); //jen pracovni bez ucelu
-    
     private StatusBar statusBar = null;
     private MainFrame parent = null;
     private Point point = new Point(550, 210);
@@ -54,7 +33,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
     private int y = 0;
 
     /**
-     * Konstruktor tridy CreateShiftForm.
+     * Constructor of the OverviewLeaderShiftForm.
      *
      * @param parent
      * @param bar
@@ -63,12 +42,25 @@ public class OverviewLeaderShiftForm extends AbstractForm {
      * @throws java.io.FileNotFoundException
      */
     public OverviewLeaderShiftForm(MainFrame parent, StatusBar bar) throws FileNotFoundException, NotBoundException, RemoteException {
-        osf = this;
+        osf = this; //necessary for repaint 
         this.parent = parent;
         this.statusBar = bar;
         loadAllData();
         initComponents();
         initMyComponents();
+        refresh();
+        clearFields();
+    }
+
+    private void initMyComponents() {
+
+        contextMenu = new JPopupMenu();
+        contextMenu.add("Obsadit"); //TODO priradit akce                              
+        contextMenu.add("Zrušit obsazení"); //TODO priradit akce - presun do prihlasenych                                             
+        contextMenu.add(new EmployeeAction(parent, jTableOverView));
+        contextMenu.addSeparator();
+        contextMenu.add("Konec");
+
         this.addMouseMotionListener(new MouseAdapter() {
 
             @Override
@@ -101,23 +93,10 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         jComboBox1.addMouseListener(new MouseAdapter() {
 
             @Override
-            public void mouseEntered(MouseEvent me) { //TODO - solve repaint after action in JComboBox1           
+            public void mouseEntered(MouseEvent me) { //TODO - solve repaint after action in JComboBox1                           
                 osf.repaint(); //always redisplay screen
             }
         });
-
-        refresh();
-        clearFields();
-    }
-
-    private void initMyComponents() {
-
-        contextMenu = new JPopupMenu();
-        contextMenu.add("Obsadit"); //TODO priradit akce                              
-        contextMenu.add("Zrušit obsazení"); //TODO priradit akce - presun do prihlasenych                                             
-        contextMenu.add(new EmployeeAction(1280, 800));
-        contextMenu.addSeparator();
-        contextMenu.add("Konec");
     }
 
     /**
@@ -125,61 +104,21 @@ public class OverviewLeaderShiftForm extends AbstractForm {
      */
     @Override
     protected void refresh() {
-        //statusBar.setMessage("Tento formulář slouží k přihlašování a odhlašování směn.");
-        statusBar.setMessage("x: " + this.x + " y: " + this.y);
+        statusBar.setMessage("Tento formulář slouží k přihlašování a obsazování směn.");
+        //statusBar.setMessage("x: " + this.x + " y: " + this.y);
     }
 
-    private void loadAllData() throws FileNotFoundException, RemoteException, NotBoundException{
+    private void loadAllData() throws FileNotFoundException, RemoteException, NotBoundException {
         SmenyController.getInstance().generateTableOverviewLeader();
         //jTableOverView.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
     }
-    
-    /**
-     * Metoda kontrolujici spravnost vyplnenych udaju.
-     *
-     * @return Vraci index urcujici vstupni komponentu, ktera obsahuje
-     * neplatny vstup. Pokud je vse vporadku tak navraci 0.
-     */
-    @Override
-    /* protected EnumSpravnost isValidInput() {
-    if (!Validator.isText(jTextFieldName)) {
-    return EnumSpravnost.NeniToSpravne;
-    }
-    return EnumSpravnost.JeToSpravne;
-    } */
+
     /**
      * Metoda cisti vsechny vstupni pole formulare.
      */
-    //@Override
+    @Override
     protected void clearFields() {
-        //Validator.clearTextField(jTextFieldName);
-        //Validator.clearTextField(jTextFieldTable);
-        //Validator.clearTextField(jTextFieldPerson);
-        //Validator.clearTextField(jTextFieldDiscountType);
-        //Validator.clearTextField(jTextFieldAccountCategory);
-        //Validator.clearTextField(jTextFieldNote);
-    }
-
-    /**
-     * Metoda vytvari a zobrazuje formular pro objednani polozek na ucet.
-     *
-     * @param accountId id uctu, na ktery se bude objednavat
-     */
-    public void loadCreateOrderForm(int accountId) {
-        /*try {
-        CreateOrderForm createOrderForm = new CreateOrderForm(parent, statusBar, accountId, MainFrame.loggedUser.getUserId());
-        parent.panel.getViewport().add(createOrderForm);
-        parent.panel.validate();
-        parent.panel.repaint();
-        parent.refreshWindowLayout();
-        refresh();
-        } catch (FileNotFoundException fnfe) {
-        JOptionPane.showMessageDialog(this, "Konfigurační soubor \"" + ConfigParser.getConfigFile() + "\" nebyl nalezen.", "Chyba", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Nelze navázat spojení se serverem.", "Chyba komunikace", JOptionPane.ERROR_MESSAGE);
-        }
-         */
+        //Validator.clearTextField(jTextFieldName);        
     }
 
     /** This method is called from within the constructor to
@@ -191,7 +130,6 @@ public class OverviewLeaderShiftForm extends AbstractForm {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
         jLabelTitle = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
@@ -206,7 +144,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         jTableOverView = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jButtonOccupy = new javax.swing.JButton();
-        jButtonCreateName2 = new javax.swing.JButton();
+        jButtonCancelOccupy = new javax.swing.JButton();
         jButtonLoginEmployee = new javax.swing.JButton();
 
         setBackground(javax.swing.UIManager.getDefaults().getColor("CheckBox.light"));
@@ -284,7 +222,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         );
 
         jTableOverView.setFont(new java.awt.Font("Calibri", 0, 14));
-        jTableOverView.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
+        jTableOverView.setModel(SmenyController.getInstance().getModelOverviewLeaderWorkShift());
         jTableOverView.setRowHeight(25);
         jScrollPane1.setViewportView(jTableOverView);
 
@@ -316,12 +254,12 @@ public class OverviewLeaderShiftForm extends AbstractForm {
             }
         });
 
-        jButtonCreateName2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
-        jButtonCreateName2.setText("Zrušit obsazení");
-        jButtonCreateName2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jButtonCreateName2.addActionListener(new java.awt.event.ActionListener() {
+        jButtonCancelOccupy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
+        jButtonCancelOccupy.setText("Zrušit obsazení");
+        jButtonCancelOccupy.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonCancelOccupy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCreateName2ActionPerformed(evt);
+                jButtonCancelOccupyActionPerformed(evt);
             }
         });
 
@@ -342,7 +280,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonOccupy, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
-                    .addComponent(jButtonCreateName2, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
+                    .addComponent(jButtonCancelOccupy, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE)
                     .addComponent(jButtonLoginEmployee, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -352,7 +290,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
                 .addGap(49, 49, 49)
                 .addComponent(jButtonOccupy, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButtonCreateName2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonCancelOccupy, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButtonLoginEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -402,19 +340,13 @@ public class OverviewLeaderShiftForm extends AbstractForm {
 
 private void jButtonOccupyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOccupyActionPerformed
     try {
-        ServiceFacade.getInstance().deleteAttendanceById(1);
-        List l = ServiceFacade.getInstance().getAttendaceByWorkShiftId(22);
-        SmenyController.getInstance().showInformationMessage("By id workshift " + l.size(), "Info");
-        Attendance att = ServiceFacade.getInstance().getAttendanceById(4);        
-        SmenyController.getInstance().showInformationMessage(att.getIdAttendance() + " " + att.getIdUser(), "Info");
-        /*int rowNumber = jTableOverView.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny        
-        String value = (String)jTableOverView.getValueAt(rowNumber, 2);        
-        chooseOcuppyEmployeeDialog = new ChooseOcuppyEmployeeDialog(parent, true, jTextField);
+        int rowNumber = jTableOverView.getSelectedRow();
+        chooseOcuppyEmployeeDialog = new ChooseOcuppyEmployeeDialog(parent, true, rowNumber, this.jTableOverView);
         chooseOcuppyEmployeeDialog.setLocation(point);
-        chooseOcuppyEmployeeDialog.setVisible(true);*/     
+        chooseOcuppyEmployeeDialog.setVisible(true);
     } catch (RemoteException ex) {
         printError(ex);
-        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);        
+        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
     } catch (NotBoundException ex) {
         printError(ex);
         Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -426,48 +358,70 @@ private void jButtonOccupyActionPerformed(java.awt.event.ActionEvent evt) {//GEN
     }
 }//GEN-LAST:event_jButtonOccupyActionPerformed
 
-public void printError(Exception ex){
-    try {
-                
-                PrintWriter vystup = new PrintWriter(new FileWriter("log-chyb.txt"));
-                StackTraceElement[] el = ex.getStackTrace();
-                for (StackTraceElement els : el) {
-                    vystup.println(els.toString());
-                }
-                vystup.println(ex.getMessage());
-                vystup.close();                  
-                
-            } catch (IOException ex1) {
-                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex1);
-            }
-}
+    public void printError(Exception ex) {
+        try {
 
-private void jButtonCreateName2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateName2ActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_jButtonCreateName2ActionPerformed
+            PrintWriter vystup = new PrintWriter(new FileWriter("log-chyb.txt"));
+            StackTraceElement[] el = ex.getStackTrace();
+            for (StackTraceElement els : el) {
+                vystup.println(els.toString());
+            }
+            vystup.println(ex.getMessage());
+            vystup.close();
+
+        } catch (IOException ex1) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex1);
+        }
+    }
+
+private void jButtonCancelOccupyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelOccupyActionPerformed
+
+    int result = parent.showConfirmDialogStandard("Opravdu zrušit obsazení?", "Dotaz");
+    if (result == 0) {
+        int rowNumber = this.jTableOverView.getSelectedRow();
+        int workShiftId = SmenyController.getInstance().getWorkShiftIdFromLeaderViewTable(rowNumber);
+        try {
+            SmenyController.getInstance().unOccupyWorkshift(workShiftId);
+            SmenyController.getInstance().generateTableOverviewLeader();
+            this.jTableOverView.setModel(SmenyController.getInstance().getModelOverviewLeaderWorkShift());
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+}//GEN-LAST:event_jButtonCancelOccupyActionPerformed
+   
+ /**
+ * Open window for selecting employee.
+ */
+    private void selectLoginUser() {
+        try {
+            int rowNumber = jTableOverView.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny        
+            chooseEmployeeDialog = new ChooseEmployeeDialog(parent, true, rowNumber, jTableOverView);
+            chooseEmployeeDialog.setLocation(point);
+            chooseEmployeeDialog.setVisible(true);
+        } catch (EmptyListException ex) {
+            logError(ex);
+            Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            logError(ex);
+            Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            logError(ex);
+            Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            logError(ex);
+            Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            logError(ex);
+        }
+    }
 
 private void jButtonLoginEmployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoginEmployeeActionPerformed
-    try {
-        int rowNumber = jTableOverView.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny        
-        
-        chooseEmployeeDialog = new ChooseEmployeeDialog(parent, true, rowNumber);
-        chooseEmployeeDialog.setLocation(point);
-        chooseEmployeeDialog.setVisible(true);
-    } catch (EmptyListException ex) {
-        logError(ex);
-        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (RemoteException ex) {
-        logError(ex);
-        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (NotBoundException ex) {
-        logError(ex);
-        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (FileNotFoundException ex) {
-        logError(ex);
-        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (Exception ex) {
-        logError(ex);
-    }
+    selectLoginUser();
 }//GEN-LAST:event_jButtonLoginEmployeeActionPerformed
 
     private void logError(Exception ex) {
@@ -485,10 +439,9 @@ private void jButtonLoginEmployeeActionPerformed(java.awt.event.ActionEvent evt)
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButtonCreateName2;
+    private javax.swing.JButton jButtonCancelOccupy;
     private javax.swing.JButton jButtonLoginEmployee;
     private javax.swing.JButton jButtonOccupy;
     private javax.swing.JComboBox jComboBox1;

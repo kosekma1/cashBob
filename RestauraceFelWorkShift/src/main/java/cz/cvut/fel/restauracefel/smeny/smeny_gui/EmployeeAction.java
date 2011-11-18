@@ -1,41 +1,48 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 
-import java.awt.FlowLayout;
+import cz.cvut.fel.restauracefel.library.service.EmptyListException;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.io.FileNotFoundException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+import javax.swing.JTable;
 
 /**
- *
+ * Action for login User to workshift for context menu in OverViewShiftForm.
+ * 
  * @author Martin
  */
-public class EmployeeAction extends AbstractAction  {
-     private int width = 0;
-     private int height = 0;
-     public final int SIZE = 300;
-    
-     //TODO - musi ziskat odkaz na frame aby tam mohl predat id zamestancu
-     public EmployeeAction(int width, int height){
-         super("Přihlásit zaměstnance");
-         this.width = width;
-         this.height = height;
-     }
-    
-     public void actionPerformed(ActionEvent e) {       
-       JFrame jf = new JFrame();
-       jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-       FlowLayout fl = new FlowLayout();
-       jf.setLayout(fl);
-       JLabel jl = new JLabel("Seznam zaměstnanců");       
-       jf.add(jl);
-       jf.setSize(SIZE, SIZE);
-       jf.setLocation(width/2-SIZE/2, height/2-SIZE/2);       
-       jf.setVisible(true);
+public class EmployeeAction extends AbstractAction {
+
+    private Point point = new Point(550, 210);
+    private ChooseEmployeeDialog chooseEmployeeDialog = null;
+    private JTable table = null;
+    private MainFrame parent = null;
+
+    public EmployeeAction(MainFrame parent, JTable table) {
+        super("Přihlásit zaměstnance");
+        this.parent = parent;
+        this.table = table;
     }
-    
+
+    public void actionPerformed(ActionEvent e) {
+        try {
+            int row = table.getSelectedRow();
+            chooseEmployeeDialog = new ChooseEmployeeDialog(parent, true, row, table);
+            chooseEmployeeDialog.setLocation(point);
+            chooseEmployeeDialog.setVisible(true);
+        } catch (EmptyListException ex) {
+            Logger.getLogger(EmployeeAction.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(EmployeeAction.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            Logger.getLogger(EmployeeAction.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(EmployeeAction.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }
