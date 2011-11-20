@@ -48,7 +48,7 @@ public class ChooseOcuppyEmployeeDialog extends AbstractDialog {
      * @throws java.io.FileNotFoundException
      */
     protected void refresh() throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {       
-       SmenyController.getInstance().generateDataListLoginUsers(SmenyController.getInstance().getWorkShiftIdFromLeaderViewTable(rowNumber));        
+       SmenyController.getInstance().generateDataListLoginUsers(SmenyController.getInstance().getWorkShiftIdFromOverViewTable(rowNumber));        
        jList1.setListData(SmenyController.getInstance().getDataListLoginUsers());
     }
 
@@ -171,12 +171,13 @@ public class ChooseOcuppyEmployeeDialog extends AbstractDialog {
     }//GEN-LAST:event_jButtonBackActionPerformed
 
     private void clicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clicked
-        int userIndexId = jList1.getSelectedIndex();        
-        int workShiftId = SmenyController.getInstance().getWorkShiftIdFromLeaderViewTable(rowNumber);        
+        int userIndexId = jList1.getSelectedIndex();
+        int userId = SmenyController.getInstance().getUserAttendanceId(userIndexId);
+        int workShiftId = SmenyController.getInstance().getWorkShiftIdFromOverViewTable(rowNumber);        
         try {            
-            SmenyController.getInstance().saveOccupyUser(userIndexId, workShiftId);
+            SmenyController.getInstance().saveOccupyUser(userId, workShiftId);
             SmenyController.getInstance().generateTableOverviewLeader();
-            table.setModel(SmenyController.getInstance().getModelOverviewLeaderWorkShift());                        
+            table.setModel(SmenyController.getInstance().getModelOverviewWorkShift());                        
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ChooseOcuppyEmployeeDialog.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NotBoundException ex) {

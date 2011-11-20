@@ -165,7 +165,7 @@ public class ChooseEmployeeDialog extends AbstractDialog {
         try {
             SmenyController.getInstance().saveUserToWorkShift(userIndexId, this.rowNumber);
             SmenyController.getInstance().generateTableOverviewLeader();
-            table.setModel(SmenyController.getInstance().getModelOverviewLeaderWorkShift());
+            table.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ChooseEmployeeDialog.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NotBoundException ex) {

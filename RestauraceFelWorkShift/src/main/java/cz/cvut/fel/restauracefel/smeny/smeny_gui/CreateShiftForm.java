@@ -90,7 +90,7 @@ public class CreateShiftForm extends AbstractForm {
 
 
         /*try {
-        CreateOrderForm createOrderForm = new CreateOrderForm(parent, statusBar, accountId, MainFrame.loggedUser.getUserId());
+        CreateOrderForm createOrderForm = new CreateOrderForm(parent, statusBar, accountId, MainFrame.loggedUser.getUserAttendanceId());
         parent.panel.getViewport().add(createOrderForm);
         parent.panel.validate();
         parent.panel.repaint();

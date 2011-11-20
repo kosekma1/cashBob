@@ -124,7 +124,7 @@ public class WorkShiftPlanForm extends AbstractForm {
      */
     public void loadCreateOrderForm(int accountId) {
         /*try {
-        CreateOrderForm createOrderForm = new CreateOrderForm(parent, statusBar, accountId, MainFrame.loggedUser.getUserId());
+        CreateOrderForm createOrderForm = new CreateOrderForm(parent, statusBar, accountId, MainFrame.loggedUser.getUserAttendanceId());
         parent.panel.getViewport().add(createOrderForm);
         parent.panel.validate();
         parent.panel.repaint();

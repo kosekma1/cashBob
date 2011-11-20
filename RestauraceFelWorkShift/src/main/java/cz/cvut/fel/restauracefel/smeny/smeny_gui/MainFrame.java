@@ -253,12 +253,12 @@ public class MainFrame extends JFrame {
                     }
                     af = workShiftPlanForm;
                     af = new WorkShiftPlanForm(this, statusBar);
-                    //af = new WorkShiftPlanForm(this, statusBar, loggedUser.getUserId(), EnumOrder.CREATE_ORDER);
+                    //af = new WorkShiftPlanForm(this, statusBar, loggedUser.getUserAttendanceId(), EnumOrder.CREATE_ORDER);
                     break;
                 case STATISTICS_FORM:
                     af = statisticsForm;
                     af = new StatisticsForm(this, statusBar);
-                    //af = new WorkShiftPlanForm(this, statusBar, loggedUser.getUserId(), EnumOrder.CREATE_ORDER);
+                    //af = new WorkShiftPlanForm(this, statusBar, loggedUser.getUserAttendanceId(), EnumOrder.CREATE_ORDER);
                     break;                
                 case OVERVIEW_LEADER_SHIFT:
                     if (!contains("Přehled směn - vedoucí")) {

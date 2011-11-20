@@ -222,7 +222,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         );
 
         jTableOverView.setFont(new java.awt.Font("Calibri", 0, 14));
-        jTableOverView.setModel(SmenyController.getInstance().getModelOverviewLeaderWorkShift());
+        jTableOverView.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
         jTableOverView.setRowHeight(25);
         jScrollPane1.setViewportView(jTableOverView);
 
@@ -339,73 +339,12 @@ public class OverviewLeaderShiftForm extends AbstractForm {
     }//GEN-LAST:event_jButton3ActionPerformed
 
 private void jButtonOccupyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOccupyActionPerformed
-    try {
-        int rowNumber = jTableOverView.getSelectedRow();
-        chooseOcuppyEmployeeDialog = new ChooseOcuppyEmployeeDialog(parent, true, rowNumber, this.jTableOverView);
-        chooseOcuppyEmployeeDialog.setLocation(point);
-        chooseOcuppyEmployeeDialog.setVisible(true);
-    } catch (RemoteException ex) {
-        printError(ex);
-        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (NotBoundException ex) {
-        printError(ex);
-        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (FileNotFoundException ex) {
-        printError(ex);
-        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (Exception ex) {
-        printError(ex);
-    }
-}//GEN-LAST:event_jButtonOccupyActionPerformed
-
-    public void printError(Exception ex) {
+    int rowNumber = jTableOverView.getSelectedRow();
+    if (rowNumber > -1) {
         try {
-
-            PrintWriter vystup = new PrintWriter(new FileWriter("log-chyb.txt"));
-            StackTraceElement[] el = ex.getStackTrace();
-            for (StackTraceElement els : el) {
-                vystup.println(els.toString());
-            }
-            vystup.println(ex.getMessage());
-            vystup.close();
-
-        } catch (IOException ex1) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex1);
-        }
-    }
-
-private void jButtonCancelOccupyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelOccupyActionPerformed
-
-    int result = parent.showConfirmDialogStandard("Opravdu zrušit obsazení?", "Dotaz");
-    if (result == 0) {
-        int rowNumber = this.jTableOverView.getSelectedRow();
-        int workShiftId = SmenyController.getInstance().getWorkShiftIdFromLeaderViewTable(rowNumber);
-        try {
-            SmenyController.getInstance().unOccupyWorkshift(workShiftId);
-            SmenyController.getInstance().generateTableOverviewLeader();
-            this.jTableOverView.setModel(SmenyController.getInstance().getModelOverviewLeaderWorkShift());
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NotBoundException ex) {
-            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-}//GEN-LAST:event_jButtonCancelOccupyActionPerformed
-   
- /**
- * Open window for selecting employee.
- */
-    private void selectLoginUser() {
-        try {
-            int rowNumber = jTableOverView.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny        
-            chooseEmployeeDialog = new ChooseEmployeeDialog(parent, true, rowNumber, jTableOverView);
-            chooseEmployeeDialog.setLocation(point);
-            chooseEmployeeDialog.setVisible(true);
-        } catch (EmptyListException ex) {
-            logError(ex);
-            Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+            chooseOcuppyEmployeeDialog = new ChooseOcuppyEmployeeDialog(parent, true, rowNumber, this.jTableOverView);
+            chooseOcuppyEmployeeDialog.setLocation(point);
+            chooseOcuppyEmployeeDialog.setVisible(true);
         } catch (RemoteException ex) {
             logError(ex);
             Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -418,11 +357,69 @@ private void jButtonCancelOccupyActionPerformed(java.awt.event.ActionEvent evt) 
         } catch (Exception ex) {
             logError(ex);
         }
+    } else {
+        parent.showMessageDialogInformation("Vyberte řádek", "Informace");
     }
+}//GEN-LAST:event_jButtonOccupyActionPerformed
 
-private void jButtonLoginEmployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoginEmployeeActionPerformed
-    selectLoginUser();
-}//GEN-LAST:event_jButtonLoginEmployeeActionPerformed
+private void jButtonCancelOccupyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelOccupyActionPerformed
+
+    int rowNumber = this.jTableOverView.getSelectedRow();
+    if (rowNumber > -1) {
+        int result = parent.showConfirmDialogStandard("Opravdu zrušit obsazení?", "Dotaz");
+        if (result == 0) {
+            int workShiftId = SmenyController.getInstance().getWorkShiftIdFromOverViewTable(rowNumber);
+            try {
+                SmenyController.getInstance().unOccupyWorkshift(workShiftId);
+                SmenyController.getInstance().generateTableOverviewLeader();
+                this.jTableOverView.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
+            } catch (FileNotFoundException ex) {
+                logError(ex);
+                Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NotBoundException ex) {
+                Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+                logError(ex);
+            } catch (RemoteException ex) {
+                Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+                logError(ex);
+            } catch (Exception ex) {
+                logError(ex);
+            }
+        }
+    } else {
+        parent.showMessageDialogInformation("Vyberte řádek", "Informace");
+    }
+}//GEN-LAST:event_jButtonCancelOccupyActionPerformed
+
+    /**
+     * Open window for selecting employee.
+     */
+    private void selectLoginUser() {
+        int rowNumber = jTableOverView.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny        
+        if (rowNumber > -1) {
+            try {
+                chooseEmployeeDialog = new ChooseEmployeeDialog(parent, true, rowNumber, jTableOverView);
+                chooseEmployeeDialog.setLocation(point);
+                chooseEmployeeDialog.setVisible(true);
+            } catch (EmptyListException ex) {
+                logError(ex);
+                Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RemoteException ex) {
+                logError(ex);
+                Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NotBoundException ex) {
+                logError(ex);
+                Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (FileNotFoundException ex) {
+                logError(ex);
+                Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                logError(ex);
+            }
+        } else {
+            parent.showMessageDialogInformation("Vyberte řádek", "Informace");
+        }
+    }
 
     private void logError(Exception ex) {
         try {
@@ -438,6 +435,10 @@ private void jButtonLoginEmployeeActionPerformed(java.awt.event.ActionEvent evt)
             Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex1);
         }
     }
+
+private void jButtonLoginEmployeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoginEmployeeActionPerformed
+    selectLoginUser();
+}//GEN-LAST:event_jButtonLoginEmployeeActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;

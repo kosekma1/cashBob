@@ -1,29 +1,23 @@
 package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 
-import cz.cvut.fel.restauracefel.hibernate.User;
-import java.awt.Insets;
 import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import javax.swing.JOptionPane;
-import cz.cvut.fel.restauracefel.library.service.ConfigParser;
-import cz.cvut.fel.restauracefel.library.service.EmptyListException;
-//import cz.cvut.fel.restauracefel.pokladna_service.ServiceFacade;
-import cz.cvut.fel.restauracefel.library.service.Validator;
-import java.awt.Component;
+import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JFrame;
-import javax.swing.JMenuItem;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPopupMenu;
-import javax.swing.SwingUtilities;
-import javax.swing.text.JTextComponent;
 
 /**
  * Trida reprezentujici GUI formular pro vytvareni noveho uctu.
  *  
- * @author Tomas Hnizdil
+ * @author Martin Kosek
  */
 public class OverviewEmployeeShiftForm extends AbstractForm {
 
@@ -52,47 +46,15 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
         osf = this;
         this.parent = parent;
         this.statusBar = bar;
+        loadAllData();
         initComponents();
         initMyComponents();
-        this.addMouseMotionListener(new MouseAdapter() {
-
-            @Override
-            public void mouseMoved(MouseEvent me) {
-                //System.out.println(me);
-                x = me.getX();
-                y = me.getY();
-                refresh();
-            }
-        });
-
-        jTable1.addMouseListener(new MouseAdapter() {
-
-            @Override
-            public void mousePressed(MouseEvent me) {
-                //System.out.println(me);
-                int button = me.getButton();
-                x = me.getX();
-                y = me.getY();
-                if (button == me.BUTTON3) {
-                    ///System.exit(1);
-                    //Component comp = SwingUtilities.getDeepestComponentAt(me.getComponent(), me.getX(), me.getY()); 
-                    //JTextComponent tc = (JTextComponent)comp;                
-                    contextMenu.show(jTable1, x, y);
-                }
-                osf.repaint(); //always redisplay screen
-            }
-        });
-
-        jComboBox1.addMouseListener(new MouseAdapter() {
-
-            @Override
-            public void mouseEntered(MouseEvent me) { //TODO - solve repaint after action in JComboBox1           
-                osf.repaint(); //always redisplay screen
-            }
-        });
-
-        refresh();
+        //refresh();
         clearFields();
+    }
+
+    private void loadAllData() throws FileNotFoundException, RemoteException, NotBoundException {
+        SmenyController.getInstance().generateTableOverviewLeader();
     }
 
     private void initMyComponents() {
@@ -104,6 +66,44 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
         contextMenu.add("Žádost o zrušení"); //TODO priradit akce - presun do prihlasenych                                             
         contextMenu.addSeparator();
         contextMenu.add("Konec");
+
+        this.addMouseMotionListener(new MouseAdapter() {
+
+            @Override
+            public void mouseMoved(MouseEvent me) {
+                //System.out.println(me);
+                x = me.getX();
+                y = me.getY();
+                //refresh();
+            }
+        });
+
+        jTableWorkShiftOverview.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mousePressed(MouseEvent me) {
+                //System.out.println(me);
+                int button = me.getButton();
+                x = me.getX();
+                y = me.getY();
+                if (button == me.BUTTON3) {
+                    ///System.exit(1);
+                    //Component comp = SwingUtilities.getDeepestComponentAt(me.getComponent(), me.getX(), me.getY()); 
+                    //JTextComponent tc = (JTextComponent)comp;                
+                    contextMenu.show(jTableWorkShiftOverview, x, y);
+                }
+                osf.repaint(); //always redisplay screen
+            }
+        });
+
+        jComboBoxFilter.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseEntered(MouseEvent me) { //TODO - solve repaint after action in JComboBox1           
+                osf.repaint(); //always redisplay screen
+            }
+        });
+
     }
 
     /**
@@ -111,56 +111,32 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
      */
     @Override
     protected void refresh() {
-        //statusBar.setMessage("Tento formulář slouží k přihlašování a odhlašování směn.");
-        statusBar.setMessage("x: " + this.x + " y: " + this.y);
+        statusBar.setMessage("Tento formulář slouží k přihlašování a odhlašování na směny.");
+        //tatusBar.setMessage("x: " + this.x + " y: " + this.y);
+        try {
+            loadAllData();
+            jTableWorkShiftOverview.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
+        } catch (FileNotFoundException ex) {
+            logError(ex);
+            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            logError(ex);
+            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            logError(ex);
+            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            logError(ex);
+        }
     }
 
-    /**
-     * Metoda kontrolujici spravnost vyplnenych udaju.
-     *
-     * @return Vraci index urcujici vstupni komponentu, ktera obsahuje
-     * neplatny vstup. Pokud je vse vporadku tak navraci 0.
-     */
-    @Override
-    /* protected EnumSpravnost isValidInput() {
-    if (!Validator.isText(jTextFieldName)) {
-    return EnumSpravnost.NeniToSpravne;
-    }
-    return EnumSpravnost.JeToSpravne;
-    } */
     /**
      * Metoda cisti vsechny vstupni pole formulare.
      */
-    //@Override
+    @Override
     protected void clearFields() {
         //Validator.clearTextField(jTextFieldName);
-        //Validator.clearTextField(jTextFieldTable);
-        //Validator.clearTextField(jTextFieldPerson);
-        //Validator.clearTextField(jTextFieldDiscountType);
-        //Validator.clearTextField(jTextFieldAccountCategory);
-        //Validator.clearTextField(jTextFieldNote);
-    }
 
-    /**
-     * Metoda vytvari a zobrazuje formular pro objednani polozek na ucet.
-     *
-     * @param accountId id uctu, na ktery se bude objednavat
-     */
-    public void loadCreateOrderForm(int accountId) {
-        /*try {
-        CreateOrderForm createOrderForm = new CreateOrderForm(parent, statusBar, accountId, MainFrame.loggedUser.getUserId());
-        parent.panel.getViewport().add(createOrderForm);
-        parent.panel.validate();
-        parent.panel.repaint();
-        parent.refreshWindowLayout();
-        refresh();
-        } catch (FileNotFoundException fnfe) {
-        JOptionPane.showMessageDialog(this, "Konfigurační soubor \"" + ConfigParser.getConfigFile() + "\" nebyl nalezen.", "Chyba", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Nelze navázat spojení se serverem.", "Chyba komunikace", JOptionPane.ERROR_MESSAGE);
-        }
-         */
     }
 
     /** This method is called from within the constructor to
@@ -172,24 +148,23 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
         jLabelTitle = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
+        jLabelOverviewWorkShift = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jTextField5 = new javax.swing.JTextField();
-        jLabel8 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox();
+        jButtonPreviousWeek = new javax.swing.JButton();
+        jButtonNextWeek = new javax.swing.JButton();
+        jTextFieldDateRange = new javax.swing.JTextField();
+        jLabelWeek = new javax.swing.JLabel();
+        jTextFieldWeek = new javax.swing.JTextField();
+        jComboBoxFilter = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        jTableWorkShiftOverview = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
-        jButtonCreateName1 = new javax.swing.JButton();
-        jButtonCreateName2 = new javax.swing.JButton();
-        jButtonCreateName3 = new javax.swing.JButton();
-        jButtonCreateName4 = new javax.swing.JButton();
+        jButtonLoginUser = new javax.swing.JButton();
+        jButtonLogoutUser = new javax.swing.JButton();
+        jButtonApprovedOccupy = new javax.swing.JButton();
+        jButtonRequestCancel = new javax.swing.JButton();
 
         setBackground(javax.swing.UIManager.getDefaults().getColor("CheckBox.light"));
         setPreferredSize(new java.awt.Dimension(948, 577));
@@ -200,36 +175,36 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
         jLabelTitle.setText("Přehled směn - zaměstnanec");
         jLabelTitle.setOpaque(true);
 
-        jLabel5.setFont(new java.awt.Font("Calibri", 1, 22));
-        jLabel5.setText("Přehled směn");
+        jLabelOverviewWorkShift.setFont(new java.awt.Font("Calibri", 1, 22));
+        jLabelOverviewWorkShift.setText("Přehled směn");
 
         jPanel1.setOpaque(false);
 
-        jButton2.setText("<");
+        jButtonPreviousWeek.setText("<");
 
-        jButton3.setText(">");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        jButtonNextWeek.setText(">");
+        jButtonNextWeek.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                jButtonNextWeekActionPerformed(evt);
             }
         });
 
-        jTextField5.setFont(new java.awt.Font("Calibri", 0, 14));
-        jTextField5.setText("9.5.2011-14.5.2011");
-        jTextField5.addActionListener(new java.awt.event.ActionListener() {
+        jTextFieldDateRange.setFont(new java.awt.Font("Calibri", 0, 14));
+        jTextFieldDateRange.setText("9.5.2011-14.5.2011");
+        jTextFieldDateRange.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField5ActionPerformed(evt);
+                jTextFieldDateRangeActionPerformed(evt);
             }
         });
 
-        jLabel8.setFont(new java.awt.Font("Calibri", 1, 14));
-        jLabel8.setText("Týden:");
+        jLabelWeek.setFont(new java.awt.Font("Calibri", 1, 14));
+        jLabelWeek.setText("Týden:");
 
-        jTextField4.setFont(new java.awt.Font("Calibri", 0, 14));
-        jTextField4.setText("14");
+        jTextFieldWeek.setFont(new java.awt.Font("Calibri", 0, 14));
+        jTextFieldWeek.setText("14");
 
-        jComboBox1.setFont(new java.awt.Font("Calibri", 0, 14));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Vše", "Moje role", "Přihlášené" }));
+        jComboBoxFilter.setFont(new java.awt.Font("Calibri", 0, 14));
+        jComboBoxFilter.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Vše", "Moje role", "Přihlášené" }));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -237,17 +212,17 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jComboBoxFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
-                .addComponent(jLabel8)
+                .addComponent(jLabelWeek)
                 .addGap(18, 18, 18)
-                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTextFieldWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jTextFieldDateRange, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonPreviousWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonNextWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -255,34 +230,20 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                    .addComponent(jComboBoxFilter, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel8)))
+                        .addComponent(jButtonPreviousWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButtonNextWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextFieldWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextFieldDateRange, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabelWeek)))
                 .addContainerGap())
         );
 
-        jTable1.setFont(new java.awt.Font("Calibri", 0, 14));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"14.4.2011 16:00-22:00", "číšník", "Karel, David", "", ""},
-                {"14.4.2011 16:00-22:00", "barman", null, "Eda", "10.4.2011, Eda (potvrdil)"},
-                {"16.4.2011 16:00-22:00", "kuchař", "Robert", "Hedvika", "15.4.2011, Hedvika, žádost o zrušení"},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
-            },
-            new String [] {
-                "Datum a čas", "Typ směny", "Nahlášení", "Obsazení", "Potvrzení"
-            }
-        ));
-        jTable1.setRowHeight(25);
-        jScrollPane1.setViewportView(jTable1);
+        jTableWorkShiftOverview.setFont(new java.awt.Font("Calibri", 0, 14));
+        jTableWorkShiftOverview.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
+        jTableWorkShiftOverview.setRowHeight(25);
+        jScrollPane1.setViewportView(jTableWorkShiftOverview);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -303,39 +264,39 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
 
         jPanel3.setOpaque(false);
 
-        jButtonCreateName1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
-        jButtonCreateName1.setText("Přihlásit");
-        jButtonCreateName1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jButtonCreateName1.addActionListener(new java.awt.event.ActionListener() {
+        jButtonLoginUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
+        jButtonLoginUser.setText("Přihlásit");
+        jButtonLoginUser.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonLoginUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCreateName1ActionPerformed(evt);
+                jButtonLoginUserActionPerformed(evt);
             }
         });
 
-        jButtonCreateName2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
-        jButtonCreateName2.setText("Odhlásit");
-        jButtonCreateName2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jButtonCreateName2.addActionListener(new java.awt.event.ActionListener() {
+        jButtonLogoutUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
+        jButtonLogoutUser.setText("Odhlásit");
+        jButtonLogoutUser.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonLogoutUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCreateName2ActionPerformed(evt);
+                jButtonLogoutUserActionPerformed(evt);
             }
         });
 
-        jButtonCreateName3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
-        jButtonCreateName3.setText("Potvrdit obsazení");
-        jButtonCreateName3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jButtonCreateName3.addActionListener(new java.awt.event.ActionListener() {
+        jButtonApprovedOccupy.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
+        jButtonApprovedOccupy.setText("Potvrdit obsazení");
+        jButtonApprovedOccupy.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonApprovedOccupy.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCreateName3ActionPerformed(evt);
+                jButtonApprovedOccupyActionPerformed(evt);
             }
         });
 
-        jButtonCreateName4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
-        jButtonCreateName4.setText("Žádost o zrušení obsazení");
-        jButtonCreateName4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jButtonCreateName4.addActionListener(new java.awt.event.ActionListener() {
+        jButtonRequestCancel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
+        jButtonRequestCancel.setText("Žádost o zrušení obsazení");
+        jButtonRequestCancel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jButtonRequestCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonCreateName4ActionPerformed(evt);
+                jButtonRequestCancelActionPerformed(evt);
             }
         });
 
@@ -346,23 +307,23 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButtonCreateName1, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
-                    .addComponent(jButtonCreateName2, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
-                    .addComponent(jButtonCreateName3, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
-                    .addComponent(jButtonCreateName4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButtonLoginUser, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                    .addComponent(jButtonLogoutUser, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                    .addComponent(jButtonApprovedOccupy, javax.swing.GroupLayout.DEFAULT_SIZE, 191, Short.MAX_VALUE)
+                    .addComponent(jButtonRequestCancel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(49, 49, 49)
-                .addComponent(jButtonCreateName1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonLoginUser, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButtonCreateName2, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonLogoutUser, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButtonCreateName3, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonApprovedOccupy, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButtonCreateName4, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jButtonRequestCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(27, Short.MAX_VALUE))
         );
 
@@ -373,7 +334,7 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
             .addComponent(jLabelTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 948, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel5)
+                .addComponent(jLabelOverviewWorkShift)
                 .addContainerGap(812, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
@@ -389,7 +350,7 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jLabelTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabelOverviewWorkShift, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -400,47 +361,143 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
+    private void jTextFieldDateRangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldDateRangeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField5ActionPerformed
+    }//GEN-LAST:event_jTextFieldDateRangeActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+    private void jButtonNextWeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNextWeekActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
+    }//GEN-LAST:event_jButtonNextWeekActionPerformed
 
-private void jButtonCreateName1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateName1ActionPerformed
-}//GEN-LAST:event_jButtonCreateName1ActionPerformed
+private void jButtonLoginUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoginUserActionPerformed
 
-private void jButtonCreateName2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateName2ActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_jButtonCreateName2ActionPerformed
+    int rowNumber = this.jTableWorkShiftOverview.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny                
+    if (rowNumber > -1) {
+        try {
+            int workShiftId = SmenyController.getInstance().getWorkShiftIdFromOverViewTable(rowNumber);
+            SmenyController.getInstance().saveCurrentUserToWorkShift(workShiftId);
+            refresh();
+        } catch (FileNotFoundException ex) {
+            logError(ex);
+            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            logError(ex);
+            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            logError(ex);
+            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            logError(ex);
+        }
+    } else {
+        parent.showMessageDialogInformation("Vyberte řádek", "Informace");
+    }
 
-private void jButtonCreateName3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateName3ActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_jButtonCreateName3ActionPerformed
 
-private void jButtonCreateName4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateName4ActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_jButtonCreateName4ActionPerformed
+}//GEN-LAST:event_jButtonLoginUserActionPerformed
 
+private void jButtonLogoutUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLogoutUserActionPerformed
+    int rowNumber = this.jTableWorkShiftOverview.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny        
+    if (rowNumber > -1) {
+        try {
+            int idWorkshift = SmenyController.getInstance().getWorkShiftIdFromOverViewTable(rowNumber);
+            SmenyController.getInstance().logoutCurrentUserFromWorkShift(idWorkshift);
+            refresh();
+        } catch (FileNotFoundException ex) {
+            logError(ex);
+            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            logError(ex);
+            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            logError(ex);
+            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            logError(ex);
+        }
+    } else {
+        parent.showMessageDialogInformation("Vyberte řádek", "Informace");
+    }
+}//GEN-LAST:event_jButtonLogoutUserActionPerformed
+
+private void jButtonApprovedOccupyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonApprovedOccupyActionPerformed
+
+    int rowNumber = this.jTableWorkShiftOverview.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny        
+    String message = "Potvrzeno";
+    if (rowNumber > -1) {
+        try {
+            int idWorkshift = SmenyController.getInstance().getWorkShiftIdFromOverViewTable(rowNumber);
+            SmenyController.getInstance().updateOccupationMessageUser(idWorkshift, message);
+            refresh();
+        } catch (FileNotFoundException ex) {
+            logError(ex);
+            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            logError(ex);
+            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            logError(ex);
+            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    } else {
+        parent.showMessageDialogInformation("Vyberte řádek", "Informace");
+    }
+}//GEN-LAST:event_jButtonApprovedOccupyActionPerformed
+
+    private void logError(Exception ex) {
+        try {
+            PrintWriter vystup = new PrintWriter(new FileWriter("log-chyb.txt"));
+            StackTraceElement[] el = ex.getStackTrace();
+            for (StackTraceElement els : el) {
+                vystup.println(els.toString());
+            }
+            vystup.println(ex.getMessage());
+            vystup.close();
+
+        } catch (IOException ex1) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex1);
+        }
+    }
+
+private void jButtonRequestCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRequestCancelActionPerformed
+int rowNumber = this.jTableWorkShiftOverview.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny        
+    String message = "Zažádáno o zrušení";
+    if (rowNumber > -1) {
+        try {
+            int idWorkshift = SmenyController.getInstance().getWorkShiftIdFromOverViewTable(rowNumber);
+            SmenyController.getInstance().updateOccupationMessageUser(idWorkshift, message);
+            refresh();
+        } catch (FileNotFoundException ex) {
+            logError(ex);
+            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            logError(ex);
+            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            logError(ex);
+            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    } else {
+        parent.showMessageDialogInformation("Vyberte řádek", "Informace");
+    }
+}//GEN-LAST:event_jButtonRequestCancelActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButtonCreateName1;
-    private javax.swing.JButton jButtonCreateName2;
-    private javax.swing.JButton jButtonCreateName3;
-    private javax.swing.JButton jButtonCreateName4;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel8;
+    private javax.swing.JButton jButtonApprovedOccupy;
+    private javax.swing.JButton jButtonLoginUser;
+    private javax.swing.JButton jButtonLogoutUser;
+    private javax.swing.JButton jButtonNextWeek;
+    private javax.swing.JButton jButtonPreviousWeek;
+    private javax.swing.JButton jButtonRequestCancel;
+    private javax.swing.JComboBox jComboBoxFilter;
+    private javax.swing.JLabel jLabelOverviewWorkShift;
     private javax.swing.JLabel jLabelTitle;
+    private javax.swing.JLabel jLabelWeek;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTable jTableWorkShiftOverview;
+    private javax.swing.JTextField jTextFieldDateRange;
+    private javax.swing.JTextField jTextFieldWeek;
     // End of variables declaration//GEN-END:variables
 }

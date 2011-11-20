@@ -58,7 +58,7 @@ public class SmenyController /*implements IModuleInteface */ {
     private int[] userIds = null;
     //Leader overview
     private Object[][] tableWorkShiftOverview = null;
-    private ResultTableModel modelOverviewLeaderWorkShift = null;
+    private ResultTableModel modelOverviewWorkShift = null;
     private int[] workShiftIds = null; //store workshift id`s that are viewed in table
     private String[] datalListLoginUsers = null;     //for chooseEmployeeDialog
     private int[] usersAttendaceIds = null; //for chooseEmployeeDialog - evidence of ids
@@ -158,8 +158,7 @@ public class SmenyController /*implements IModuleInteface */ {
             dataListForDelete[i] = (String) tableWorkShiftData[i][j];
         }
     }
-    
-    
+
     /**
      * Generate list of employees for OverviewLeaderShiftForm.
      * @throws FileNotFoundException
@@ -167,7 +166,7 @@ public class SmenyController /*implements IModuleInteface */ {
      * @throws RemoteException 
      */
     public void generateDataListEmployees() throws FileNotFoundException, NotBoundException, RemoteException {
-        List usersList = ServiceFacade.getInstance().getAllUsers();        
+        List usersList = ServiceFacade.getInstance().getAllUsers();
         List userRoleList = null;
 
         if (usersList == null || usersList.isEmpty()) {
@@ -444,7 +443,7 @@ public class SmenyController /*implements IModuleInteface */ {
                 i++;
             }
         }
-        modelOverviewLeaderWorkShift = new ResultTableModel(new String[]{"Datum a čas", "Typ směny", "Nahlášení", "Obsazení", "Potvrzení"}, tableWorkShiftOverview);
+        modelOverviewWorkShift = new ResultTableModel(new String[]{"Datum a čas", "Typ směny", "Nahlášení", "Obsazení", "Potvrzení"}, tableWorkShiftOverview);
     }
 
     /**
@@ -456,13 +455,23 @@ public class SmenyController /*implements IModuleInteface */ {
         int userId = userIds[userIndexId];
         int workShiftId = this.workShiftIds[workShiftIndexId];
         Attendance att = ServiceFacade.getInstance().getAttendaceByWorkShiftAndUser(workShiftId, userId);
-        if(att==null) {
-           ServiceFacade.getInstance().createNewAttendance(userId, workShiftId);    
+        if (att == null) {
+            ServiceFacade.getInstance().createNewAttendance(userId, workShiftId);
         } else {
-            this.showErrorMessage("Uživatel je již přihlášen", "Chyba");            
-        }        
+            this.showErrorMessage("Uživatel je již přihlášen", "Chyba");
+        }
     }
-    
+
+    public void saveCurrentUserToWorkShift(int workShiftId) throws FileNotFoundException, NotBoundException, RemoteException {
+        Attendance att = ServiceFacade.getInstance().getAttendaceByWorkShiftAndUser(workShiftId, user.getUserId());
+        if (att == null) {
+            ServiceFacade.getInstance().createNewAttendance(user.getUserId(), workShiftId);
+            showInformationMessage("Uživatel je přihlášen.", "Infomrace");
+        } else {
+            this.showErrorMessage("Uživatel je již přihlášen", "Chyba");
+        }
+    }
+
     /**
      * Generate list of login users for ChooseOcuppyEmployeeDialog
      * @param workShiftId
@@ -474,6 +483,7 @@ public class SmenyController /*implements IModuleInteface */ {
         List attendanceList = ServiceFacade.getInstance().getAttendaceByWorkShiftId(workShiftId);
         if (attendanceList == null || attendanceList.isEmpty()) {
             this.showErrorMessage("Nikdo není přihlášen.", "Chyba");
+            usersAttendaceIds = null;
         } else {
             Attendance attendance = null;
             int userId = 0;
@@ -496,23 +506,22 @@ public class SmenyController /*implements IModuleInteface */ {
             }
         }
     }
-    
+
     /**
      * Save user to workshift to occupy workshift. From login state to occupy state.
      * Delete from login state (from Attendance table)
-     * @param userIndexId
+     * @param userId
      * @param workShiftId
      * @throws FileNotFoundException
      * @throws NotBoundException
      * @throws RemoteException 
      */
-    public void saveOccupyUser(int userIndexId, int workShiftId) throws FileNotFoundException, NotBoundException, RemoteException {
-        int userId = usersAttendaceIds[userIndexId];
+    public void saveOccupyUser(int userId, int workShiftId) throws FileNotFoundException, NotBoundException, RemoteException {
         Workshift ws = ServiceFacade.getInstance().getWorkshiftById(workShiftId);
         if (ws.getIdUser() != null) {
             this.showErrorMessage("Směna je již obsazena", "Chyba");
         } else {
-            boolean result = ServiceFacade.getInstance().updateWorkshift(workShiftId, userId);
+            boolean result = ServiceFacade.getInstance().updateWorkshiftLogin(workShiftId, userId);
             if (result) {
                 Attendance att = ServiceFacade.getInstance().getAttendaceByWorkShiftAndUser(workShiftId, userId);
                 ServiceFacade.getInstance().deleteAttendanceById(att.getIdAttendance());
@@ -528,26 +537,59 @@ public class SmenyController /*implements IModuleInteface */ {
      * @throws NotBoundException
      * @throws RemoteException 
      */
-    public void unOccupyWorkshift(int workShiftId) throws FileNotFoundException, NotBoundException, RemoteException {        
-        boolean result = ServiceFacade.getInstance().updateWorkshift(workShiftId, null);
-        if(result) {
+    public void unOccupyWorkshift(int workShiftId) throws FileNotFoundException, NotBoundException, RemoteException {
+        boolean result = ServiceFacade.getInstance().updateWorkshiftLogin(workShiftId, null);
+        if (result) {
+            this.updateOccupationMessage(workShiftId, "Nepotvrzeno");
             this.showInformationMessage("Obsazení směny bylo uvolněno.", "Informace");
         } else {
             this.showErrorMessage("Nepodařilo se zrušit obsazení směny.", "Chyba");
         }
-                
+
+    }
+
+    /**
+     * Logout actually login user form workshift where is he login.
+     * 
+     * @param workShiftId
+     * @throws FileNotFoundException
+     * @throws NotBoundException
+     * @throws RemoteException 
+     */
+    public void logoutCurrentUserFromWorkShift(int workShiftId) throws FileNotFoundException, NotBoundException, RemoteException {
+        Attendance att = ServiceFacade.getInstance().getAttendaceByWorkShiftAndUser(workShiftId, user.getUserId());
+        if (att == null) {
+            this.showErrorMessage("Na tuto směnu nejste přihlášen/a.", "Chyba");
+        } else {
+            ServiceFacade.getInstance().deleteAttendanceById(att.getIdAttendance());
+            this.showInformationMessage("Byl/a jste úspěšně odhlášen ze směny", "Informace");
+        }
+    }
+    
+    public void updateOccupationMessageUser(int idWorkshift, String message) throws FileNotFoundException, NotBoundException, RemoteException {
+        Workshift ws = ServiceFacade.getInstance().getWorkshiftById(idWorkshift);        
+        if(ws.getIdUser().equals(user.getUserId())) {
+            ServiceFacade.getInstance().updateWorkshiftOccupation(ws.getIdWorkshift(), message);
+            this.showInformationMessage("Akce úspěšně provedena.", "Informace");
+        } else {
+            this.showErrorMessage("Akce se nezdařila. Nejste obsazen/a do vybrané směny.", "Chyba");
+        }        
+    }
+    
+    public void updateOccupationMessage(int idWorkshift, String message) throws FileNotFoundException, NotBoundException, RemoteException {        
+            ServiceFacade.getInstance().updateWorkshiftOccupation(idWorkshift, message);                    
     }
     
     public String[] getDataListLoginUsers() {
         return this.datalListLoginUsers;
     }
 
-    public int getWorkShiftIdFromLeaderViewTable(int row) {
+    public int getWorkShiftIdFromOverViewTable(int row) {
         return this.workShiftIds[row];
     }
 
-    public ResultTableModel getModelOverviewLeaderWorkShift() {
-        return this.modelOverviewLeaderWorkShift;
+    public ResultTableModel getModelOverviewWorkShift() {
+        return this.modelOverviewWorkShift;
     }
 
     public String[] getDataListTemplates() {
@@ -769,6 +811,15 @@ public class SmenyController /*implements IModuleInteface */ {
         }
 
         return process;
+
+    }
+
+    public int getUserAttendanceId(int indexUserId) {
+        return usersAttendaceIds[indexUserId];
+    }
+
+    public User getCurrentUser() {
+        return this.user;
     }
 
     /**
