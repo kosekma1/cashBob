@@ -49,10 +49,18 @@ public class WorkShiftController {
         return Workshift.getAllActiveWorkShifts(dateFrom);
     }
 
-    public boolean updateWorkshift(int workShiftId, Integer userId) {
+    public boolean updateWorkshiftLogin(int workShiftId, Integer userId) {
         Workshift ws = Workshift.findByIdNotDeleted(workShiftId);
         if(ws==null) return false;
         ws.setIdUser(userId);     
+        ws.update();
+        return true;
+    }
+    
+    public boolean updateWorkshiftOccupation(int workShiftId, String message) {
+        Workshift ws = Workshift.findByIdNotDeleted(workShiftId);
+        if(ws==null) return false;
+        ws.setUserSubmit(message);
         ws.update();
         return true;
     }

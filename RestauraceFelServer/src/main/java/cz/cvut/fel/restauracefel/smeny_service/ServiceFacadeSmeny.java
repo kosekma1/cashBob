@@ -141,8 +141,13 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
     }
 
     @Override
-    public boolean updateWorkshift(int workShiftId, Integer userId) throws RemoteException {
-        return WorkShiftController.getInstance().updateWorkshift(workShiftId, userId);
+    public boolean updateWorkshiftLogin(int workShiftId, Integer userId) throws RemoteException {
+        return WorkShiftController.getInstance().updateWorkshiftLogin(workShiftId, userId);
+    }
+    
+    @Override
+    public boolean updateWorkshiftOccupation(int workShiftId, String message) throws RemoteException {
+        return WorkShiftController.getInstance().updateWorkshiftOccupation(workShiftId, message);
     }
 
     //ATTENDANCE      
@@ -316,5 +321,5 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
     @Override
     public boolean isUserRole(int userId, int roleId) throws RemoteException {
         return UserRoleController.getInstance().isUserRole(userId, roleId);
-    }
+    }    
 }
