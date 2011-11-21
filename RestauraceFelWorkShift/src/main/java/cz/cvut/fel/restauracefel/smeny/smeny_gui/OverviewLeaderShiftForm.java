@@ -55,9 +55,9 @@ public class OverviewLeaderShiftForm extends AbstractForm {
     private void initMyComponents() {
 
         contextMenu = new JPopupMenu();
-        contextMenu.add("Obsadit"); //TODO priradit akce                              
-        contextMenu.add("Zrušit obsazení"); //TODO priradit akce - presun do prihlasenych                                             
-        contextMenu.add(new EmployeeAction(parent, jTableOverView));
+        contextMenu.add(new OccupyAction(parent, jTableOverView));
+        contextMenu.add(new CancelOccupationAction(jTableOverView));
+        contextMenu.add(new LoginEmployeeAction(parent, jTableOverView));
         contextMenu.addSeparator();
         contextMenu.add("Konec");
 
@@ -363,32 +363,15 @@ private void jButtonOccupyActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 }//GEN-LAST:event_jButtonOccupyActionPerformed
 
 private void jButtonCancelOccupyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelOccupyActionPerformed
-
-    int rowNumber = this.jTableOverView.getSelectedRow();
-    if (rowNumber > -1) {
-        int result = parent.showConfirmDialogStandard("Opravdu zrušit obsazení?", "Dotaz");
-        if (result == 0) {
-            int workShiftId = SmenyController.getInstance().getWorkShiftIdFromOverViewTable(rowNumber);
-            try {
-                SmenyController.getInstance().unOccupyWorkshift(workShiftId);
-                SmenyController.getInstance().generateTableOverviewLeader();
-                this.jTableOverView.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
-            } catch (FileNotFoundException ex) {
-                logError(ex);
-                Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (NotBoundException ex) {
-                Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
-                logError(ex);
-            } catch (RemoteException ex) {
-                Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
-                logError(ex);
-            } catch (Exception ex) {
-                logError(ex);
-            }
+        try {
+            SmenyController.getInstance().cancelOccupationWorkshift(this.jTableOverView);            
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
         }
-    } else {
-        parent.showMessageDialogInformation("Vyberte řádek", "Informace");
-    }
 }//GEN-LAST:event_jButtonCancelOccupyActionPerformed
 
     /**

@@ -60,10 +60,10 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
     private void initMyComponents() {
 
         contextMenu = new JPopupMenu();
-        contextMenu.add("Přihlásit"); //TODO priradit akce               
-        contextMenu.add("Odhlásit"); //TODO priradit akce - presun do prihlasenych                              
-        contextMenu.add("Potvrdit obsazení"); //TODO priradit akce - presun do prihlasenych                              
-        contextMenu.add("Žádost o zrušení"); //TODO priradit akce - presun do prihlasenych                                             
+        contextMenu.add(new LoginCurrentUserAction(parent, this.jTableWorkShiftOverview));
+        contextMenu.add(new LogoutCurrentUserAction(parent, this.jTableWorkShiftOverview));
+        contextMenu.add(new ApproveOccupyAction(parent, this.jTableWorkShiftOverview)); 
+        contextMenu.add(new RequestCancelOccupationAction(parent, this.jTableWorkShiftOverview));                                        
         contextMenu.addSeparator();
         contextMenu.add("Konec");
 

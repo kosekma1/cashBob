@@ -8,6 +8,7 @@ import cz.cvut.fel.restauracefel.hibernate.Typeworkshift;
 import cz.cvut.fel.restauracefel.hibernate.User;
 import cz.cvut.fel.restauracefel.hibernate.UserRole;
 import cz.cvut.fel.restauracefel.hibernate.Workshift;
+import cz.cvut.fel.restauracefel.smeny.smeny_gui.OverviewLeaderShiftForm;
 import cz.cvut.fel.restauracefel.smeny.smeny_gui.SmenyViewController;
 import cz.cvut.fel.restauracefel.smeny.smeny_main.ResultTableModel;
 import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
@@ -17,8 +18,11 @@ import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 
 /**
  * Kontrolér pro Smeny. Spojuje gui a model.
@@ -466,7 +470,7 @@ public class SmenyController /*implements IModuleInteface */ {
         Attendance att = ServiceFacade.getInstance().getAttendaceByWorkShiftAndUser(workShiftId, user.getUserId());
         if (att == null) {
             ServiceFacade.getInstance().createNewAttendance(user.getUserId(), workShiftId);
-            showInformationMessage("Uživatel je přihlášen.", "Infomrace");
+            showMessageDialogInformation("Uživatel je přihlášen.", "Infomrace");
         } else {
             this.showErrorMessage("Uživatel je již přihlášen", "Chyba");
         }
@@ -484,6 +488,7 @@ public class SmenyController /*implements IModuleInteface */ {
         if (attendanceList == null || attendanceList.isEmpty()) {
             this.showErrorMessage("Nikdo není přihlášen.", "Chyba");
             usersAttendaceIds = null;
+            datalListLoginUsers = new String[0];            
         } else {
             Attendance attendance = null;
             int userId = 0;
@@ -529,7 +534,7 @@ public class SmenyController /*implements IModuleInteface */ {
         }
 
     }
-
+   
     /**
      * Cancel occupation of workshift with user.
      * @param workShiftId
@@ -537,15 +542,27 @@ public class SmenyController /*implements IModuleInteface */ {
      * @throws NotBoundException
      * @throws RemoteException 
      */
-    public void unOccupyWorkshift(int workShiftId) throws FileNotFoundException, NotBoundException, RemoteException {
-        boolean result = ServiceFacade.getInstance().updateWorkshiftLogin(workShiftId, null);
-        if (result) {
-            this.updateOccupationMessage(workShiftId, "Nepotvrzeno");
-            this.showInformationMessage("Obsazení směny bylo uvolněno.", "Informace");
+    public void cancelOccupationWorkshift(JTable table) throws FileNotFoundException, NotBoundException, RemoteException {
+        int rowNumber = table.getSelectedRow();
+        boolean resultUpdate = false;
+        int workShiftId = -1;
+        if (rowNumber > -1) {
+            int resultUI = showConfirmDialogStandard("Opravdu zrušit obsazení?", "Dotaz");
+            if (resultUI == 0) {
+                workShiftId = getWorkShiftIdFromOverViewTable(rowNumber);
+                resultUpdate = ServiceFacade.getInstance().updateWorkshiftLogin(workShiftId, null);
+                if (resultUpdate) {
+                    updateOccupationMessage(workShiftId, "Nepotvrzeno");
+                    generateTableOverviewLeader();
+                    table.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
+                    showMessageDialogInformation("Obsazení směny bylo uvolněno.", "Informace");
+                } else {
+                    this.showErrorMessage("Nepodařilo se zrušit obsazení směny.", "Chyba");
+                }
+            }
         } else {
-            this.showErrorMessage("Nepodařilo se zrušit obsazení směny.", "Chyba");
+            showMessageDialogInformation("Vyberte řádek", "Informace");
         }
-
     }
 
     /**
@@ -562,24 +579,24 @@ public class SmenyController /*implements IModuleInteface */ {
             this.showErrorMessage("Na tuto směnu nejste přihlášen/a.", "Chyba");
         } else {
             ServiceFacade.getInstance().deleteAttendanceById(att.getIdAttendance());
-            this.showInformationMessage("Byl/a jste úspěšně odhlášen ze směny", "Informace");
+            this.showMessageDialogInformation("Byl/a jste úspěšně odhlášen ze směny", "Informace");
         }
     }
-    
+
     public void updateOccupationMessageUser(int idWorkshift, String message) throws FileNotFoundException, NotBoundException, RemoteException {
-        Workshift ws = ServiceFacade.getInstance().getWorkshiftById(idWorkshift);        
-        if(ws.getIdUser().equals(user.getUserId())) {
+        Workshift ws = ServiceFacade.getInstance().getWorkshiftById(idWorkshift);
+        if (ws.getIdUser().equals(user.getUserId())) {
             ServiceFacade.getInstance().updateWorkshiftOccupation(ws.getIdWorkshift(), message);
-            this.showInformationMessage("Akce úspěšně provedena.", "Informace");
+            this.showMessageDialogInformation("Akce úspěšně provedena.", "Informace");
         } else {
             this.showErrorMessage("Akce se nezdařila. Nejste obsazen/a do vybrané směny.", "Chyba");
-        }        
+        }
     }
-    
-    public void updateOccupationMessage(int idWorkshift, String message) throws FileNotFoundException, NotBoundException, RemoteException {        
-            ServiceFacade.getInstance().updateWorkshiftOccupation(idWorkshift, message);                    
+
+    public void updateOccupationMessage(int idWorkshift, String message) throws FileNotFoundException, NotBoundException, RemoteException {
+        ServiceFacade.getInstance().updateWorkshiftOccupation(idWorkshift, message);
     }
-    
+
     public String[] getDataListLoginUsers() {
         return this.datalListLoginUsers;
     }
@@ -689,7 +706,7 @@ public class SmenyController /*implements IModuleInteface */ {
                     ServiceFacade.getInstance().createNewTemplateList(idTemplate, tws.getIdTypeWorkshift());
                 }
             }
-            showInformationMessage("Šablona uložena.", "Úspěšné uložení.");
+            showMessageDialogInformation("Šablona uložena.", "Úspěšné uložení.");
         }
         return process;
     }
@@ -738,7 +755,7 @@ public class SmenyController /*implements IModuleInteface */ {
             //System.out.println("TW: " + tw.getName() + " " + tw.getFromTime() + " " + tw.getToTime());
             ServiceFacade.getInstance().createNewTypewWorkShift(tw);
 
-            showInformationMessage("Typ směny byl uložen.", "Informace");
+            showMessageDialogInformation("Typ směny byl uložen.", "Informace");
         }
 
         return process;
@@ -807,7 +824,7 @@ public class SmenyController /*implements IModuleInteface */ {
                     dateFromMills = dateFrom.getTime();
                 }
             }
-            showInformationMessage("Pracovní směny uloženy.", "Úspěšné uložení dat");
+            showMessageDialogInformation("Pracovní směny uloženy.", "Úspěšné uložení dat");
         }
 
         return process;
@@ -836,7 +853,17 @@ public class SmenyController /*implements IModuleInteface */ {
      * @param error
      * @param title 
      */
-    public void showInformationMessage(String error, String title) {
+    public void showMessageDialogInformation(String error, String title) {
         JOptionPane.showMessageDialog(null, error, title, JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    /**
+     * Klasicke Ano/Ne potvrzovací okno
+     * @param text Popis
+     * @param title
+     * @return 0, pokud klikne na ano
+     */
+    public int showConfirmDialogStandard(String text, String title) {
+        return JOptionPane.showConfirmDialog(null, text, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
     }
 }
