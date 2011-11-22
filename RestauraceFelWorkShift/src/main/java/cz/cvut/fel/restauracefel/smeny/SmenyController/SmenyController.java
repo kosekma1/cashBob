@@ -8,7 +8,6 @@ import cz.cvut.fel.restauracefel.hibernate.Typeworkshift;
 import cz.cvut.fel.restauracefel.hibernate.User;
 import cz.cvut.fel.restauracefel.hibernate.UserRole;
 import cz.cvut.fel.restauracefel.hibernate.Workshift;
-import cz.cvut.fel.restauracefel.smeny.smeny_gui.OverviewLeaderShiftForm;
 import cz.cvut.fel.restauracefel.smeny.smeny_gui.SmenyViewController;
 import cz.cvut.fel.restauracefel.smeny.smeny_main.ResultTableModel;
 import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
@@ -18,14 +17,12 @@ import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 /**
- * Kontrolér pro Smeny. Spojuje gui a model.
+ * Controller for workshifts forms. Connects GUI and MODEL.
  * 
  * @author Martin Kosek
  */
@@ -488,7 +485,7 @@ public class SmenyController /*implements IModuleInteface */ {
         if (attendanceList == null || attendanceList.isEmpty()) {
             this.showErrorMessage("Nikdo není přihlášen.", "Chyba");
             usersAttendaceIds = null;
-            datalListLoginUsers = new String[0];            
+            datalListLoginUsers = new String[0];
         } else {
             Attendance attendance = null;
             int userId = 0;
@@ -534,7 +531,7 @@ public class SmenyController /*implements IModuleInteface */ {
         }
 
     }
-   
+
     /**
      * Cancel occupation of workshift with user.
      * @param workShiftId

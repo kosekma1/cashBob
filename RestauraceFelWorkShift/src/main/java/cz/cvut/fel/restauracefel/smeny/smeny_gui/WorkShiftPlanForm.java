@@ -1,23 +1,17 @@
 package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 
 import com.toedter.calendar.JDateChooser;
-import java.awt.Component;
-import java.awt.Insets;
 import java.awt.Point;
 import java.io.FileNotFoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import cz.cvut.fel.restauracefel.library.service.EmptyListException;
-//import cz.cvut.fel.restauracefel.pokladna_service.ServiceFacade;
-import cz.cvut.fel.restauracefel.library.service.Validator;
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JTextField;
 
 /**
  * Trida reprezentujici GUI formular pro vytvareni noveho uctu.
@@ -26,10 +20,6 @@ import javax.swing.JTextField;
  */
 public class WorkShiftPlanForm extends AbstractForm {
 
-    /*private ChooseTableDialog chooseTableDialog = null;
-    private ChoosePersonDialog choosePersonDialog = null;
-    private ChooseDiscountTypeDialog chooseDiscountTypeDialog = null;
-    private ChooseAccountCategoryDialog chooseAccountCategoryDialog = null;*/
     private ChooseShiftDialog chooseShiftDialog = null;
     private ChooseDeleteShiftDialog chooseDeleteShiftDialog = null;
     private ChooseTemplateDialog chooseTemplateDialog = null;
@@ -59,14 +49,19 @@ public class WorkShiftPlanForm extends AbstractForm {
     }
 
     private void initCalendars() {
+        
+        Locale czechLocale = new Locale("cs", "CZ");
+        
         dateChooserFrom = new JDateChooser();
         dateChooserFrom.setMinSelectableDate(Calendar.getInstance().getTime());
         dateChooserFrom.setBounds(0, 0, 218, 43);
+        dateChooserFrom.setLocale(czechLocale);
         jPanelDateChooserFrom.add(dateChooserFrom, null);
 
         dateChooserTo = new JDateChooser();
         dateChooserTo.setMinSelectableDate(Calendar.getInstance().getTime());
         dateChooserTo.setBounds(0, 0, 218, 43);
+        dateChooserTo.setLocale(czechLocale);
         jPanelDateChooserTo.add(dateChooserTo, null);
 
     }

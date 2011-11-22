@@ -11,6 +11,9 @@ import java.awt.event.MouseEvent;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPopupMenu;
@@ -48,6 +51,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         loadAllData();
         initComponents();
         initMyComponents();
+        initRangeDate();
         refresh();
         clearFields();
     }
@@ -112,12 +116,47 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         SmenyController.getInstance().generateTableOverviewLeader();
         //jTableOverView.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
     }
-
+    
     /**
-     * Metoda cisti vsechny vstupni pole formulare.
+     * Gets and sets a week of year and first and last day in that week where is
+     * current date.
      */
-    @Override
-    protected void clearFields() {
+    private void initRangeDate() {
+        Calendar cal = Calendar.getInstance();
+        Date date = new Date();
+        cal.setTime(date);
+        int week = cal.get(Calendar.WEEK_OF_YEAR);
+        int day = cal.get(Calendar.DAY_OF_WEEK);
+        int firstDayOfWeek = cal.getFirstDayOfWeek();
+        int diff = 0;
+        //universal for all locales
+        if (day >= firstDayOfWeek) {
+            diff = firstDayOfWeek - day;
+        } else {
+            if (diff == -1) { //sunday
+                diff = -6; 
+            }
+            if (diff == -2) { //saturday
+                diff = -5; 
+            }
+        }
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        System.out.println("Week: " + week);
+        cal.add(Calendar.DAY_OF_WEEK, diff);//first date
+        String firstDate = sdf.format(cal.getTime());
+        System.out.println("First day " + sdf.format(cal.getTime()));
+        cal.add(Calendar.DAY_OF_WEEK, 6);//first date
+        String lastDate = sdf.format(cal.getTime());        
+        System.out.println("Last day " + sdf.format(cal.getTime()));
+        jTextFieldWeek.setText(String.valueOf(week));
+        jTextFieldWeekRange.setText(firstDate + " - " + lastDate);
+        
+    }
+/**
+ * Metoda cisti vsechny vstupni pole formulare.
+ */
+@Override
+        protected void clearFields() {
         //Validator.clearTextField(jTextFieldName);        
     }
 
@@ -135,9 +174,9 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         jPanel1 = new javax.swing.JPanel();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
-        jTextField5 = new javax.swing.JTextField();
+        jTextFieldWeekRange = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
+        jTextFieldWeek = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -170,19 +209,19 @@ public class OverviewLeaderShiftForm extends AbstractForm {
             }
         });
 
-        jTextField5.setFont(new java.awt.Font("Calibri", 0, 14));
-        jTextField5.setText("9.5.2011-14.5.2011");
-        jTextField5.addActionListener(new java.awt.event.ActionListener() {
+        jTextFieldWeekRange.setFont(new java.awt.Font("Calibri", 0, 14));
+        jTextFieldWeekRange.setText("9.5.2011-14.5.2011");
+        jTextFieldWeekRange.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField5ActionPerformed(evt);
+                jTextFieldWeekRangeActionPerformed(evt);
             }
         });
 
         jLabel8.setFont(new java.awt.Font("Calibri", 1, 14));
         jLabel8.setText("Týden:");
 
-        jTextField4.setFont(new java.awt.Font("Calibri", 0, 14));
-        jTextField4.setText("14");
+        jTextFieldWeek.setFont(new java.awt.Font("Calibri", 0, 14));
+        jTextFieldWeek.setText("14");
 
         jComboBox1.setFont(new java.awt.Font("Calibri", 0, 14));
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Vše", "Obsazené", "Neobsazené", "Potvrzené", "Žádosti o zrušení" }));
@@ -196,11 +235,11 @@ public class OverviewLeaderShiftForm extends AbstractForm {
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
                 .addComponent(jLabel8)
-                .addGap(18, 18, 18)
-                .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextFieldWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextFieldWeekRange, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 53, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -215,9 +254,9 @@ public class OverviewLeaderShiftForm extends AbstractForm {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel8)))
+                        .addComponent(jTextFieldWeekRange, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel8)
+                        .addComponent(jTextFieldWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -330,9 +369,9 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField5ActionPerformed
+    private void jTextFieldWeekRangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldWeekRangeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField5ActionPerformed
+    }//GEN-LAST:event_jTextFieldWeekRangeActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         // TODO add your handling code here:
@@ -347,13 +386,25 @@ private void jButtonOccupyActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             chooseOcuppyEmployeeDialog.setVisible(true);
         } catch (RemoteException ex) {
             logError(ex);
-            Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+            Logger
+
+.getLogger(CreateTemplateForm.class  
+
+.getName()).log(Level.SEVERE, null, ex);
         } catch (NotBoundException ex) {
             logError(ex);
-            Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+            Logger
+
+.getLogger(CreateTemplateForm.class  
+
+.getName()).log(Level.SEVERE, null, ex);
         } catch (FileNotFoundException ex) {
             logError(ex);
-            Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+            Logger
+
+.getLogger(CreateTemplateForm.class  
+
+.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             logError(ex);
         }
@@ -365,12 +416,24 @@ private void jButtonOccupyActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 private void jButtonCancelOccupyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelOccupyActionPerformed
         try {
             SmenyController.getInstance().cancelOccupationWorkshift(this.jTableOverView);            
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NotBoundException ex) {
-            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        
+
+} catch (FileNotFoundException ex) {
+            Logger.getLogger(OverviewLeaderShiftForm.class  
+
+.getName()).log(Level.SEVERE, null, ex);
+        } 
+
+catch (NotBoundException ex) {
+            Logger.getLogger(OverviewLeaderShiftForm.class  
+
+.getName()).log(Level.SEVERE, null, ex);
+        } 
+
+catch (RemoteException ex) {
+            Logger.getLogger(OverviewLeaderShiftForm.class  
+
+.getName()).log(Level.SEVERE, null, ex);
         }
 }//GEN-LAST:event_jButtonCancelOccupyActionPerformed
 
@@ -386,16 +449,32 @@ private void jButtonCancelOccupyActionPerformed(java.awt.event.ActionEvent evt) 
                 chooseEmployeeDialog.setVisible(true);
             } catch (EmptyListException ex) {
                 logError(ex);
-                Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+                Logger
+
+.getLogger(CreateTemplateForm.class  
+
+.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
                 logError(ex);
-                Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+                Logger
+
+.getLogger(CreateTemplateForm.class  
+
+.getName()).log(Level.SEVERE, null, ex);
             } catch (NotBoundException ex) {
                 logError(ex);
-                Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+                Logger
+
+.getLogger(CreateTemplateForm.class  
+
+.getName()).log(Level.SEVERE, null, ex);
             } catch (FileNotFoundException ex) {
                 logError(ex);
-                Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+                Logger
+
+.getLogger(CreateTemplateForm.class  
+
+.getName()).log(Level.SEVERE, null, ex);
             } catch (Exception ex) {
                 logError(ex);
             }
@@ -414,8 +493,12 @@ private void jButtonCancelOccupyActionPerformed(java.awt.event.ActionEvent evt) 
             vystup.println(ex.getMessage());
             vystup.close();
 
-        } catch (IOException ex1) {
-            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex1);
+        
+
+} catch (IOException ex1) {
+            Logger.getLogger(MainFrame.class  
+
+.getName()).log(Level.SEVERE, null, ex1);
         }
     }
 
@@ -437,7 +520,7 @@ private void jButtonLoginEmployeeActionPerformed(java.awt.event.ActionEvent evt)
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableOverView;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
+    private javax.swing.JTextField jTextFieldWeek;
+    private javax.swing.JTextField jTextFieldWeekRange;
     // End of variables declaration//GEN-END:variables
 }
