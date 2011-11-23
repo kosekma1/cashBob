@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPopupMenu;
@@ -47,11 +48,12 @@ public class OverviewLeaderShiftForm extends AbstractForm {
     public OverviewLeaderShiftForm(MainFrame parent, StatusBar bar) throws FileNotFoundException, NotBoundException, RemoteException {
         osf = this; //necessary for repaint 
         this.parent = parent;
-        this.statusBar = bar;
-        loadAllData();
+        this.statusBar = bar;        
+        initRangeDate(); //1
+        loadAllData(); //2
         initComponents();
         initMyComponents();
-        initRangeDate();
+        setDateFromToWeek();
         refresh();
         clearFields();
     }
@@ -113,16 +115,27 @@ public class OverviewLeaderShiftForm extends AbstractForm {
     }
 
     private void loadAllData() throws FileNotFoundException, RemoteException, NotBoundException {
+
         SmenyController.getInstance().generateTableOverviewLeader();
         //jTableOverView.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
     }
-    
+
+    private void setDateFromToWeek() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        String firstDate = sdf.format(SmenyController.getInstance().getDateFrom());
+        String lastDate = sdf.format(SmenyController.getInstance().getDateTo());
+        int week = SmenyController.getInstance().getWeek();
+        jTextFieldWeek.setText(String.valueOf(week));
+        jTextFieldWeekRange.setText(firstDate + " - " + lastDate);
+    }
+
     /**
      * Gets and sets a week of year and first and last day in that week where is
      * current date.
      */
     private void initRangeDate() {
-        Calendar cal = Calendar.getInstance();
+        Locale locale = new Locale("cs", "CZ");
+        Calendar cal = Calendar.getInstance(locale);         
         Date date = new Date();
         cal.setTime(date);
         int week = cal.get(Calendar.WEEK_OF_YEAR);
@@ -134,29 +147,25 @@ public class OverviewLeaderShiftForm extends AbstractForm {
             diff = firstDayOfWeek - day;
         } else {
             if (diff == -1) { //sunday
-                diff = -6; 
+                diff = -6;
             }
             if (diff == -2) { //saturday
-                diff = -5; 
+                diff = -5;
             }
         }
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-        System.out.println("Week: " + week);
-        cal.add(Calendar.DAY_OF_WEEK, diff);//first date
-        String firstDate = sdf.format(cal.getTime());
-        System.out.println("First day " + sdf.format(cal.getTime()));
-        cal.add(Calendar.DAY_OF_WEEK, 6);//first date
-        String lastDate = sdf.format(cal.getTime());        
-        System.out.println("Last day " + sdf.format(cal.getTime()));
-        jTextFieldWeek.setText(String.valueOf(week));
-        jTextFieldWeekRange.setText(firstDate + " - " + lastDate);
-        
+
+        SmenyController.getInstance().setWeek(week);
+        cal.add(Calendar.DAY_OF_WEEK, diff);//first date of the week                
+        SmenyController.getInstance().setDateFrom(cal.getTime());
+        cal.add(Calendar.DAY_OF_WEEK, 6);//last date of the week                
+        SmenyController.getInstance().setDateTo(cal.getTime());
     }
-/**
- * Metoda cisti vsechny vstupni pole formulare.
- */
-@Override
-        protected void clearFields() {
+
+    /**
+     * Metoda cisti vsechny vstupni pole formulare.
+     */
+    @Override
+    protected void clearFields() {
         //Validator.clearTextField(jTextFieldName);        
     }
 
@@ -209,8 +218,10 @@ public class OverviewLeaderShiftForm extends AbstractForm {
             }
         });
 
-        jTextFieldWeekRange.setFont(new java.awt.Font("Calibri", 0, 14));
+        jTextFieldWeekRange.setEditable(false);
+        jTextFieldWeekRange.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
         jTextFieldWeekRange.setText("9.5.2011-14.5.2011");
+        jTextFieldWeekRange.setToolTipText("První a poslední den zvoleného týdne.");
         jTextFieldWeekRange.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldWeekRangeActionPerformed(evt);
@@ -220,7 +231,8 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         jLabel8.setFont(new java.awt.Font("Calibri", 1, 14));
         jLabel8.setText("Týden:");
 
-        jTextFieldWeek.setFont(new java.awt.Font("Calibri", 0, 14));
+        jTextFieldWeek.setEditable(false);
+        jTextFieldWeek.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
         jTextFieldWeek.setText("14");
 
         jComboBox1.setFont(new java.awt.Font("Calibri", 0, 14));
@@ -386,25 +398,13 @@ private void jButtonOccupyActionPerformed(java.awt.event.ActionEvent evt) {//GEN
             chooseOcuppyEmployeeDialog.setVisible(true);
         } catch (RemoteException ex) {
             logError(ex);
-            Logger
-
-.getLogger(CreateTemplateForm.class  
-
-.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NotBoundException ex) {
             logError(ex);
-            Logger
-
-.getLogger(CreateTemplateForm.class  
-
-.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
         } catch (FileNotFoundException ex) {
             logError(ex);
-            Logger
-
-.getLogger(CreateTemplateForm.class  
-
-.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             logError(ex);
         }
@@ -414,27 +414,17 @@ private void jButtonOccupyActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 }//GEN-LAST:event_jButtonOccupyActionPerformed
 
 private void jButtonCancelOccupyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelOccupyActionPerformed
-        try {
-            SmenyController.getInstance().cancelOccupationWorkshift(this.jTableOverView);            
-        
+    try {
+        SmenyController.getInstance().cancelOccupationWorkshift(this.jTableOverView);
 
-} catch (FileNotFoundException ex) {
-            Logger.getLogger(OverviewLeaderShiftForm.class  
 
-.getName()).log(Level.SEVERE, null, ex);
-        } 
-
-catch (NotBoundException ex) {
-            Logger.getLogger(OverviewLeaderShiftForm.class  
-
-.getName()).log(Level.SEVERE, null, ex);
-        } 
-
-catch (RemoteException ex) {
-            Logger.getLogger(OverviewLeaderShiftForm.class  
-
-.getName()).log(Level.SEVERE, null, ex);
-        }
+    } catch (FileNotFoundException ex) {
+        Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (NotBoundException ex) {
+        Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+    } catch (RemoteException ex) {
+        Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+    }
 }//GEN-LAST:event_jButtonCancelOccupyActionPerformed
 
     /**
@@ -449,32 +439,16 @@ catch (RemoteException ex) {
                 chooseEmployeeDialog.setVisible(true);
             } catch (EmptyListException ex) {
                 logError(ex);
-                Logger
-
-.getLogger(CreateTemplateForm.class  
-
-.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
             } catch (RemoteException ex) {
                 logError(ex);
-                Logger
-
-.getLogger(CreateTemplateForm.class  
-
-.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NotBoundException ex) {
                 logError(ex);
-                Logger
-
-.getLogger(CreateTemplateForm.class  
-
-.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
             } catch (FileNotFoundException ex) {
                 logError(ex);
-                Logger
-
-.getLogger(CreateTemplateForm.class  
-
-.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
             } catch (Exception ex) {
                 logError(ex);
             }
@@ -493,12 +467,10 @@ catch (RemoteException ex) {
             vystup.println(ex.getMessage());
             vystup.close();
 
-        
 
-} catch (IOException ex1) {
-            Logger.getLogger(MainFrame.class  
 
-.getName()).log(Level.SEVERE, null, ex1);
+        } catch (IOException ex1) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex1);
         }
     }
 

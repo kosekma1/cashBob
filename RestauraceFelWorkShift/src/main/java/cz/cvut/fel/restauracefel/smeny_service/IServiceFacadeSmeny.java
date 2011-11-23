@@ -44,6 +44,7 @@ public interface IServiceFacadeSmeny extends Remote  {
     public List getAllActiveWorkShifts(Date dateFrom) throws RemoteException;
     public boolean updateWorkshiftLogin(int workShiftId, Integer userId) throws RemoteException;
     public boolean updateWorkshiftOccupation(int workShiftId, String message) throws RemoteException;
+    public List getWorkshiftsFromTo(Date dateFrom, Date dateTo) throws RemoteException;
     
     //ATTENDANCE
     public void createNewAttendance(int userId, int workShiftId) throws RemoteException;

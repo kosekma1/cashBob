@@ -64,6 +64,10 @@ public class SmenyController /*implements IModuleInteface */ {
     private String[] datalListLoginUsers = null;     //for chooseEmployeeDialog
     private int[] usersAttendaceIds = null; //for chooseEmployeeDialog - evidence of ids
 
+    private Date dateFrom = null;
+    private Date dateTo = null;
+    private int week = 0;
+    
     public SmenyController() {
         view = SmenyViewController.getInstance();
     }
@@ -379,8 +383,14 @@ public class SmenyController /*implements IModuleInteface */ {
      */
     public void generateTableOverviewLeader() throws FileNotFoundException, NotBoundException, RemoteException {
         Date actualDate = new Date();
-        List workShifts = ServiceFacade.getInstance().getAllActiveWorkShifts(actualDate); //get all planned workshift from today, not history
-
+        //List workShifts = ServiceFacade.getInstance().getAllActiveWorkShifts(actualDate); //get all planned workshift from today, not history
+        
+        List workShifts = ServiceFacade.getInstance().getWorkshiftsFromTo(this.dateFrom, this.dateTo); //get all planned workshift from today, not history
+        if(workShifts==null || workShifts.isEmpty()) {
+            this.showMessageDialogInformation("Žádné směny nejsou plánovany.", "Informace");            
+            return;
+        }                    
+        
         int columns = 5; //table has 5 columns
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
@@ -862,5 +872,47 @@ public class SmenyController /*implements IModuleInteface */ {
      */
     public int showConfirmDialogStandard(String text, String title) {
         return JOptionPane.showConfirmDialog(null, text, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+    }
+
+    /**
+     * @return the dateFrom
+     */
+    public Date getDateFrom() {
+        return dateFrom;
+    }
+
+    /**
+     * @param dateFrom the dateFrom to set
+     */
+    public void setDateFrom(Date dateFrom) {
+        this.dateFrom = dateFrom;
+    }
+
+    /**
+     * @return the dateTo
+     */
+    public Date getDateTo() {
+        return dateTo;
+    }
+
+    /**
+     * @param dateTo the dateTo to set
+     */
+    public void setDateTo(Date dateTo) {
+        this.dateTo = dateTo;
+    }
+
+    /**
+     * @return the week
+     */
+    public int getWeek() {
+        return week;
+    }
+
+    /**
+     * @param week the week to set
+     */
+    public void setWeek(int week) {
+        this.week = week;
     }
 }
