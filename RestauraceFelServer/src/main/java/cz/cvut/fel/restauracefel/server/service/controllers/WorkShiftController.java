@@ -64,4 +64,8 @@ public class WorkShiftController {
         ws.update();
         return true;
     }
+    
+    public List getWorkshiftsFromTo(Date dateFrom, Date dateTo) {
+        return Workshift.getWorkshiftsFromTo(dateFrom, dateTo);
+    }
 }

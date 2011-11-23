@@ -132,7 +132,7 @@ public class Workshift extends DBEntity implements java.io.Serializable {
     public void setIsDeleted(int isDeleted) {
         this.isDeleted = isDeleted;
     }
-    
+
     public void update() {
         update(this);
     }
@@ -163,6 +163,36 @@ public class Workshift extends DBEntity implements java.io.Serializable {
         try {
             String hibernateQuery = "from " + className + " w where w."
                     + parameterName + " >= '" + parameterValue + "'";//apostrophes near parameterValue are necessary
+            tx = session.beginTransaction();
+            Query query = session.createQuery(hibernateQuery);
+            List result = query.list();
+
+            tx.commit();
+            return result;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
+            return null;
+        }
+    }
+
+    public static List getWorkshiftsFromTo(Date dateFrom, Date dateTo) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd"); //make right format for comparing        
+        String parameterValue1 = sdf.format(dateFrom);
+        String parameterValue2 = sdf.format(dateTo);
+
+        Transaction tx = null;
+        String className = "Workshift";
+        String parameterName = "dateShift";
+
+        try {
+            String hibernateQuery = "from " + className + " w where w."
+                    + parameterName + " >= '" + parameterValue1 + "' and w." + parameterName
+                    + " <= '" + parameterValue2 + "'";
+            //apostrophes near parameterValue are necessary
             tx = session.beginTransaction();
             Query query = session.createQuery(hibernateQuery);
             List result = query.list();
