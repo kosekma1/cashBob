@@ -33,6 +33,7 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
     private int x = 0;
     private int y = 0;
     private Locale locale = new Locale("cs", "CZ");
+    String[] comboBoxItems = new String[] { "Vše", "Moje role", "Přihlášené" };
 
     /**
      * Konstruktor tridy CreateShiftForm.
@@ -221,8 +222,13 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
         jTextFieldWeek.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
         jTextFieldWeek.setText("14");
 
-        jComboBoxFilter.setFont(new java.awt.Font("Calibri", 0, 14));
-        jComboBoxFilter.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Vše", "Moje role", "Přihlášené" }));
+        jComboBoxFilter.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        jComboBoxFilter.setModel(new javax.swing.DefaultComboBoxModel(comboBoxItems));
+        jComboBoxFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxFilterActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -551,6 +557,13 @@ private void jButtonRequestCancelActionPerformed(java.awt.event.ActionEvent evt)
             Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButtonPreviousWeekActionPerformed
+
+    private void jComboBoxFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxFilterActionPerformed
+        int index = jComboBoxFilter.getSelectedIndex();
+        Object o = jComboBoxFilter.getSelectedItem();
+        parent.showMessageDialogInformation("You selected: " + (String)o + " on index " + index, "Test" );
+    }//GEN-LAST:event_jComboBoxFilterActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonApprovedOccupy;
     private javax.swing.JButton jButtonLoginUser;

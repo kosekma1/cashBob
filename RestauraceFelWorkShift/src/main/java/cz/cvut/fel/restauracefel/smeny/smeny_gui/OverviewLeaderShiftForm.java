@@ -37,6 +37,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
     private int y = 0;
     
     private Locale locale = new Locale("cs", "CZ");
+    String[] comboBoxItems = new String[] { "Vše", "Obsazené", "Neobsazené", "Potvrzené", "Žádosti o zrušení" };
 
     /**
      * Constructor of the OverviewLeaderShiftForm.
@@ -97,7 +98,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
             }
         });
 
-        jComboBox1.addMouseListener(new MouseAdapter() {
+        jComboBoxFilter.addMouseListener(new MouseAdapter() {
 
             @Override
             public void mouseEntered(MouseEvent me) { //TODO - solve repaint after action in JComboBox1                           
@@ -155,7 +156,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         jTextFieldWeekRange = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jTextFieldWeek = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox();
+        jComboBoxFilter = new javax.swing.JComboBox();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTableWorkShiftOverview = new javax.swing.JTable();
@@ -204,8 +205,13 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         jTextFieldWeek.setFont(new java.awt.Font("Calibri", 0, 14));
         jTextFieldWeek.setText("14");
 
-        jComboBox1.setFont(new java.awt.Font("Calibri", 0, 14));
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Vše", "Obsazené", "Neobsazené", "Potvrzené", "Žádosti o zrušení" }));
+        jComboBoxFilter.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        jComboBoxFilter.setModel(new javax.swing.DefaultComboBoxModel(comboBoxItems));
+        jComboBoxFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBoxFilterActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -213,7 +219,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jComboBoxFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -231,7 +237,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
+                    .addComponent(jComboBoxFilter, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 32, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButtonPreviousWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButtonNextWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -493,13 +499,20 @@ private void jButtonLoginEmployeeActionPerformed(java.awt.event.ActionEvent evt)
         }
 
     }//GEN-LAST:event_jButtonPreviousWeekActionPerformed
+
+    private void jComboBoxFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxFilterActionPerformed
+        int index = jComboBoxFilter.getSelectedIndex();
+        Object o = jComboBoxFilter.getSelectedItem();
+        parent.showMessageDialogInformation("You selected: " + (String)o + " on index " + index, "Test" );
+    }//GEN-LAST:event_jComboBoxFilterActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancelOccupy;
     private javax.swing.JButton jButtonLoginEmployee;
     private javax.swing.JButton jButtonNextWeek;
     private javax.swing.JButton jButtonOccupy;
     private javax.swing.JButton jButtonPreviousWeek;
-    private javax.swing.JComboBox jComboBox1;
+    private javax.swing.JComboBox jComboBoxFilter;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabelTitle;
