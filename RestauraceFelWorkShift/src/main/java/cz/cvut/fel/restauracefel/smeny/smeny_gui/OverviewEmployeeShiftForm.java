@@ -10,6 +10,10 @@ import java.awt.event.MouseEvent;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPopupMenu;
@@ -21,10 +25,6 @@ import javax.swing.JPopupMenu;
  */
 public class OverviewEmployeeShiftForm extends AbstractForm {
 
-    /*private ChooseTableDialog chooseTableDialog = null;
-    private ChoosePersonDialog choosePersonDialog = null;
-    private ChooseDiscountTypeDialog chooseDiscountTypeDialog = null;
-    private ChooseAccountCategoryDialog chooseAccountCategoryDialog = null;*/
     private StatusBar statusBar = null;
     private MainFrame parent = null;
     private Point point = new Point(550, 210);
@@ -32,6 +32,7 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
     private OverviewEmployeeShiftForm osf = null;
     private int x = 0;
     private int y = 0;
+    private Locale locale = new Locale("cs", "CZ");
 
     /**
      * Konstruktor tridy CreateShiftForm.
@@ -49,12 +50,23 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
         loadAllData();
         initComponents();
         initMyComponents();
+        setDateFromToWeek();
         //refresh();
         clearFields();
     }
 
     private void loadAllData() throws FileNotFoundException, RemoteException, NotBoundException {
+        SmenyController.getInstance().initRangeDate(locale);
         SmenyController.getInstance().generateTableOverviewLeader();
+    }
+
+    private void setDateFromToWeek() {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        String firstDate = sdf.format(SmenyController.getInstance().getDateFrom());
+        String lastDate = sdf.format(SmenyController.getInstance().getDateTo());
+        int week = SmenyController.getInstance().getWeek();
+        jTextFieldWeek.setText(String.valueOf(week));
+        jTextFieldWeekRange.setText(firstDate + " - " + lastDate);
     }
 
     private void initMyComponents() {
@@ -62,8 +74,8 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
         contextMenu = new JPopupMenu();
         contextMenu.add(new LoginCurrentUserAction(parent, this.jTableWorkShiftOverview));
         contextMenu.add(new LogoutCurrentUserAction(parent, this.jTableWorkShiftOverview));
-        contextMenu.add(new ApproveOccupyAction(parent, this.jTableWorkShiftOverview)); 
-        contextMenu.add(new RequestCancelOccupationAction(parent, this.jTableWorkShiftOverview));                                        
+        contextMenu.add(new ApproveOccupyAction(parent, this.jTableWorkShiftOverview));
+        contextMenu.add(new RequestCancelOccupationAction(parent, this.jTableWorkShiftOverview));
         contextMenu.addSeparator();
         contextMenu.add("Konec");
 
@@ -136,7 +148,6 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
     @Override
     protected void clearFields() {
         //Validator.clearTextField(jTextFieldName);
-
     }
 
     /** This method is called from within the constructor to
@@ -153,7 +164,7 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
         jPanel1 = new javax.swing.JPanel();
         jButtonPreviousWeek = new javax.swing.JButton();
         jButtonNextWeek = new javax.swing.JButton();
-        jTextFieldDateRange = new javax.swing.JTextField();
+        jTextFieldWeekRange = new javax.swing.JTextField();
         jLabelWeek = new javax.swing.JLabel();
         jTextFieldWeek = new javax.swing.JTextField();
         jComboBoxFilter = new javax.swing.JComboBox();
@@ -181,6 +192,11 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
         jPanel1.setOpaque(false);
 
         jButtonPreviousWeek.setText("<");
+        jButtonPreviousWeek.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonPreviousWeekActionPerformed(evt);
+            }
+        });
 
         jButtonNextWeek.setText(">");
         jButtonNextWeek.addActionListener(new java.awt.event.ActionListener() {
@@ -189,18 +205,20 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
             }
         });
 
-        jTextFieldDateRange.setFont(new java.awt.Font("Calibri", 0, 14));
-        jTextFieldDateRange.setText("9.5.2011-14.5.2011");
-        jTextFieldDateRange.addActionListener(new java.awt.event.ActionListener() {
+        jTextFieldWeekRange.setEditable(false);
+        jTextFieldWeekRange.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        jTextFieldWeekRange.setText("9.5.2011-14.5.2011");
+        jTextFieldWeekRange.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextFieldDateRangeActionPerformed(evt);
+                jTextFieldWeekRangeActionPerformed(evt);
             }
         });
 
         jLabelWeek.setFont(new java.awt.Font("Calibri", 1, 14));
         jLabelWeek.setText("Týden:");
 
-        jTextFieldWeek.setFont(new java.awt.Font("Calibri", 0, 14));
+        jTextFieldWeek.setEditable(false);
+        jTextFieldWeek.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
         jTextFieldWeek.setText("14");
 
         jComboBoxFilter.setFont(new java.awt.Font("Calibri", 0, 14));
@@ -215,10 +233,10 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
                 .addComponent(jComboBoxFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
                 .addComponent(jLabelWeek)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jTextFieldWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jTextFieldDateRange, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextFieldWeekRange, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jButtonPreviousWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -234,9 +252,9 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButtonPreviousWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jButtonNextWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextFieldWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jTextFieldDateRange, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabelWeek)))
+                        .addComponent(jTextFieldWeekRange, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabelWeek)
+                        .addComponent(jTextFieldWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -361,12 +379,36 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextFieldDateRangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldDateRangeActionPerformed
+    private void jTextFieldWeekRangeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldWeekRangeActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextFieldDateRangeActionPerformed
+    }//GEN-LAST:event_jTextFieldWeekRangeActionPerformed
 
     private void jButtonNextWeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNextWeekActionPerformed
-        // TODO add your handling code here:
+        Date date = SmenyController.getInstance().getDateTo();
+        Calendar cal = Calendar.getInstance(locale);
+
+        cal.setTime(date);
+        cal.add(Calendar.DAY_OF_WEEK, 1);//last date of the week
+        SmenyController.getInstance().setDateFrom(cal.getTime());
+
+        cal.setTime(date);
+        cal.add(Calendar.DAY_OF_WEEK, 7);//last date of the week
+        SmenyController.getInstance().setDateTo(cal.getTime());
+
+        SmenyController.getInstance().setWeek(cal.get(Calendar.WEEK_OF_YEAR));
+
+        setDateFromToWeek();
+
+        try {
+            SmenyController.getInstance().generateTableOverviewLeader();
+            this.jTableWorkShiftOverview.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_jButtonNextWeekActionPerformed
 
 private void jButtonLoginUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLoginUserActionPerformed
@@ -460,7 +502,7 @@ private void jButtonApprovedOccupyActionPerformed(java.awt.event.ActionEvent evt
     }
 
 private void jButtonRequestCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRequestCancelActionPerformed
-int rowNumber = this.jTableWorkShiftOverview.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny        
+    int rowNumber = this.jTableWorkShiftOverview.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny        
     String message = "Zažádáno o zrušení";
     if (rowNumber > -1) {
         try {
@@ -481,6 +523,34 @@ int rowNumber = this.jTableWorkShiftOverview.getSelectedRow(); //bude slouzit ja
         parent.showMessageDialogInformation("Vyberte řádek", "Informace");
     }
 }//GEN-LAST:event_jButtonRequestCancelActionPerformed
+
+    private void jButtonPreviousWeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPreviousWeekActionPerformed
+        Date date = SmenyController.getInstance().getDateFrom();
+        Calendar cal = Calendar.getInstance(locale);
+
+        cal.setTime(date);
+        cal.add(Calendar.DAY_OF_WEEK, -7);//last date of the week
+        SmenyController.getInstance().setDateFrom(cal.getTime());
+
+        cal.setTime(date);
+        cal.add(Calendar.DAY_OF_WEEK, -1);//last date of the week
+        SmenyController.getInstance().setDateTo(cal.getTime());
+
+        SmenyController.getInstance().setWeek(cal.get(Calendar.WEEK_OF_YEAR));
+
+        setDateFromToWeek();
+
+        try {
+            SmenyController.getInstance().generateTableOverviewLeader();
+            this.jTableWorkShiftOverview.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButtonPreviousWeekActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonApprovedOccupy;
     private javax.swing.JButton jButtonLoginUser;
@@ -497,7 +567,7 @@ int rowNumber = this.jTableWorkShiftOverview.getSelectedRow(); //bude slouzit ja
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTableWorkShiftOverview;
-    private javax.swing.JTextField jTextFieldDateRange;
     private javax.swing.JTextField jTextFieldWeek;
+    private javax.swing.JTextField jTextFieldWeekRange;
     // End of variables declaration//GEN-END:variables
 }

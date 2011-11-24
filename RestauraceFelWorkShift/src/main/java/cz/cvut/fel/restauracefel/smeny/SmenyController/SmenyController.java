@@ -15,8 +15,10 @@ import java.io.FileNotFoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -385,20 +387,17 @@ public class SmenyController /*implements IModuleInteface */ {
         Date actualDate = new Date();
         //List workShifts = ServiceFacade.getInstance().getAllActiveWorkShifts(actualDate); //get all planned workshift from today, not history
         
-        List workShifts = ServiceFacade.getInstance().getWorkshiftsFromTo(this.dateFrom, this.dateTo); //get all planned workshift from today, not history
-        if(workShifts==null || workShifts.isEmpty()) {
-            this.showMessageDialogInformation("Žádné směny nejsou plánovany.", "Informace");            
-            return;
-        }                    
+        List workShifts = ServiceFacade.getInstance().getWorkshiftsFromTo(this.dateFrom, this.dateTo); //get all planned workshift from today, not history                           
         
         int columns = 5; //table has 5 columns
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-        if (workShifts == null || workShifts.isEmpty()) {
-            tablePlannedWorkShift = new Object[0][columns];
+        if (workShifts == null || workShifts.isEmpty()) {            
+            tableWorkShiftOverview = new Object[1][columns];
             for (int i = 0; i < 5; i++) {
-                tableWorkShiftOverview[0][i] = "";
+                tableWorkShiftOverview[0][i] = null;
             }
+            showMessageDialogInformation("Žádné směny nejsou plánovany.", "Informace");            
         } else {
             tableWorkShiftOverview = new Object[workShifts.size()][columns];
             Workshift workShift = null;
@@ -477,7 +476,7 @@ public class SmenyController /*implements IModuleInteface */ {
         Attendance att = ServiceFacade.getInstance().getAttendaceByWorkShiftAndUser(workShiftId, user.getUserId());
         if (att == null) {
             ServiceFacade.getInstance().createNewAttendance(user.getUserId(), workShiftId);
-            showMessageDialogInformation("Uživatel je přihlášen.", "Infomrace");
+            showMessageDialogInformation("Uživatel je přihlášen.", "Informace");
         } else {
             this.showErrorMessage("Uživatel je již přihlášen", "Chyba");
         }
@@ -914,5 +913,35 @@ public class SmenyController /*implements IModuleInteface */ {
      */
     public void setWeek(int week) {
         this.week = week;
+    }
+    
+     /**
+     * Gets and sets a week of year and first and last day in that week where is
+     * current date.
+     */
+    public void initRangeDate(Locale locale) {        
+        Calendar cal = Calendar.getInstance(locale);
+        Date date = new Date();
+        cal.setTime(date);        
+        int day = cal.get(Calendar.DAY_OF_WEEK);
+        int firstDayOfWeek = cal.getFirstDayOfWeek();
+        int diff = 0;
+        //universal for all locales
+        if (day >= firstDayOfWeek) {
+            diff = firstDayOfWeek - day;
+        } else {
+            if (diff == -1) { //sunday
+                diff = -6;
+            }
+            if (diff == -2) { //saturday
+                diff = -5;
+            }
+        }
+
+        setWeek(cal.get(Calendar.WEEK_OF_YEAR));
+        cal.add(Calendar.DAY_OF_WEEK, diff);//first date of the week                
+        setDateFrom(cal.getTime());
+        cal.add(Calendar.DAY_OF_WEEK, 6);//last date of the week                
+        setDateTo(cal.getTime());
     }
 }
