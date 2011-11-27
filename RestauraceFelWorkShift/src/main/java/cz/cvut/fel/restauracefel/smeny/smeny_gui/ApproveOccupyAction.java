@@ -5,6 +5,7 @@
 package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
+import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController.WorkShiftFilter;
 import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import java.rmi.NotBoundException;
@@ -22,13 +23,12 @@ import javax.swing.JTable;
 public class ApproveOccupyAction extends AbstractAction {
 
     private JTable table = null;
-    private MainFrame parent = null;
+    private OverviewEmployeeShiftForm parent = null;
 
-    public ApproveOccupyAction(MainFrame parent, JTable table) {
+    public ApproveOccupyAction(OverviewEmployeeShiftForm parent, JTable table) {
         super("Potvrdit obsazení");
         this.parent = parent;
-        this.table = table;
-
+        this.table = table;      
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -38,8 +38,7 @@ public class ApproveOccupyAction extends AbstractAction {
             try {
                 int idWorkshift = SmenyController.getInstance().getWorkShiftIdFromOverViewTable(rowNumber);
                 SmenyController.getInstance().updateOccupationMessageUser(idWorkshift, message);
-                SmenyController.getInstance().generateTableOverviewLeader();
-                table.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
+                parent.reloadTable(parent.getCurrentFilter());
             } catch (FileNotFoundException ex) {
 
                 Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
@@ -51,7 +50,7 @@ public class ApproveOccupyAction extends AbstractAction {
                 Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
-            parent.showMessageDialogInformation("Vyberte řádek", "Informace");
+            SmenyController.getInstance().showMessageDialogInformation("Vyberte řádek", "Informace");
         }
     }
 }

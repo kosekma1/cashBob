@@ -7,7 +7,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import cz.cvut.fel.restauracefel.library.service.EmptyListException;
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
-import javax.swing.JTable;
 
 /**
  * Create dialog for choose User/Employee that will be login to workshift.
@@ -17,12 +16,12 @@ import javax.swing.JTable;
 public class ChooseEmployeeDialog extends AbstractDialog {
 
     private int rowNumber; //index of saved userId in table
-    private JTable table;
+    private OverviewLeaderShiftForm parent;
 
     /**
      * Konstruktor tridy ChooseEmployeeDialog
      *
-     * @param parent instance tridy MainFrame jenz vytvorila tento formular
+     * @param mainFrame instance tridy MainFrame jenz vytvorila tento formular
      * @param modal     
      * @param rowNumber cislo zvoleneho radku z tabulky se smenami
      * @param table odkaz na tabulku se smenami
@@ -31,10 +30,10 @@ public class ChooseEmployeeDialog extends AbstractDialog {
      * @throws java.rmi.NotBoundException
      * @throws java.io.FileNotFoundException
      */
-    public ChooseEmployeeDialog(MainFrame parent, boolean modal, int rowNumber, JTable table) throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {
-        super(parent, modal);
+    public ChooseEmployeeDialog(MainFrame mainFrame, boolean modal, int rowNumber, OverviewLeaderShiftForm parent) throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {
+        super(mainFrame, modal);
         this.rowNumber = rowNumber;
-        this.table = table;
+        this.parent = parent;
         initComponents();
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         refresh();
@@ -164,8 +163,7 @@ public class ChooseEmployeeDialog extends AbstractDialog {
         int userIndexId = jListEmployees.getSelectedIndex();
         try {
             SmenyController.getInstance().saveUserToWorkShift(userIndexId, this.rowNumber);
-            SmenyController.getInstance().generateTableOverviewLeader();
-            table.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
+            parent.reloadTable(parent.getCurrentFilter());
         } catch (FileNotFoundException ex) {
             Logger.getLogger(ChooseEmployeeDialog.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NotBoundException ex) {

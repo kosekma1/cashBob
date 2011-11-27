@@ -1,5 +1,6 @@
 package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.io.FileNotFoundException;
 import java.rmi.NotBoundException;
@@ -15,8 +16,9 @@ import javax.swing.JPanel;
  */
 public abstract class AbstractForm extends JPanel {
 
-    ImageIcon image = new ImageIcon("images/back.png");
-
+    //ImageIcon image = new ImageIcon("images/back.png");
+    ImageIcon image = null;
+            
     /**
      * Konstruktor tridy AbstractForm.
      */
@@ -51,6 +53,7 @@ public abstract class AbstractForm extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        setBackground(new Color(191,204,249));
         if (image != null) {
             g.drawImage(image.getImage(), 0, 0, g.getClipBounds().width, g.getClipBounds().height, this);
         }

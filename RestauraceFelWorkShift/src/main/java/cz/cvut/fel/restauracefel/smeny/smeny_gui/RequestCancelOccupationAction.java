@@ -20,11 +20,11 @@ import javax.swing.JTable;
  * @author Martin
  */
 public class RequestCancelOccupationAction extends AbstractAction {
-    
-    private JTable table = null;
-    private MainFrame parent = null;
 
-    public RequestCancelOccupationAction(MainFrame parent, JTable table) {
+    private JTable table = null;
+    private OverviewEmployeeShiftForm parent = null;
+
+    public RequestCancelOccupationAction(OverviewEmployeeShiftForm parent, JTable table) {
         super("Žádost o zrušení");
         this.parent = parent;
         this.table = table;
@@ -32,26 +32,24 @@ public class RequestCancelOccupationAction extends AbstractAction {
 
     public void actionPerformed(ActionEvent e) {
         int rowNumber = table.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny        
-    String message = "Zažádáno o zrušení";
-    if (rowNumber > -1) {
-        try {
-            int idWorkshift = SmenyController.getInstance().getWorkShiftIdFromOverViewTable(rowNumber);
-            SmenyController.getInstance().updateOccupationMessageUser(idWorkshift, message);
-            SmenyController.getInstance().generateTableOverviewLeader();
-                table.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
-        } catch (FileNotFoundException ex) {
+        String message = "Zažádáno o zrušení";
+        if (rowNumber > -1) {
+            try {
+                int idWorkshift = SmenyController.getInstance().getWorkShiftIdFromOverViewTable(rowNumber);
+                SmenyController.getInstance().updateOccupationMessageUser(idWorkshift, message);
+                parent.reloadTable(parent.getCurrentFilter());
+            } catch (FileNotFoundException ex) {
 
-            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NotBoundException ex) {
-            
-            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            
-            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NotBoundException ex) {
+
+                Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RemoteException ex) {
+
+                Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            SmenyController.getInstance().showMessageDialogInformation("Vyberte řádek", "Informace");
         }
-    } else {
-        parent.showMessageDialogInformation("Vyberte řádek", "Informace");
     }
-    }
-    
 }

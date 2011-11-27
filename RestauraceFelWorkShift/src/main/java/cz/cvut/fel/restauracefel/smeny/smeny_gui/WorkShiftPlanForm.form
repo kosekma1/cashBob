@@ -3,7 +3,7 @@
 <Form version="1.5" maxVersion="1.7" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
   <Properties>
     <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-      <Color blue="e2" green="ef" id="CheckBox.light" palette="3" red="f1" type="palette"/>
+      <Color blue="e3" green="e3" id="CheckBox.light" palette="3" red="e3" type="palette"/>
     </Property>
     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
       <Dimension value="[1032, 622]"/>
@@ -52,7 +52,7 @@
         <Property name="opaque" type="boolean" value="false"/>
       </Properties>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new BackgroundPanel()"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new BackgroundPanel();"/>
       </AuxValues>
 
       <Layout>
@@ -231,7 +231,7 @@
                 </Property>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
                   <StringArray count="3">
-                    <StringItem index="0" value="v&#x161;edn&#xed; dny i v&#xed;kendy"/>
+                    <StringItem index="0" value="v&#x161;echny dny"/>
                     <StringItem index="1" value="v&#x161;edn&#xed; dny"/>
                     <StringItem index="2" value="v&#xed;kendy"/>
                   </StringArray>

@@ -1,6 +1,7 @@
 package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 
 import cz.cvut.fel.restauracefel.library.service.EmptyListException;
+import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
@@ -21,10 +22,12 @@ public class LoginEmployeeAction extends AbstractAction {
     private Point point = new Point(550, 210);
     private ChooseEmployeeDialog chooseEmployeeDialog = null;
     private JTable table = null;
-    private MainFrame parent = null;
+    private MainFrame mainFrame = null;
+    private OverviewLeaderShiftForm parent = null;
 
-    public LoginEmployeeAction(MainFrame parent, JTable table) {
+    public LoginEmployeeAction(MainFrame mainFrame, OverviewLeaderShiftForm parent, JTable table) {
         super("Přihlásit zaměstnance");
+        this.mainFrame = mainFrame;
         this.parent = parent;
         this.table = table;
     }
@@ -33,7 +36,7 @@ public class LoginEmployeeAction extends AbstractAction {
        int rowNumber = table.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny        
         if (rowNumber > -1) {
             try {
-                chooseEmployeeDialog = new ChooseEmployeeDialog(parent, true, rowNumber, table);
+                chooseEmployeeDialog = new ChooseEmployeeDialog(mainFrame, true, rowNumber, parent);
                 chooseEmployeeDialog.setLocation(point);
                 chooseEmployeeDialog.setVisible(true);
             } catch (EmptyListException ex) {                
@@ -46,8 +49,8 @@ public class LoginEmployeeAction extends AbstractAction {
                 Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
             } catch (Exception ex) {                
             }
-        } else {
-            parent.showMessageDialogInformation("Vyberte řádek", "Informace");
+        } else {            
+            SmenyController.getInstance().showMessageDialogInformation("Vyberte řádek", "Informace");
         }
     }
 }

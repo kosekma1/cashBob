@@ -18,15 +18,18 @@ import javax.swing.JTable;
 public class CancelOccupationAction extends AbstractAction {
    
     private JTable table = null;
+    private OverviewLeaderShiftForm parent = null;
 
-    public CancelOccupationAction(JTable table) {
+    public CancelOccupationAction(OverviewLeaderShiftForm parent, JTable table) {
         super("Zrušit obsazení");        
-        this.table = table;
+        this.parent = parent;
+        this.table = table;        
     }
 
     public void actionPerformed(ActionEvent e) {
         try {
             SmenyController.getInstance().cancelOccupationWorkshift(table);
+            parent.reloadTable(parent.getCurrentFilter());
         } catch (FileNotFoundException ex) {
             Logger.getLogger(CancelOccupationAction.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NotBoundException ex) {

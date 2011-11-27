@@ -6,6 +6,7 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import cz.cvut.fel.restauracefel.library.service.EmptyListException;
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
+import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController.WorkShiftFilter;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.FileWriter;
@@ -35,9 +36,8 @@ public class OverviewLeaderShiftForm extends AbstractForm {
     private OverviewLeaderShiftForm osf = null;
     private int x = 0;
     private int y = 0;
-    
     private Locale locale = new Locale("cs", "CZ");
-    String[] comboBoxItems = new String[] { "Vše", "Obsazené", "Neobsazené", "Potvrzené", "Žádosti o zrušení" };
+    String[] comboBoxItems = new String[]{"Vše", "Obsazené", "Neobsazené", "Potvrzené", "Nepotvrzené", "Žádosti o zrušení"};
 
     /**
      * Constructor of the OverviewLeaderShiftForm.
@@ -51,8 +51,8 @@ public class OverviewLeaderShiftForm extends AbstractForm {
     public OverviewLeaderShiftForm(MainFrame parent, StatusBar bar) throws FileNotFoundException, NotBoundException, RemoteException {
         osf = this; //necessary for repaint 
         this.parent = parent;
-        this.statusBar = bar;        
-        loadAllData();
+        this.statusBar = bar;
+        initAllData();
         initComponents();
         initMyComponents();
         setDateFromToWeek();
@@ -63,9 +63,9 @@ public class OverviewLeaderShiftForm extends AbstractForm {
     private void initMyComponents() {
 
         contextMenu = new JPopupMenu();
-        contextMenu.add(new OccupyAction(parent, jTableWorkShiftOverview));
-        contextMenu.add(new CancelOccupationAction(jTableWorkShiftOverview));
-        contextMenu.add(new LoginEmployeeAction(parent, jTableWorkShiftOverview));
+        contextMenu.add(new OccupyAction(parent, this, jTableWorkShiftOverview));
+        contextMenu.add(new CancelOccupationAction(this, jTableWorkShiftOverview));
+        contextMenu.add(new LoginEmployeeAction(parent, this, jTableWorkShiftOverview));
         contextMenu.addSeparator();
         contextMenu.add("Konec");
 
@@ -116,10 +116,22 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         //statusBar.setMessage("x: " + this.x + " y: " + this.y);
     }
 
-    private void loadAllData() throws FileNotFoundException, RemoteException, NotBoundException {
-        SmenyController.getInstance().initRangeDate(locale); //1
-        SmenyController.getInstance().generateTableOverviewLeader();
-        //jTableOverView.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
+    private void initAllData() throws FileNotFoundException, RemoteException, NotBoundException {
+        SmenyController.getInstance().initRangeDate(locale);
+        SmenyController.getInstance().generateTableOverviewTest(SmenyController.WorkShiftFilter.ALL);
+    }
+
+    protected void reloadTable(WorkShiftFilter filter) {
+        try {
+            SmenyController.getInstance().generateTableOverviewTest(filter);
+            jTableWorkShiftOverview.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RemoteException ex) {
+            Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     private void setDateFromToWeek() {
@@ -130,7 +142,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         jTextFieldWeek.setText(String.valueOf(week));
         jTextFieldWeekRange.setText(firstDate + " - " + lastDate);
     }
-   
+
     /**
      * Metoda cisti vsechny vstupni pole formulare.
      */
@@ -194,7 +206,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         });
 
         jTextFieldWeekRange.setEditable(false);
-        jTextFieldWeekRange.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        jTextFieldWeekRange.setFont(new java.awt.Font("Calibri", 0, 14));
         jTextFieldWeekRange.setText("9.5.2011-14.5.2011");
         jTextFieldWeekRange.setToolTipText("První a poslední den zvoleného týdne.");
 
@@ -205,7 +217,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         jTextFieldWeek.setFont(new java.awt.Font("Calibri", 0, 14));
         jTextFieldWeek.setText("14");
 
-        jComboBoxFilter.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        jComboBoxFilter.setFont(new java.awt.Font("Calibri", 0, 14));
         jComboBoxFilter.setModel(new javax.swing.DefaultComboBoxModel(comboBoxItems));
         jComboBoxFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -219,8 +231,8 @@ public class OverviewLeaderShiftForm extends AbstractForm {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jComboBoxFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 128, Short.MAX_VALUE)
+                .addComponent(jComboBoxFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
                 .addComponent(jLabel8)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jTextFieldWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -243,7 +255,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
                         .addComponent(jButtonNextWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jTextFieldWeekRange, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel8)
-                        .addComponent(jTextFieldWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jTextFieldWeek, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -357,38 +369,15 @@ public class OverviewLeaderShiftForm extends AbstractForm {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonNextWeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNextWeekActionPerformed
-        Date date = SmenyController.getInstance().getDateTo();        
-        Calendar cal = Calendar.getInstance(locale);
-
-        cal.setTime(date);
-        cal.add(Calendar.DAY_OF_WEEK, 1);//last date of the week
-        SmenyController.getInstance().setDateFrom(cal.getTime());
-
-        cal.setTime(date);
-        cal.add(Calendar.DAY_OF_WEEK, 7);//last date of the week
-        SmenyController.getInstance().setDateTo(cal.getTime());
-        
-        SmenyController.getInstance().setWeek(cal.get(Calendar.WEEK_OF_YEAR));        
-        
-        setDateFromToWeek();
-        
-        try {
-            SmenyController.getInstance().generateTableOverviewLeader();
-            this.jTableWorkShiftOverview.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NotBoundException ex) {
-            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        setDaysInWeek(7, 13);
+        reloadTable(getCurrentFilter());
     }//GEN-LAST:event_jButtonNextWeekActionPerformed
 
 private void jButtonOccupyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOccupyActionPerformed
     int rowNumber = jTableWorkShiftOverview.getSelectedRow();
     if (rowNumber > -1) {
         try {
-            chooseOcuppyEmployeeDialog = new ChooseOcuppyEmployeeDialog(parent, true, rowNumber, this.jTableWorkShiftOverview);
+            chooseOcuppyEmployeeDialog = new ChooseOcuppyEmployeeDialog(parent, true, rowNumber, this);
             chooseOcuppyEmployeeDialog.setLocation(point);
             chooseOcuppyEmployeeDialog.setVisible(true);
         } catch (RemoteException ex) {
@@ -411,6 +400,7 @@ private void jButtonOccupyActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 private void jButtonCancelOccupyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCancelOccupyActionPerformed
     try {
         SmenyController.getInstance().cancelOccupationWorkshift(this.jTableWorkShiftOverview);
+        reloadTable(getCurrentFilter());
     } catch (FileNotFoundException ex) {
         Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
     } catch (NotBoundException ex) {
@@ -427,7 +417,7 @@ private void jButtonCancelOccupyActionPerformed(java.awt.event.ActionEvent evt) 
         int rowNumber = jTableWorkShiftOverview.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny        
         if (rowNumber > -1) {
             try {
-                chooseEmployeeDialog = new ChooseEmployeeDialog(parent, true, rowNumber, jTableWorkShiftOverview);
+                chooseEmployeeDialog = new ChooseEmployeeDialog(parent, true, rowNumber, this);
                 chooseEmployeeDialog.setLocation(point);
                 chooseEmployeeDialog.setVisible(true);
             } catch (EmptyListException ex) {
@@ -448,6 +438,52 @@ private void jButtonCancelOccupyActionPerformed(java.awt.event.ActionEvent evt) 
         } else {
             parent.showMessageDialogInformation("Vyberte řádek", "Informace");
         }
+    }
+
+    /**
+     * Add or subtract number of the days from first day of thce current week
+     * and set new week dates.
+     * @param from
+     * @param to 
+     */
+    private void setDaysInWeek(int from, int to) {
+        Date date = SmenyController.getInstance().getDateFrom();
+        Calendar cal = Calendar.getInstance(locale);
+
+        cal.setTime(date);
+        cal.add(Calendar.DAY_OF_WEEK, from);//first date of the week
+        SmenyController.getInstance().setDateFrom(cal.getTime());
+
+        cal.setTime(date);
+        cal.add(Calendar.DAY_OF_WEEK, to);//last date of the week
+        SmenyController.getInstance().setDateTo(cal.getTime());
+
+        SmenyController.getInstance().setWeek(cal.get(Calendar.WEEK_OF_YEAR));
+
+        setDateFromToWeek();
+    }
+
+    /**
+     * Returns current filter selected in ComboBox with filters.
+     * @return 
+     */
+    protected SmenyController.WorkShiftFilter getCurrentFilter() {
+        int index = jComboBoxFilter.getSelectedIndex();
+        switch (index) {
+            case 0:
+                return WorkShiftFilter.ALL;
+            case 1: //TODO jine filtry POZOR!!!!
+                return WorkShiftFilter.OCCUPATION;
+            case 2:
+                return WorkShiftFilter.UNOCCUPATION;
+            case 3:
+                return WorkShiftFilter.CONFIRMED;
+            case 4:
+                return WorkShiftFilter.UNCONFIRMED;
+            case 5:
+                return WorkShiftFilter.REQUEST_CANCEL;
+        }
+        return WorkShiftFilter.ALL;
     }
 
     private void logError(Exception ex) {
@@ -472,40 +508,14 @@ private void jButtonLoginEmployeeActionPerformed(java.awt.event.ActionEvent evt)
 }//GEN-LAST:event_jButtonLoginEmployeeActionPerformed
 
     private void jButtonPreviousWeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonPreviousWeekActionPerformed
-        Date date = SmenyController.getInstance().getDateFrom();        
-        Calendar cal = Calendar.getInstance(locale);
-
-        cal.setTime(date);
-        cal.add(Calendar.DAY_OF_WEEK, -7);//last date of the week
-        SmenyController.getInstance().setDateFrom(cal.getTime());
-
-        cal.setTime(date);
-        cal.add(Calendar.DAY_OF_WEEK, -1);//last date of the week
-        SmenyController.getInstance().setDateTo(cal.getTime());
-
-        SmenyController.getInstance().setWeek(cal.get(Calendar.WEEK_OF_YEAR));        
-        
-        setDateFromToWeek();
-        
-        try {
-            SmenyController.getInstance().generateTableOverviewLeader();
-            this.jTableWorkShiftOverview.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (RemoteException ex) {
-            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NotBoundException ex) {
-            Logger.getLogger(OverviewLeaderShiftForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
+        setDaysInWeek(-7, -1);
+        reloadTable(getCurrentFilter());
     }//GEN-LAST:event_jButtonPreviousWeekActionPerformed
 
     private void jComboBoxFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxFilterActionPerformed
-        int index = jComboBoxFilter.getSelectedIndex();
-        Object o = jComboBoxFilter.getSelectedItem();
-        parent.showMessageDialogInformation("You selected: " + (String)o + " on index " + index, "Test" );
+        reloadTable(getCurrentFilter());
+        this.repaint();
     }//GEN-LAST:event_jComboBoxFilterActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancelOccupy;
     private javax.swing.JButton jButtonLoginEmployee;

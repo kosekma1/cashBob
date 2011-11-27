@@ -15,9 +15,11 @@ import java.io.FileNotFoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
@@ -65,11 +67,21 @@ public class SmenyController /*implements IModuleInteface */ {
     private int[] workShiftIds = null; //store workshift id`s that are viewed in table
     private String[] datalListLoginUsers = null;     //for chooseEmployeeDialog
     private int[] usersAttendaceIds = null; //for chooseEmployeeDialog - evidence of ids
-
     private Date dateFrom = null;
     private Date dateTo = null;
     private int week = 0;
-    
+
+    //constants for tilters
+    public enum WorkShiftFilter {
+
+        ALL, LOGIN, LOGIN_USER, OCCUPATION, UNOCCUPATION, UNCONFIRMED, CONFIRMED, REQUEST_CANCEL, OCCUPATION_USER, ROLE_USER
+    }
+
+    public enum DateFilter {
+
+        ALL_DAYS, COMMON_DAYS, WEEKENDS
+    }
+
     public SmenyController() {
         view = SmenyViewController.getInstance();
     }
@@ -384,20 +396,199 @@ public class SmenyController /*implements IModuleInteface */ {
      * @throws RemoteException 
      */
     public void generateTableOverviewLeader() throws FileNotFoundException, NotBoundException, RemoteException {
-        Date actualDate = new Date();
-        //List workShifts = ServiceFacade.getInstance().getAllActiveWorkShifts(actualDate); //get all planned workshift from today, not history
-        
+        //List workShifts = ServiceFacade.getInstance().getAllActiveWorkShifts(actualDate); //get all planned workshift from today, not history        
         List workShifts = ServiceFacade.getInstance().getWorkshiftsFromTo(this.dateFrom, this.dateTo); //get all planned workshift from today, not history                           
-        
+
+        //TODO - implementovat filtr
+
         int columns = 5; //table has 5 columns
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-        if (workShifts == null || workShifts.isEmpty()) {            
+        if (workShifts == null || workShifts.isEmpty()) {
             tableWorkShiftOverview = new Object[1][columns];
             for (int i = 0; i < 5; i++) {
                 tableWorkShiftOverview[0][i] = null;
             }
-            showMessageDialogInformation("Žádné směny nejsou plánovany.", "Informace");            
+            showMessageDialogInformation("Žádné směny nejsou plánovany.", "Informace");
+        } else {
+            tableWorkShiftOverview = new Object[workShifts.size()][columns];
+            Workshift workShift = null;
+            workShiftIds = new int[workShifts.size()];
+
+            int i = 0, j = 0, k = 0;
+            List typeWorkshifts = ServiceFacade.getInstance().getTypeWorkShifts();
+            Typeworkshift typeWorkShift = null;
+            for (Object o : workShifts) { //set Date of planned workshift
+                workShift = (Workshift) o;
+                int idTypeWorkShift = workShift.getIdTypeWorkshift();
+                for (Object ot : typeWorkshifts) { //set date and name of Workshift
+                    typeWorkShift = (Typeworkshift) ot;
+                    if (typeWorkShift.getIdTypeWorkshift() == idTypeWorkShift) {
+                        tableWorkShiftOverview[i][j++] = sdf.format(workShift.getDateShift()) + " " + typeWorkShift.getFromTime() + "-" + typeWorkShift.getToTime();
+                        tableWorkShiftOverview[i][j++] = typeWorkShift.getName();
+                        break;
+                    }
+                }
+                List attendanceList = ServiceFacade.getInstance().getAttendaceByWorkShiftId(workShift.getIdWorkshift());
+                if (attendanceList == null) {
+                    tableWorkShiftOverview[i][j++] = "Nikdo není přihlášen";
+                } else { //read users from Attendance and add to table
+                    StringBuilder sb = new StringBuilder();
+                    User userTemp = null;
+                    for (Object att : attendanceList) {
+                        int idUser = ((Attendance) att).getIdUser();
+                        userTemp = ServiceFacade.getInstance().getUserById(idUser);
+                        sb.append(userTemp.getFirstName());
+                        sb.append(" ");
+                        sb.append(userTemp.getLastName());
+                        sb.append(",");
+                    }
+                    tableWorkShiftOverview[i][j++] = (sb.toString()).substring(0, sb.toString().length() - 1);//remove last comma
+                }
+
+                //occupy user
+                StringBuilder sb = new StringBuilder();
+                if (workShift.getIdUser() == null) {
+                    tableWorkShiftOverview[i][j++] = "Neobsazeno";
+                } else { //read user in workshit and add to table full name
+                    User userOccupy = ServiceFacade.getInstance().getUserById(workShift.getIdUser());
+                    sb.append(userOccupy.getFirstName());
+                    sb.append(" ");
+                    sb.append(userOccupy.getLastName());
+                    tableWorkShiftOverview[i][j++] = sb.toString();
+                }
+
+                tableWorkShiftOverview[i][j++] = workShift.getUserSubmit() == null ? "Nepotvrzeno" : workShift.getUserSubmit(); //TODO - premenit na jmeno uzivatele, ktery je obsazeny
+
+                workShiftIds[k++] = workShift.getIdWorkshift();
+                j = 0;
+                i++;
+            }
+        }
+        modelOverviewWorkShift = new ResultTableModel(new String[]{"Datum a čas", "Typ směny", "Nahlášení", "Obsazení", "Potvrzení"}, tableWorkShiftOverview);
+    }
+
+    /**
+     * Generate data for table that is displayed in OverviewLeaderShiftForm.
+     * @throws FileNotFoundException
+     * @throws NotBoundException
+     * @throws RemoteException 
+     */
+    public void generateTableOverviewTest(WorkShiftFilter filter) throws FileNotFoundException, NotBoundException, RemoteException {
+        //List workShifts = ServiceFacade.getInstance().getAllActiveWorkShifts(actualDate); //get all planned workshift from today, not history
+
+        List workShifts = ServiceFacade.getInstance().getWorkshiftsFromTo(this.dateFrom, this.dateTo); //get all planned workshift from today, not history                           
+        //TODO - implementovat další filtry
+        Workshift ws = null;
+        ListIterator iter = workShifts.listIterator();
+        switch (filter) {
+            case ALL: //do nothing eg. without filter - show everything
+                break;
+            case ROLE_USER:
+                List userRoles = ServiceFacade.getInstance().getUserRoleByUserId(user.getUserId());
+                UserRole userRole = null;
+                int roleIdUser = 0;
+                int roleIdWorkShift = 0;
+                Typeworkshift tws = null;
+                List tempWorkShifts = new ArrayList();
+                while (iter.hasNext()) {
+                    ws = (Workshift) iter.next();
+                    for (Object o : userRoles) {
+                        userRole = (UserRole) o;
+                        roleIdUser = userRole.getRole().getRoleId();
+                        tws = ServiceFacade.getInstance().getTypeWorkShiftById(ws.getIdTypeWorkshift());
+                        roleIdWorkShift = tws.getIdWorkshiftRole();
+                        if (roleIdUser == roleIdWorkShift) {
+                            tempWorkShifts.add(ws);
+                            break;
+                        }
+                    }
+                }
+                workShifts = tempWorkShifts;
+                break;
+            case OCCUPATION_USER: //remove all workshifts that are not occupied with current user
+
+                while (iter.hasNext()) {
+                    ws = (Workshift) iter.next();
+                    if (ws.getIdUser() == null || !(ws.getIdUser().equals(user.getUserId()))) {
+                        iter.remove();
+                    }
+                }
+                break;
+            case LOGIN_USER:
+                List attendances = null;
+                int userId = user.getUserId();
+                List tempWorkShifts1 = new ArrayList();
+                while (iter.hasNext()) {
+                    ws = (Workshift) iter.next();
+                    attendances = ServiceFacade.getInstance().getAttendaceByWorkShiftId(ws.getIdWorkshift());
+                    if (attendances != null) {
+                        for (Object o : attendances) {
+                            Attendance att = (Attendance) o;
+                            if (att.getIdUser() == userId) {
+                                tempWorkShifts1.add(ws);
+                                break;
+                            }
+                        }
+                    }
+                }
+                workShifts = tempWorkShifts1;
+                break;
+            case OCCUPATION: //select only occupied workshifts               
+                while (iter.hasNext()) {
+                    ws = (Workshift) iter.next();
+                    if (ws.getIdUser() == null) {
+                        iter.remove();
+                    }
+                }
+                break;
+            case UNOCCUPATION: //select only unoccupied workshifts               
+                while (iter.hasNext()) {
+                    ws = (Workshift) iter.next();
+                    if (ws.getIdUser() != null) {
+                        iter.remove();
+                    }
+                }
+                break;
+            case CONFIRMED: //select only confirmed workshifts               
+                while (iter.hasNext()) {
+                    ws = (Workshift) iter.next();
+                    if (ws.getUserSubmit() == null || !ws.getUserSubmit().equals("Potvrzeno")) {
+                        iter.remove();
+                    }
+                }
+                break;
+            case UNCONFIRMED: //select only unconfirmed or request cancel workshifts               
+                while (iter.hasNext()) {
+                    ws = (Workshift) iter.next();
+                    if (ws.getUserSubmit() != null) {
+                        if (ws.getUserSubmit().equals("Potvrzeno")) {
+                            iter.remove();
+                        }
+                    }
+                }
+                break;
+            case REQUEST_CANCEL: //select only requests for cancel workshifts               
+                while (iter.hasNext()) {
+                    ws = (Workshift) iter.next();
+                    if (ws.getUserSubmit() == null || !ws.getUserSubmit().equals("Zažádáno o zrušení")) {
+                        iter.remove();
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+
+        int columns = 5; //table has 5 columns
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        if (workShifts == null || workShifts.isEmpty()) {
+            tableWorkShiftOverview = new Object[1][columns];
+            for (int i = 0; i < 5; i++) {
+                tableWorkShiftOverview[0][i] = null;
+            }
+            showMessageDialogInformation("Žádné směny.", "Informace");
         } else {
             tableWorkShiftOverview = new Object[workShifts.size()][columns];
             Workshift workShift = null;
@@ -559,8 +750,6 @@ public class SmenyController /*implements IModuleInteface */ {
                 resultUpdate = ServiceFacade.getInstance().updateWorkshiftLogin(workShiftId, null);
                 if (resultUpdate) {
                     updateOccupationMessage(workShiftId, "Nepotvrzeno");
-                    generateTableOverviewLeader();
-                    table.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
                     showMessageDialogInformation("Obsazení směny bylo uvolněno.", "Informace");
                 } else {
                     this.showErrorMessage("Nepodařilo se zrušit obsazení směny.", "Chyba");
@@ -786,7 +975,7 @@ public class SmenyController /*implements IModuleInteface */ {
      * @throws NotBoundException
      * @throws RemoteException 
      */
-    public boolean saveWorkShifts(Date dateFrom, Date dateTo) throws FileNotFoundException, NotBoundException, RemoteException {
+    public boolean saveWorkShifts(Date dateFrom, Date dateTo, DateFilter filter) throws FileNotFoundException, NotBoundException, RemoteException {
         boolean process = true;
         if (dateFrom == null || dateTo == null) {
             showErrorMessage("Zadejte obě data.", SmenyController.ERROR_ENTERED_DATA);
@@ -817,6 +1006,9 @@ public class SmenyController /*implements IModuleInteface */ {
             long dateToMills = dateTo.getTime();
             Date tempDate = null;
             int j = 0;
+            Locale locale = new Locale("cs", "CZ");
+            Calendar cal = Calendar.getInstance(locale);
+            boolean isToSave = false;
             for (int i = 0; i < table.length; i++) {
                 if (table[i][j] != null) {
                     tws = ServiceFacade.getInstance().findTypeworkshiftByName((String) table[i][j]);
@@ -824,8 +1016,31 @@ public class SmenyController /*implements IModuleInteface */ {
                     //save workshift to each day
                     do {
                         tempDate = new Date(dateFromMills);
-                        ServiceFacade.getInstance().createNewWorkshift(tempDate, idTypeWorkShift);
-                        dateFromMills += DAY_IN_MILLISECONDS;
+                        cal.setTime(tempDate);
+
+                        switch (filter) {
+                            case ALL_DAYS:
+                                isToSave = true;
+                                break;
+                            case COMMON_DAYS: //czech week - common days 2-6
+                                if (cal.get(Calendar.DAY_OF_WEEK) >= Calendar.MONDAY
+                                        && cal.get(Calendar.DAY_OF_WEEK) <= Calendar.FRIDAY) {
+                                    isToSave = true;
+                                }
+                                break;
+                            case WEEKENDS: //czech weekends 7 (Saturaday), 1 (Sunday)
+                                if (cal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY
+                                        || cal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+                                    isToSave = true;
+                                }
+                                break;
+                        }
+                        if (isToSave) {
+                            ServiceFacade.getInstance().createNewWorkshift(tempDate, idTypeWorkShift);
+                            isToSave = false;
+                        }
+
+                        dateFromMills += DAY_IN_MILLISECONDS; //add one day
                     } while (dateFromMills <= dateToMills);
                     dateFromMills = dateFrom.getTime();
                 }
@@ -914,15 +1129,15 @@ public class SmenyController /*implements IModuleInteface */ {
     public void setWeek(int week) {
         this.week = week;
     }
-    
-     /**
+
+    /**
      * Gets and sets a week of year and first and last day in that week where is
      * current date.
      */
-    public void initRangeDate(Locale locale) {        
+    public void initRangeDate(Locale locale) {
         Calendar cal = Calendar.getInstance(locale);
         Date date = new Date();
-        cal.setTime(date);        
+        cal.setTime(date);
         int day = cal.get(Calendar.DAY_OF_WEEK);
         int firstDayOfWeek = cal.getFirstDayOfWeek();
         int diff = 0;

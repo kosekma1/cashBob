@@ -18,12 +18,12 @@ import javax.swing.JTable;
 public class LoginCurrentUserAction extends AbstractAction {
 
     private JTable table = null;
-    private MainFrame parent = null;
+    private OverviewEmployeeShiftForm parent = null;    
 
-    public LoginCurrentUserAction(MainFrame parent, JTable table) {
+    public LoginCurrentUserAction(OverviewEmployeeShiftForm parent, JTable table) {
         super("Přihlásit");
         this.parent = parent;
-        this.table = table;
+        this.table = table;        
     }
 
     public void actionPerformed(ActionEvent e) {
@@ -32,10 +32,7 @@ public class LoginCurrentUserAction extends AbstractAction {
             try {
                 int workShiftId = SmenyController.getInstance().getWorkShiftIdFromOverViewTable(rowNumber);
                 SmenyController.getInstance().saveCurrentUserToWorkShift(workShiftId);
-
-                SmenyController.getInstance().generateTableOverviewLeader();
-                table.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
-
+                parent.reloadTable(parent.getCurrentFilter());
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
             } catch (NotBoundException ex) {
@@ -45,7 +42,7 @@ public class LoginCurrentUserAction extends AbstractAction {
             } catch (Exception ex) {
             }
         } else {
-            parent.showMessageDialogInformation("Vyberte řádek", "Informace");
+            SmenyController.getInstance().showMessageDialogInformation("Vyberte řádek", "Informace");           
         }
     }
 }

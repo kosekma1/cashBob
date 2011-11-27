@@ -7,11 +7,13 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import cz.cvut.fel.restauracefel.library.service.EmptyListException;
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
+import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController.DateFilter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JPanel;
 
 /**
  * Trida reprezentujici GUI formular pro vytvareni noveho uctu.
@@ -28,6 +30,7 @@ public class WorkShiftPlanForm extends AbstractForm {
     private Point point = new Point(550, 210);
     private JDateChooser dateChooserFrom;
     private JDateChooser dateChooserTo;
+    String[] comboBoxItems = new String[]{"Všechny dny", "Všední dny", "Víkendy"};
 
     /**
      * Konstruktor tridy CreateShiftForm.
@@ -40,7 +43,7 @@ public class WorkShiftPlanForm extends AbstractForm {
      */
     public WorkShiftPlanForm(MainFrame parent, StatusBar bar) throws FileNotFoundException, NotBoundException, RemoteException {
         this.parent = parent;
-        this.statusBar = bar;
+        this.statusBar = bar;        
         loadAllData();
         initComponents();
         initCalendars();        
@@ -61,9 +64,9 @@ public class WorkShiftPlanForm extends AbstractForm {
         dateChooserTo = new JDateChooser();
         dateChooserTo.setMinSelectableDate(Calendar.getInstance().getTime());
         dateChooserTo.setBounds(0, 0, 218, 43);
-        dateChooserTo.setLocale(czechLocale);
-        jPanelDateChooserTo.add(dateChooserTo, null);
-
+        dateChooserTo.setLocale(czechLocale);        
+        jPanelDateChooserTo.add(dateChooserTo, null);        
+        
     }
     
     private void loadAllData(){
@@ -209,7 +212,7 @@ public class WorkShiftPlanForm extends AbstractForm {
         });
 
         jComboBoxSelectRange.setFont(new java.awt.Font("Tahoma", 0, 12));
-        jComboBoxSelectRange.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "všední dny i víkendy", "všední dny", "víkendy" }));
+        jComboBoxSelectRange.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "všechny dny", "všední dny", "víkendy" }));
 
         jButtonAddWorkShift1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/cz/cvut/fel/restauracefel/buttons/left-red.png"))); // NOI18N
         jButtonAddWorkShift1.setText("Odebrat směnu");
@@ -446,7 +449,7 @@ public class WorkShiftPlanForm extends AbstractForm {
         Date dateFrom = dateChooserFrom.getDate();
         Date dateTo = dateChooserTo.getDate();
                 
-        boolean result = SmenyController.getInstance().saveWorkShifts(dateFrom, dateTo);
+        boolean result = SmenyController.getInstance().saveWorkShifts(dateFrom, dateTo, this.getCurrentFilter());
         
         if(result){
             clearFields();
@@ -459,6 +462,19 @@ public class WorkShiftPlanForm extends AbstractForm {
             
             this.repaint();
         }
+    }
+    
+    private DateFilter getCurrentFilter(){
+        int index = this.jComboBoxSelectRange.getSelectedIndex();
+        switch(index) {
+            case 0:
+                return DateFilter.ALL_DAYS;
+            case 1:
+                return DateFilter.COMMON_DAYS;
+            case 2:
+                return DateFilter.WEEKENDS;
+        }
+        return DateFilter.ALL_DAYS;
     }
 
     private void jButtonSavePlanWorkShiftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSavePlanWorkShiftActionPerformed

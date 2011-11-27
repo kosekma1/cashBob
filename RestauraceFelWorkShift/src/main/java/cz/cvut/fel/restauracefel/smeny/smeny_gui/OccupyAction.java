@@ -1,5 +1,6 @@
 package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 
+import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
@@ -19,11 +20,14 @@ public class OccupyAction extends AbstractAction {
 
     private Point point = new Point(550, 210);
     private JTable table = null;
-    private MainFrame parent = null;
+    private OverviewLeaderShiftForm parent = null;
+    private MainFrame mainFrame = null;
     ChooseOcuppyEmployeeDialog chooseOcuppyEmployeeDialog = null;
 
-    public OccupyAction(MainFrame parent, JTable table) {
+    public OccupyAction(MainFrame mainFrame, OverviewLeaderShiftForm parent, JTable table) {
         super("Obsadit zaměstnance");
+        this.mainFrame = mainFrame;
+        this.parent = parent;
         this.table = table;
     }
 
@@ -31,7 +35,7 @@ public class OccupyAction extends AbstractAction {
         int rowNumber = table.getSelectedRow();
         if (rowNumber > -1) {
             try {
-                chooseOcuppyEmployeeDialog = new ChooseOcuppyEmployeeDialog(parent, true, rowNumber, table);
+                chooseOcuppyEmployeeDialog = new ChooseOcuppyEmployeeDialog(mainFrame, true, rowNumber, parent);
                 chooseOcuppyEmployeeDialog.setLocation(point);
                 chooseOcuppyEmployeeDialog.setVisible(true);
             } catch (RemoteException ex) {
@@ -42,8 +46,8 @@ public class OccupyAction extends AbstractAction {
                 Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
             } catch (Exception ex) {
             }
-        } else {
-            parent.showMessageDialogInformation("Vyberte řádek", "Informace");
+        } else {            
+            SmenyController.getInstance().showMessageDialogInformation("Vyberte řádek", "Informace");
         }
     }
 }
