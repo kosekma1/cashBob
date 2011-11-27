@@ -191,7 +191,7 @@ public class Workshift extends DBEntity implements java.io.Serializable {
         try {
             String hibernateQuery = "from " + className + " w where w."
                     + parameterName + " >= '" + parameterValue1 + "' and w." + parameterName
-                    + " <= '" + parameterValue2 + "'";
+                    + " <= '" + parameterValue2 + "'" + "order by w." + parameterName ;
             //apostrophes near parameterValue are necessary
             tx = session.beginTransaction();
             Query query = session.createQuery(hibernateQuery);
