@@ -1,8 +1,5 @@
 package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 
-import cz.cvut.fel.restauracefel.hibernate.Template;
-import cz.cvut.fel.restauracefel.hibernate.Typeworkshift;
-import cz.cvut.fel.restauracefel.hibernate.User;
 import java.awt.Insets;
 import java.awt.Point;
 import java.io.FileNotFoundException;
@@ -10,15 +7,10 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-import cz.cvut.fel.restauracefel.library.service.ConfigParser;
 import cz.cvut.fel.restauracefel.library.service.EmptyListException;
 //import cz.cvut.fel.restauracefel.pokladna_service.ServiceFacade;
 import cz.cvut.fel.restauracefel.library.service.Validator;
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
-import cz.cvut.fel.restauracefel.smeny.smeny_gui.ChooseDeleteTemplateDialog;
-import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
-import java.util.Arrays;
 
 /**
  * Trida reprezentujici GUI formular pro vytvareni noveho uctu.
@@ -46,7 +38,7 @@ public class CreateTemplateForm extends AbstractForm {
     public CreateTemplateForm(MainFrame parent, StatusBar bar) throws FileNotFoundException, NotBoundException, RemoteException {
         this.parent = parent;
         this.statusBar = bar;
-        loadAllData();
+        initAllData();
         initComponents();
         refresh();
         clearFields();
@@ -62,22 +54,9 @@ public class CreateTemplateForm extends AbstractForm {
     }
 
     /**
-     * Metoda kontrolujici spravnost vyplnenych udaju.
-     *
-     * @return Vraci index urcujici vstupni komponentu, ktera obsahuje
-     * neplatny vstup. Pokud je vse vporadku tak navraci 0.
-     */
-    @Override
-    /* protected EnumSpravnost isValidInput() {
-    if (!Validator.isText(jTextFieldName)) {
-    return EnumSpravnost.NeniToSpravne;
-    }
-    return EnumSpravnost.JeToSpravne;
-    } */
-    /**
      * Metoda cisti vsechny vstupni pole formulare.
      */
-    //@Override
+    @Override
     protected void clearFields() {
         Validator.clearTextField(templateNameTextField);
     }
@@ -104,7 +83,12 @@ public class CreateTemplateForm extends AbstractForm {
          */
     }
 
-    private void loadAllData() throws FileNotFoundException, NotBoundException, RemoteException {
+    private void reloadTableTemplates() throws FileNotFoundException, NotBoundException, RemoteException {
+        SmenyController.getInstance().generateTableTemplateData();
+        jTableTemplates.setModel(SmenyController.getInstance().getModelTemplate());
+    }
+
+    private void initAllData() throws FileNotFoundException, NotBoundException, RemoteException {
         SmenyController.getInstance().generateTableTemplateData();
 
     }
@@ -218,7 +202,7 @@ public class CreateTemplateForm extends AbstractForm {
         jTableWorkShifts.setModel(SmenyController.getInstance().getModelWorkShift());
         jScrollPane2.setViewportView(jTableWorkShifts);
 
-        jTableTemplates.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        jTableTemplates.setFont(new java.awt.Font("Calibri", 0, 14));
         jTableTemplates.setModel(SmenyController.getInstance().getModelTemplate());
         jScrollPane1.setViewportView(jTableTemplates);
 
@@ -387,10 +371,7 @@ public class CreateTemplateForm extends AbstractForm {
         Boolean result = SmenyController.getInstance().saveTemplate(templateName);
         if (result) {
             clearFields();
-            SmenyController.getInstance().clearTableWorkShiftData();
-
-            loadAllData(); //aktualizace tabulky sablon
-            jTableTemplates.setModel(SmenyController.getInstance().getModelTemplate());
+            reloadTableTemplates();
             this.repaint();
         }
     }
@@ -450,7 +431,28 @@ private void templateNameTextFieldActionPerformed(java.awt.event.ActionEvent evt
 }//GEN-LAST:event_templateNameTextFieldActionPerformed
 
 private void jButtonDeleteTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteTemplateActionPerformed
-// TODO add your handling code here:
+    int row = this.jTableTemplates.getSelectedRow();
+    int column = this.jTableTemplates.getSelectedColumn();
+    if (row == -1) {
+        SmenyController.getInstance().showErrorMessage("Vyberte řádek.", "Chyba");
+    } else {
+        int result = SmenyController.getInstance().showConfirmDialogStandard("Opravdu smazat šablonu?", "Dotaz");
+        if (result == 0) {
+            try {
+                String templateName = (String) jTableTemplates.getValueAt(row, column);
+                SmenyController.getInstance().deleteTemplateByName(templateName);
+                reloadTableTemplates();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (RemoteException ex) {
+                Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (NotBoundException ex) {
+                Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+
 }//GEN-LAST:event_jButtonDeleteTemplateActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAddWorkShift;

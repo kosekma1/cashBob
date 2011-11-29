@@ -907,6 +907,22 @@ public class SmenyController /*implements IModuleInteface */ {
     }
 
     /**
+     * Delete template. Template can not be recovered.
+     * @param templateName
+     * @throws FileNotFoundException
+     * @throws RemoteException
+     * @throws NotBoundException 
+     */
+    public void deleteTemplateByName(String templateName) throws FileNotFoundException, RemoteException, NotBoundException {
+        if (templateName == null || templateName.trim().equals("")) {
+            this.showErrorMessage("Šablona nebyla vybrána.", "Chyba");
+        } else {
+            ServiceFacade.getInstance().deleteTemplateByName(templateName);
+            this.showMessageDialogInformation("Šablona úspěšně smazána", "Informace");
+        }
+    }
+
+    /**
      * Save Typeworkshift to database entred from CreateShiftForm
      * @param shiftName
      * @param roleName
