@@ -43,8 +43,8 @@ public class Template extends DBEntity implements java.io.Serializable {
     public void setName(String name) {
         this.name = name;
     }
-    
-     /**
+
+    /**
      * @return the isDeleted
      */
     public int getIsDeleted() {
@@ -69,13 +69,21 @@ public class Template extends DBEntity implements java.io.Serializable {
     public static List findAll() {
         return findAllNotDeleted("Template", "isDeleted", 0);
     }
-    
+
     public static Template findByName(String name) {
         return (Template) findByStringNameNotDeleted("Template", "name", name, "isDeleted", 0);
 
     }
-    
+
+    public static Template findById(int id) {
+        return (Template) findById("Template", "idTemplate", id);
+    }
+
     public void create() {
         create(this);
+    }
+
+    public void delete() {
+        delete(this);
     }
 }

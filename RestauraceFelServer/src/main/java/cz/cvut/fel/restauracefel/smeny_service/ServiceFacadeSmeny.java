@@ -113,6 +113,11 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
     public List getTemplates() throws RemoteException {
         return TemplateController.getInstance().getTemplates();
     }
+    
+    @Override
+    public void deleteTemplateByName(String name) throws RemoteException {
+        TemplateController.getInstance().deleteTemplateByName(name);
+    }
 
     //WORKSHIFTS
     @Override

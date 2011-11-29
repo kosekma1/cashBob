@@ -33,7 +33,8 @@ public interface IServiceFacadeSmeny extends Remote  {
     public Template findTemplateByName(String name) throws RemoteException;
     public void createNewTemplateList(int idTemplate, int idTypeWorkShift) throws RemoteException;
     public List getTemplateListByTemplateId(int idTemplate) throws RemoteException;
-    public List getTemplates() throws RemoteException;  
+    public List getTemplates() throws RemoteException;
+    public void deleteTemplateByName(String name) throws RemoteException;
     
     //WORKSHIFTS
     //public void createNewWorkshift(Workshift workshift) throws RemoteException;

@@ -45,4 +45,16 @@ public class TemplateController {
     public List getTemplateListByTemplateId(int idTemplate) {
         return TemplateList.getTemplateListByTemplateId(idTemplate);        
     }
+    
+    public void deleteTemplateByName(String name) {
+        Template temp = Template.findByName(name);
+        int id = temp.getIdTemplate();
+        List list = TemplateList.getTemplateListByTemplateId(id);        
+        TemplateList templateList = null;
+        for(Object o : list) {
+            templateList = (TemplateList)o;
+            templateList.delete();
+        }                
+        temp.delete();        
+    }
 }
