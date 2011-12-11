@@ -31,7 +31,8 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
     private MainFrame parent = null;
     private Point point = new Point(550, 210);
     private JPopupMenu contextMenu = null;
-    private OverviewEmployeeShiftForm osf = null;
+    //private OverviewEmployeeShiftForm osf = null;
+    private OverviewEmployeeShiftForm osf = this;
     private int x = 0;
     private int y = 0;
     private Locale locale = new Locale("cs", "CZ");
@@ -47,15 +48,14 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
      * @throws java.io.FileNotFoundException
      */
     public OverviewEmployeeShiftForm(MainFrame parent, StatusBar bar) throws FileNotFoundException, NotBoundException, RemoteException {
-        osf = this;
+        //osf = this;
         this.parent = parent;
         this.statusBar = bar;
         initAllData();
         initComponents();
         initMyComponents();
         setDateFromToWeek();
-        refresh();
-        clearFields();
+        refresh();        
     }
 
     private void initAllData() throws FileNotFoundException, RemoteException, NotBoundException {
@@ -114,13 +114,10 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
                 int button = me.getButton();
                 x = me.getX();
                 y = me.getY();
-                if (button == me.BUTTON3) {
-                    ///System.exit(1);
-                    //Component comp = SwingUtilities.getDeepestComponentAt(me.getComponent(), me.getX(), me.getY()); 
-                    //JTextComponent tc = (JTextComponent)comp;                
+                if (button == me.BUTTON3) {                    
                     contextMenu.show(jTableWorkShiftOverview, x, y);
                 }
-                osf.repaint(); //always redisplay screen
+                osf.repaint(); //always redisplay screen                
             }
         });
 
@@ -142,14 +139,7 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
         statusBar.setMessage("Tento formulář slouží k přihlašování a odhlašování na směny.");
         //tatusBar.setMessage("x: " + this.x + " y: " + this.y);        
     }
-
-    /**
-     * Metoda cisti vsechny vstupni pole formulare.
-     */
-    @Override
-    protected void clearFields() {
-        //Validator.clearTextField(jTextFieldName);
-    }
+   
 
     /** This method is called from within the constructor to
      * initialize the form.

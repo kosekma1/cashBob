@@ -33,7 +33,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
     private MainFrame parent = null;
     private Point point = new Point(550, 210);
     private JPopupMenu contextMenu = null;
-    private OverviewLeaderShiftForm osf = null;
+    private OverviewLeaderShiftForm osf = this;
     private int x = 0;
     private int y = 0;
     private Locale locale = new Locale("cs", "CZ");
@@ -48,16 +48,14 @@ public class OverviewLeaderShiftForm extends AbstractForm {
      * @throws java.rmi.NotBoundException
      * @throws java.io.FileNotFoundException
      */
-    public OverviewLeaderShiftForm(MainFrame parent, StatusBar bar) throws FileNotFoundException, NotBoundException, RemoteException {
-        osf = this; //necessary for repaint 
+    public OverviewLeaderShiftForm(MainFrame parent, StatusBar bar) throws FileNotFoundException, NotBoundException, RemoteException {        
         this.parent = parent;
         this.statusBar = bar;
         initAllData();
         initComponents();
         initMyComponents();
         setDateFromToWeek();
-        refresh();
-        clearFields();
+        refresh();        
     }
 
     private void initMyComponents() {
@@ -142,15 +140,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         jTextFieldWeek.setText(String.valueOf(week));
         jTextFieldWeekRange.setText(firstDate + " - " + lastDate);
     }
-
-    /**
-     * Metoda cisti vsechny vstupni pole formulare.
-     */
-    @Override
-    protected void clearFields() {
-        //Validator.clearTextField(jTextFieldName);        
-    }
-
+ 
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is

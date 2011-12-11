@@ -3,6 +3,7 @@ package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 import cz.cvut.fel.restauracefel.hibernate.User;
 import cz.cvut.fel.restauracefel.library.service.ConfigParser;
 import cz.cvut.fel.restauracefel.library.view.CommonViewController;
+import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
@@ -45,14 +46,13 @@ public class MainFrame extends JFrame {
     public MainFrame( //User user, String[] prava
             ) {
 
-        //loggedUser = cz.cvut.fel.restauracefel.pokladna.PokladnaController.PokladnaController.getInstance().user;
-        rights = cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController.getInstance().prava;
+        loggedUser = SmenyController.getInstance().user;
+        rights = SmenyController.getInstance().prava;
         if (loggedUser == null) {
-            //TODO  System.exit(0);
+            System.exit(0);
         }
-        
-        //TO DO - zprovoznit prihlasovani - napojit na server
-        String userName = "Martin"; // + loggedUser.getUsername();
+                
+        String userName = loggedUser.getUsername();
         this.title = "Restaurace FEL - Modul směn, přihlášený uživatel: " + userName;
         this.setTitle(title);
         initComponents();
