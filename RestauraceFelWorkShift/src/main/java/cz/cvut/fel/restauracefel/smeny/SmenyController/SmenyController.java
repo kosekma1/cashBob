@@ -358,7 +358,7 @@ public class SmenyController /*implements IModuleInteface */ {
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
         if (workShifts == null || workShifts.isEmpty()) {
-            tablePlannedWorkShift = new Object[0][columns];
+            tablePlannedWorkShift = new Object[1][columns];
             tablePlannedWorkShift[0][0] = "";
             tablePlannedWorkShift[0][1] = "";
 
