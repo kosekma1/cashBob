@@ -60,12 +60,12 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
 
     private void initAllData() throws FileNotFoundException, RemoteException, NotBoundException {
         SmenyController.getInstance().initRangeDate(locale);
-        SmenyController.getInstance().generateTableOverviewTest(SmenyController.WorkShiftFilter.ALL);
+        SmenyController.getInstance().generateTableWorkShiftsOverview(SmenyController.WorkShiftFilter.ALL);
     }
 
     protected void reloadTable(WorkShiftFilter filter) {
         try {
-            SmenyController.getInstance().generateTableOverviewTest(filter);
+            SmenyController.getInstance().generateTableWorkShiftsOverview(filter);
             jTableWorkShiftOverview.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
         } catch (FileNotFoundException ex) {
             Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);

@@ -70,6 +70,7 @@ public class SmenyController /*implements IModuleInteface */ {
     private Date dateFrom = null;
     private Date dateTo = null;
     private int week = 0;
+    private Locale currentLocale = new Locale("cs", "CZ");
 
     //constants for tilters
     public enum WorkShiftFilter {
@@ -389,96 +390,8 @@ public class SmenyController /*implements IModuleInteface */ {
         modelPlannedWorkShift = new ResultTableModel(new String[]{"Datum", "Směna"}, tablePlannedWorkShift);
     }
 
-    /**
-     * Generate data for table that is displayed in OverviewLeaderShiftForm.
-     * @throws FileNotFoundException
-     * @throws NotBoundException
-     * @throws RemoteException 
-     */
-    public void generateTableOverviewLeader() throws FileNotFoundException, NotBoundException, RemoteException {
-        //List workShifts = ServiceFacade.getInstance().getAllActiveWorkShifts(actualDate); //get all planned workshift from today, not history        
-        List workShifts = ServiceFacade.getInstance().getWorkshiftsFromTo(this.dateFrom, this.dateTo); //get all planned workshift from today, not history                           
+    public List filterWorkShifts(WorkShiftFilter filter, List workShifts) throws FileNotFoundException, NotBoundException, RemoteException {
 
-        //TODO - implementovat filtr
-
-        int columns = 5; //table has 5 columns
-
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
-        if (workShifts == null || workShifts.isEmpty()) {
-            tableWorkShiftOverview = new Object[1][columns];
-            for (int i = 0; i < 5; i++) {
-                tableWorkShiftOverview[0][i] = null;
-            }
-            showMessageDialogInformation("Žádné směny nejsou plánovany.", "Informace");
-        } else {
-            tableWorkShiftOverview = new Object[workShifts.size()][columns];
-            Workshift workShift = null;
-            workShiftIds = new int[workShifts.size()];
-
-            int i = 0, j = 0, k = 0;
-            List typeWorkshifts = ServiceFacade.getInstance().getTypeWorkShifts();
-            Typeworkshift typeWorkShift = null;
-            for (Object o : workShifts) { //set Date of planned workshift
-                workShift = (Workshift) o;
-                int idTypeWorkShift = workShift.getIdTypeWorkshift();
-                for (Object ot : typeWorkshifts) { //set date and name of Workshift
-                    typeWorkShift = (Typeworkshift) ot;
-                    if (typeWorkShift.getIdTypeWorkshift() == idTypeWorkShift) {
-                        tableWorkShiftOverview[i][j++] = sdf.format(workShift.getDateShift()) + " " + typeWorkShift.getFromTime() + "-" + typeWorkShift.getToTime();
-                        tableWorkShiftOverview[i][j++] = typeWorkShift.getName();
-                        break;
-                    }
-                }
-                List attendanceList = ServiceFacade.getInstance().getAttendaceByWorkShiftId(workShift.getIdWorkshift());
-                if (attendanceList == null) {
-                    tableWorkShiftOverview[i][j++] = "Nikdo není přihlášen";
-                } else { //read users from Attendance and add to table
-                    StringBuilder sb = new StringBuilder();
-                    User userTemp = null;
-                    for (Object att : attendanceList) {
-                        int idUser = ((Attendance) att).getIdUser();
-                        userTemp = ServiceFacade.getInstance().getUserById(idUser);
-                        sb.append(userTemp.getFirstName());
-                        sb.append(" ");
-                        sb.append(userTemp.getLastName());
-                        sb.append(",");
-                    }
-                    tableWorkShiftOverview[i][j++] = (sb.toString()).substring(0, sb.toString().length() - 1);//remove last comma
-                }
-
-                //occupy user
-                StringBuilder sb = new StringBuilder();
-                if (workShift.getIdUser() == null) {
-                    tableWorkShiftOverview[i][j++] = "Neobsazeno";
-                } else { //read user in workshit and add to table full name
-                    User userOccupy = ServiceFacade.getInstance().getUserById(workShift.getIdUser());
-                    sb.append(userOccupy.getFirstName());
-                    sb.append(" ");
-                    sb.append(userOccupy.getLastName());
-                    tableWorkShiftOverview[i][j++] = sb.toString();
-                }
-
-                tableWorkShiftOverview[i][j++] = workShift.getUserSubmit() == null ? "Nepotvrzeno" : workShift.getUserSubmit(); //TODO - premenit na jmeno uzivatele, ktery je obsazeny
-
-                workShiftIds[k++] = workShift.getIdWorkshift();
-                j = 0;
-                i++;
-            }
-        }
-        modelOverviewWorkShift = new ResultTableModel(new String[]{"Datum a čas", "Typ směny", "Nahlášení", "Obsazení", "Potvrzení"}, tableWorkShiftOverview);
-    }
-
-    /**
-     * Generate data for table that is displayed in OverviewLeaderShiftForm.
-     * @throws FileNotFoundException
-     * @throws NotBoundException
-     * @throws RemoteException 
-     */
-    public void generateTableOverviewTest(WorkShiftFilter filter) throws FileNotFoundException, NotBoundException, RemoteException {
-        //List workShifts = ServiceFacade.getInstance().getAllActiveWorkShifts(actualDate); //get all planned workshift from today, not history
-
-        List workShifts = ServiceFacade.getInstance().getWorkshiftsFromTo(this.dateFrom, this.dateTo); //get all planned workshift from today, not history                           
-        //TODO - implementovat další filtry
         Workshift ws = null;
         ListIterator iter = workShifts.listIterator();
         switch (filter) {
@@ -579,10 +492,23 @@ public class SmenyController /*implements IModuleInteface */ {
             default:
                 break;
         }
+        return workShifts;
+    }
+
+    /**
+     * Generate data for table that is displayed in OverviewLeaderShiftForm.
+     * @throws FileNotFoundException
+     * @throws NotBoundException
+     * @throws RemoteException 
+     */
+    public void generateTableWorkShiftsOverview(WorkShiftFilter filter) throws FileNotFoundException, NotBoundException, RemoteException {
+        List workShifts = ServiceFacade.getInstance().getWorkshiftsFromTo(this.dateFrom, this.dateTo); //get all planned workshift from today, not history                           
+        workShifts = filterWorkShifts(filter, workShifts);
 
         int columns = 5; //table has 5 columns
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+        SimpleDateFormat sdfDate = new SimpleDateFormat("dd.MM.yyyy", currentLocale);
+        SimpleDateFormat sdfTime = new SimpleDateFormat("HH:mm", currentLocale);
         if (workShifts == null || workShifts.isEmpty()) {
             tableWorkShiftOverview = new Object[1][columns];
             for (int i = 0; i < 5; i++) {
@@ -603,7 +529,7 @@ public class SmenyController /*implements IModuleInteface */ {
                 for (Object ot : typeWorkshifts) { //set date and name of Workshift
                     typeWorkShift = (Typeworkshift) ot;
                     if (typeWorkShift.getIdTypeWorkshift() == idTypeWorkShift) {
-                        tableWorkShiftOverview[i][j++] = sdf.format(workShift.getDateShift()) + " " + typeWorkShift.getFromTime() + "-" + typeWorkShift.getToTime();
+                        tableWorkShiftOverview[i][j++] = sdfDate.format(workShift.getDateShift()) + " " + sdfTime.format(typeWorkShift.getFromTime()) + "-" + sdfTime.format(typeWorkShift.getToTime());
                         tableWorkShiftOverview[i][j++] = typeWorkShift.getName();
                         break;
                     }
@@ -645,6 +571,7 @@ public class SmenyController /*implements IModuleInteface */ {
             }
         }
         modelOverviewWorkShift = new ResultTableModel(new String[]{"Datum a čas", "Typ směny", "Nahlášení", "Obsazení", "Potvrzení"}, tableWorkShiftOverview);
+
     }
 
     /**
@@ -1022,8 +949,8 @@ public class SmenyController /*implements IModuleInteface */ {
             long dateToMills = dateTo.getTime();
             Date tempDate = null;
             int j = 0;
-            Locale locale = new Locale("cs", "CZ");
-            Calendar cal = Calendar.getInstance(locale);
+
+            Calendar cal = Calendar.getInstance(currentLocale);
             boolean isToSave = false;
             for (int i = 0; i < table.length; i++) {
                 if (table[i][j] != null) {
