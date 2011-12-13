@@ -27,34 +27,53 @@ public class TemplateController {
         return Template.findAll();
     }
 
-    public void createTemplate(Template template) {
-        template.create();
+    public boolean createTemplate(Template template) {
+        if (template != null) {
+            template.create();
+            return true;
+        } else {
+            return false;
+        }
+
     }
-    
-    public void createNewTemplateList(int idTemplate, int idTypeWorkShift) {
-        TemplateList tl = new TemplateList();
-        tl.setIdTemplate(idTemplate);
-        tl.setIdTypeworkshift(idTypeWorkShift);
-        tl.create();
+
+    public boolean createNewTemplateList(int idTemplate, int idTypeWorkShift) {
+        if (idTemplate > 0 && idTypeWorkShift > 0) {
+            TemplateList tl = new TemplateList();
+            tl.setIdTemplate(idTemplate);
+            tl.setIdTypeworkshift(idTypeWorkShift);
+            tl.create();
+            return true;
+        } else {
+            return false;
+        }
+
     }
 
     public Template findTemplateByName(String name) {
         return Template.findByName(name);
     }
-    
+
     public List getTemplateListByTemplateId(int idTemplate) {
-        return TemplateList.getTemplateListByTemplateId(idTemplate);        
+        return TemplateList.getTemplateListByTemplateId(idTemplate);
     }
-    
-    public void deleteTemplateByName(String name) {
+
+    public boolean deleteTemplateByName(String name) {
         Template temp = Template.findByName(name);
-        int id = temp.getIdTemplate();
-        List list = TemplateList.getTemplateListByTemplateId(id);        
-        TemplateList templateList = null;
-        for(Object o : list) {
-            templateList = (TemplateList)o;
-            templateList.delete();
-        }                
-        temp.delete();        
+
+        if (temp != null) {
+            int id = temp.getIdTemplate();
+            List list = TemplateList.getTemplateListByTemplateId(id);
+            TemplateList templateList = null;
+            for (Object o : list) {
+                templateList = (TemplateList) o;
+                templateList.delete();
+            }
+            temp.delete();
+            return true;
+        } else {
+            return false;
+        }
     }
 }
+

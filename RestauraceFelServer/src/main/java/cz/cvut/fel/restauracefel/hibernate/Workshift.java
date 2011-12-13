@@ -212,4 +212,32 @@ public class Workshift extends DBEntity implements java.io.Serializable {
     public void create() {
         create(this);
     }
+    
+    public void delete() {
+        delete(this);
+    }
+    
+    public static List getWorkshiftByUserId(Integer userId){
+         String query = "from Workshift ws where ws.idUser = :id";
+		String[] paramNames = new String[] {"id"};
+		String[] paramTypes = new String[] {"Integer"};
+		Object[] paramValues = new Object[] {userId};
+
+        List res = executeQuery(query, paramNames, paramTypes, paramValues);
+        if (res == null || res.isEmpty())
+            return null;
+	return res;
+    }
+    
+    public static List getWorkshiftByTypeWorkshiftId(Integer idTypeWorkshift) {
+        String query = "from Workshift ws where ws.idTypeWorkshift = :id";
+		String[] paramNames = new String[] {"id"};
+		String[] paramTypes = new String[] {"Integer"};
+		Object[] paramValues = new Object[] {idTypeWorkshift};
+
+        List res = executeQuery(query, paramNames, paramTypes, paramValues);
+        if (res == null || res.isEmpty())
+            return null;
+	return res;
+    }
 }
