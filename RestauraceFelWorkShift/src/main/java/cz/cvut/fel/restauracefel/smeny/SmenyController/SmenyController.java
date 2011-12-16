@@ -61,7 +61,8 @@ public class SmenyController /*implements IModuleInteface */ {
     //Users
     private String[] dataListEmployees = null; //for ChooseEmployeeDialog
     private int[] userIds = null;
-    //Leader overview
+    //Leader and employee overview
+    private String[] headerOverView = new String[]{"Datum a čas", "Typ směny", "Nahlášení", "Obsazení", "Potvrzení"};
     private Object[][] tableWorkShiftOverview = null;
     private ResultTableModel modelOverviewWorkShift = null;
     private int[] workShiftIds = null; //store workshift id`s that are viewed in table
@@ -570,7 +571,7 @@ public class SmenyController /*implements IModuleInteface */ {
                 i++;
             }
         }
-        modelOverviewWorkShift = new ResultTableModel(new String[]{"Datum a čas", "Typ směny", "Nahlášení", "Obsazení", "Potvrzení"}, tableWorkShiftOverview);
+        modelOverviewWorkShift = new ResultTableModel(this.headerOverView, tableWorkShiftOverview);
 
     }
 
