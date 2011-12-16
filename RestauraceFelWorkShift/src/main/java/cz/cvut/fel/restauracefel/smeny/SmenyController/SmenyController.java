@@ -62,7 +62,7 @@ public class SmenyController /*implements IModuleInteface */ {
     private String[] dataListEmployees = null; //for ChooseEmployeeDialog
     private int[] userIds = null;
     //Leader and employee overview
-    private String[] headerOverView = new String[]{"Datum a čas", "Typ směny", "Nahlášení", "Obsazení", "Potvrzení"};
+    private String[] headerOverView = new String[]{"Datum a čas", "Typ směny", "Přihlášení", "Obsazení", "Potvrzení"};
     private Object[][] tableWorkShiftOverview = null;
     private ResultTableModel modelOverviewWorkShift = null;
     private int[] workShiftIds = null; //store workshift id`s that are viewed in table
@@ -76,7 +76,8 @@ public class SmenyController /*implements IModuleInteface */ {
     //constants for tilters
     public enum WorkShiftFilter {
 
-        ALL, LOGIN, LOGIN_USER, OCCUPATION, UNOCCUPATION, UNCONFIRMED, CONFIRMED, REQUEST_CANCEL, OCCUPATION_USER, ROLE_USER
+        ALL, LOGIN, LOGIN_USER, OCCUPATION, UNOCCUPATION, UNCONFIRMED, CONFIRMED, REQUEST_CANCEL, OCCUPATION_USER, ROLE_USER, CONFIRMED_USER,
+        LOGIN_OR_OCCUPATION_USER
     }
 
     public enum DateFilter {
@@ -490,6 +491,37 @@ public class SmenyController /*implements IModuleInteface */ {
                     }
                 }
                 break;
+            case CONFIRMED_USER:
+                while (iter.hasNext()) {
+                    ws = (Workshift) iter.next();
+                    if (ws.getIdUser() != user.getUserId() && (ws.getUserSubmit() == null || !ws.getUserSubmit().equals("Potvrzeno"))) {
+                        iter.remove();
+                    }
+                }
+                break;
+            case LOGIN_OR_OCCUPATION_USER:
+                List attendanceList = null;
+                int user_Id = user.getUserId();
+                List temp_WorkShifts = new ArrayList();
+                while (iter.hasNext()) {
+                    ws = (Workshift) iter.next();
+                    if (ws.getIdUser() != null && user_Id == ws.getIdUser()) { //idUser can be null
+                        temp_WorkShifts.add(ws);
+                    } else {
+                        attendanceList = ServiceFacade.getInstance().getAttendaceByWorkShiftId(ws.getIdWorkshift());
+                        if (attendanceList != null) {
+                            for (Object o : attendanceList) {
+                                Attendance att = (Attendance) o;
+                                if (att.getIdUser() == user_Id) {
+                                    temp_WorkShifts.add(ws);
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                workShifts = temp_WorkShifts;
+                break;
             default:
                 break;
         }
@@ -557,7 +589,7 @@ public class SmenyController /*implements IModuleInteface */ {
                 if (workShift.getIdUser() == null) {
                     tableWorkShiftOverview[i][j++] = "Neobsazeno";
                 } else { //read user in workshit and add to table full name
-                    User userOccupy = ServiceFacade.getInstance().getUserById(workShift.getIdUser());                    
+                    User userOccupy = ServiceFacade.getInstance().getUserById(workShift.getIdUser());
                     sb.append(userOccupy.getFirstName());
                     sb.append(" ");
                     sb.append(userOccupy.getLastName());

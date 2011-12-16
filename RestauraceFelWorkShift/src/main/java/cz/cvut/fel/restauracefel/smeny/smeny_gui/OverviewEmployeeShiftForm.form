@@ -24,20 +24,20 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jLabelTitle" alignment="0" pref="948" max="32767" attributes="0"/>
+          <Component id="jLabelTitle" alignment="0" pref="981" max="32767" attributes="0"/>
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="jPanel1" alignment="0" max="32767" attributes="1"/>
-                  <Component id="jPanel2" alignment="0" pref="623" max="32767" attributes="1"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jLabelOverviewWorkShift" min="-2" max="-2" attributes="1"/>
-                      <EmptySpace pref="497" max="32767" attributes="0"/>
+                      <EmptySpace pref="584" max="32767" attributes="0"/>
                   </Group>
+                  <Component id="jPanel2" alignment="0" pref="710" max="32767" attributes="1"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="jPanel3" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="86" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="32" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -91,10 +91,10 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jComboBoxFilter" min="-2" pref="146" max="-2" attributes="0"/>
+                  <Component id="jComboBoxFilter" min="-2" pref="230" max="-2" attributes="0"/>
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="refreshTableButton" min="-2" max="-2" attributes="1"/>
-                  <EmptySpace pref="7" max="32767" attributes="0"/>
+                  <EmptySpace type="unrelated" max="32767" attributes="0"/>
                   <Component id="jLabelWeek" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Component id="jTextFieldWeek" min="-2" pref="32" max="-2" attributes="0"/>
@@ -110,16 +110,14 @@
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" alignment="0" attributes="0">
+              <Group type="102" alignment="1" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                          <Component id="jComboBoxFilter" alignment="3" pref="32" max="32767" attributes="0"/>
-                          <Component id="refreshTableButton" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
-                      </Group>
+                  <Group type="103" groupAlignment="1" attributes="0">
+                      <Component id="jComboBoxFilter" alignment="0" pref="32" max="32767" attributes="0"/>
+                      <Component id="refreshTableButton" alignment="0" min="-2" pref="32" max="-2" attributes="0"/>
                       <Component id="jTextFieldWeekRange" alignment="0" pref="32" max="32767" attributes="1"/>
                       <Component id="jTextFieldWeek" alignment="0" pref="32" max="32767" attributes="1"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
+                      <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                           <Component id="jButtonPreviousWeek" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                           <Component id="jButtonNextWeek" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                           <Component id="jLabelWeek" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -212,7 +210,7 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane1" pref="603" max="32767" attributes="1"/>
+                  <Component id="jScrollPane1" pref="690" max="32767" attributes="1"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
           </Group>
