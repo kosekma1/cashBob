@@ -473,7 +473,12 @@ INSERT INTO `right` (`rightID`, `name`, `isDeleted`) VALUES
 (22, 'Editace důvodů odpisu', 0),
 (23, 'Tvorba uzávěrky (zrcadlo)', 0),
 (24, 'Přehled uzávěrek', 0),
-(25, 'Nastavení klienta', 0);
+(25, 'Nastavení klienta', 0),
+(26, 'Tvorba nového typu směny', 0),
+(27, 'Tvorba nového templatu', 0),
+(28, 'Tvorba plánu směn', 0),
+(29, 'Přehled směn - vedoucí', 0),
+(30, 'Přehled směn zaměstnanec', 0);
 
 -- --------------------------------------------------------
 
@@ -577,7 +582,14 @@ INSERT INTO `role_right` (`roleRightID`, `roleID`, `rightID`, `isDeleted`) VALUE
 (36, 3, 19, 0),
 (37, 3, 20, 0),
 (38, 3, 23, 0),
-(39, 3, 24, 0);
+(39, 3, 24, 0),
+(40, 1, 26, 0),
+(41, 1, 27, 0),
+(42, 3, 30, 0),
+(43, 2, 30, 0),
+(44, 1, 28, 0),
+(45, 1, 29, 0),
+(46, 1, 30, 0);
 
 -- --------------------------------------------------------
 
