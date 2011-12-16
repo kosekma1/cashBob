@@ -138,9 +138,6 @@
               <Connection code="new Insets(10, 10, 10, 10)" type="code"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="templateNameTextFieldActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelNewTemplate">
           <Properties>

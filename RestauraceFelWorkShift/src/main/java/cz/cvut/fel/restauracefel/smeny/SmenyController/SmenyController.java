@@ -556,7 +556,7 @@ public class SmenyController /*implements IModuleInteface */ {
                 if (workShift.getIdUser() == null) {
                     tableWorkShiftOverview[i][j++] = "Neobsazeno";
                 } else { //read user in workshit and add to table full name
-                    User userOccupy = ServiceFacade.getInstance().getUserById(workShift.getIdUser());
+                    User userOccupy = ServiceFacade.getInstance().getUserById(workShift.getIdUser());                    
                     sb.append(userOccupy.getFirstName());
                     sb.append(" ");
                     sb.append(userOccupy.getLastName());

@@ -8,7 +8,6 @@ import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import cz.cvut.fel.restauracefel.library.service.EmptyListException;
-//import cz.cvut.fel.restauracefel.pokladna_service.ServiceFacade;
 import cz.cvut.fel.restauracefel.library.service.Validator;
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
 
@@ -20,8 +19,7 @@ import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
 public class CreateTemplateForm extends AbstractForm {
 
     private ChooseShiftDialog chooseShiftDialog = null;
-    private ChooseDeleteShiftDialog chooseDeleteShiftDialog = null;
-    private ChooseDeleteTemplateDialog chooseDeleteTemplateDialog = null;
+    private ChooseDeleteShiftDialog chooseDeleteShiftDialog = null;    
     private StatusBar statusBar = null;
     private MainFrame parent = null;
     private Point point = new Point(550, 210);
@@ -45,52 +43,33 @@ public class CreateTemplateForm extends AbstractForm {
     }
 
     /**
-     * Metoda prenastavuje statusBar.
+     * Metoda prenastavuje statusBar
      */
     @Override
     protected void refresh() {
-        statusBar.setMessage("Tento formulář slouží k vytvoření nové šablony.");
-        jTableWorkShifts.setModel(SmenyController.getInstance().getModelWorkShift());
+        statusBar.setMessage("Tento formulář slouží k vytvoření nové šablony.");        
     }
 
     /**
-     * Metoda cisti vsechny vstupni pole formulare.
+     * Metoda cisti vsechny vstupni pole formulare vcetne tabulky se smenanmi.
      */
     @Override
     protected void clearFields() {
         Validator.clearTextField(templateNameTextField);
-    }
-
-    /**
-     * Metoda vytvari a zobrazuje formular pro objednani polozek na ucet.
-     *
-     * @param accountId id uctu, na ktery se bude objednavat
-     */
-    public void loadCreateOrderForm(int accountId) {
-        /*try {
-        CreateOrderForm createOrderForm = new CreateOrderForm(parent, statusBar, accountId, MainFrame.loggedUser.getUserAttendanceId());
-        parent.panel.getViewport().add(createOrderForm);
-        parent.panel.validate();
-        parent.panel.repaint();
-        parent.refreshWindowLayout();
-        refresh();
-        } catch (FileNotFoundException fnfe) {
-        JOptionPane.showMessageDialog(this, "Konfigurační soubor \"" + ConfigParser.getConfigFile() + "\" nebyl nalezen.", "Chyba", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Nelze navázat spojení se serverem.", "Chyba komunikace", JOptionPane.ERROR_MESSAGE);
-        }
-         */
-    }
+        SmenyController.getInstance().clearTableWorkShiftData();
+    }    
 
     private void reloadTableTemplates() throws FileNotFoundException, NotBoundException, RemoteException {
         SmenyController.getInstance().generateTableTemplateData();
         jTableTemplates.setModel(SmenyController.getInstance().getModelTemplate());
     }
+    
+    private void reloadTableWorkShifts(){
+        jTableWorkShifts.setModel(SmenyController.getInstance().getModelWorkShift());
+    }
 
     private void initAllData() throws FileNotFoundException, NotBoundException, RemoteException {
-        SmenyController.getInstance().generateTableTemplateData();
-
+        SmenyController.getInstance().generateTableTemplateData();        
     }
 
     /** This method is called from within the constructor to
@@ -127,14 +106,9 @@ public class CreateTemplateForm extends AbstractForm {
         newTemplatePanel.setBackground(javax.swing.UIManager.getDefaults().getColor("CheckBox.light"));
         newTemplatePanel.setOpaque(false);
 
-        templateNameTextField.setFont(new java.awt.Font("Tahoma", 0, 12));
+        templateNameTextField.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         templateNameTextField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         templateNameTextField.setMargin(new Insets(10, 10, 10, 10));
-        templateNameTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                templateNameTextFieldActionPerformed(evt);
-            }
-        });
 
         jLabelNewTemplate.setFont(new java.awt.Font("Calibri", 1, 22));
         jLabelNewTemplate.setText("Nová šablona");
@@ -368,10 +342,11 @@ public class CreateTemplateForm extends AbstractForm {
 
     private void saveTemplate() throws FileNotFoundException, NotBoundException, RemoteException {
         String templateName = templateNameTextField.getText();
-        Boolean result = SmenyController.getInstance().saveTemplate(templateName);
+        boolean result = SmenyController.getInstance().saveTemplate(templateName);
         if (result) {
             clearFields();
-            reloadTableTemplates();
+            reloadTableTemplates();            
+            reloadTableWorkShifts();
             this.repaint();
         }
     }
@@ -409,27 +384,13 @@ private void jButtonRemoveWorkShiftActionPerformed(java.awt.event.ActionEvent ev
 }//GEN-LAST:event_jButtonRemoveWorkShiftActionPerformed
 
 private void jButtonEditTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEditTemplateActionPerformed
-    try {
-        //TODO - implementovat smazání šablon
-        chooseDeleteTemplateDialog = new ChooseDeleteTemplateDialog(parent, true, templateNameTextField);
-        chooseDeleteTemplateDialog.setLocation(point);
-        chooseDeleteTemplateDialog.setVisible(true);
-    } catch (EmptyListException ex) {
-        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (RemoteException ex) {
-        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (NotBoundException ex) {
-        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
-    } catch (FileNotFoundException ex) {
-        Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
-    }
-
+    //TODO - implementovat editaci sablon    
 }//GEN-LAST:event_jButtonEditTemplateActionPerformed
 
-private void templateNameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_templateNameTextFieldActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_templateNameTextFieldActionPerformed
-
+/**
+ * Smazani vybrane sablony.
+ * @param evt 
+ */
 private void jButtonDeleteTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteTemplateActionPerformed
     int row = this.jTableTemplates.getSelectedRow();
     int column = this.jTableTemplates.getSelectedColumn();

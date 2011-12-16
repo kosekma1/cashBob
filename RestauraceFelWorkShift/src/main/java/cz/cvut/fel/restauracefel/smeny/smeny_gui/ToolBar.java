@@ -54,31 +54,32 @@ public class ToolBar extends JToolBar {
 
             planOfShifts.setFocusPainted(false);
             planOfShifts.setToolTipText(PLAN_OF_SHIFTS);
+            
+            overviewShift.setFocusPainted(false);
+            overviewShift.setToolTipText(OVERVIEW_WORKSHIFTS);
+                        
 
-            statistics.setFocusPainted(false);
-            statistics.setToolTipText(STATISTICS);
+            //statistics.setFocusPainted(false);
+            //statistics.setToolTipText(STATISTICS);
 
             panel.add(addTypeWorkShift);
             panel.add(addTemplate);
             //panel.add(listOfTemplates);
             panel.add(planOfShifts);
-            panel.add(statistics);
+            panel.add(overviewShift);
+            //panel.add(statistics);
         }
 
         boolean isWorker = true;
-        if (isWorker) {            
-            overviewShift.setFocusPainted(false);
-            overviewShift.setToolTipText(OVERVIEW_WORKSHIFTS);
-
-            information.setFocusPainted(false);
-            information.setToolTipText(INFORMATION_HELP);
+        if (isWorker) {                        
+            //information.setFocusPainted(false);
+            //information.setToolTipText(INFORMATION_HELP);
 
             overviewEmpShift.setFocusPainted(false);
             overviewEmpShift.setToolTipText(OVERVIEW_WORKSHIFTS);
-            
-            panel.add(overviewShift);
+                        
             panel.add(overviewEmpShift);
-            panel.add(information);
+            //panel.add(information);
         }        
 
         //this.addSeparator(new Dimension(20, 20));

@@ -72,6 +72,7 @@ public class WorkShiftPlanForm extends AbstractForm {
     private void loadAllData(){
         try {
             SmenyController.getInstance().generateTableDataPlannedWorkShifts();
+            SmenyController.getInstance().clearTableWorkShiftData();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(WorkShiftPlanForm.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NotBoundException ex) {

@@ -36,7 +36,7 @@ public class MainFrame extends JFrame {
     protected static CreateShiftForm createShiftForm = null;
     protected static CreateTemplateForm createTemplateForm = null;
     protected static WorkShiftPlanForm workShiftPlanForm = null;
-    protected static StatisticsForm statisticsForm = null;        
+    protected static StatisticsForm statisticsForm = null;
     protected static OverviewLeaderShiftForm overViewShiftForm = null;
     protected static InformationForm informationForm = null;
     protected static OverviewEmployeeShiftForm overViewEmplForm = null;
@@ -51,7 +51,7 @@ public class MainFrame extends JFrame {
         if (loggedUser == null) {
             System.exit(0);
         }
-                
+
         String userName = loggedUser.getUsername();
         this.title = "Restaurace FEL - Modul směn, přihlášený uživatel: " + userName;
         this.setTitle(title);
@@ -120,18 +120,12 @@ public class MainFrame extends JFrame {
                 loadForm(EnumChooseForm.PLAN_OF_SHIFTS);
             }
         });
-
+        
+        //TODO - imlementovat statistiku - export dat
         toolBar.statistics.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 loadForm(EnumChooseForm.STATISTICS_FORM);
-            }
-        });
-
-        toolBar.information.addActionListener(new ActionListener() {
-
-            public void actionPerformed(ActionEvent e) {
-                loadForm(EnumChooseForm.INFORMATION);
             }
         });
 
@@ -141,11 +135,18 @@ public class MainFrame extends JFrame {
                 loadForm(EnumChooseForm.OVERVIEW_EMPLOYEE_SHIFT);
             }
         });
-       
+
         toolBar.overviewShift.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
                 loadForm(EnumChooseForm.OVERVIEW_LEADER_SHIFT);
+            }
+        });
+
+        toolBar.information.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                loadForm(EnumChooseForm.INFORMATION);
             }
         });
 
@@ -220,11 +221,11 @@ public class MainFrame extends JFrame {
             switch (form) {
                 case ADD_TYPE_WORKSHIFT:
                     //TODO testovat prava                    
-                    /*if (!contains("Tvorba nového typu směny")) {
-                    if (!commonViewController.performBaseAdditionalLogin(this, "Tvorba nového typu směny")) {
-                    return;
+                    if (!contains("Tvorba nového typu směny")) {
+                        if (!commonViewController.performBaseAdditionalLogin(this, "Tvorba nového typu směny")) {
+                            return;
+                        }
                     }
-                    }*/
                     af = createShiftForm;
                     if (af == null) {
                         af = new CreateShiftForm(this, statusBar);
@@ -259,7 +260,7 @@ public class MainFrame extends JFrame {
                     af = statisticsForm;
                     af = new StatisticsForm(this, statusBar);
                     //af = new WorkShiftPlanForm(this, statusBar, loggedUser.getUserAttendanceId(), EnumOrder.CREATE_ORDER);
-                    break;                
+                    break;
                 case OVERVIEW_LEADER_SHIFT:
                     if (!contains("Přehled směn - vedoucí")) {
                         if (!commonViewController.performBaseAdditionalLogin(this, "Přehled směn - vedoucí")) {
@@ -304,15 +305,15 @@ public class MainFrame extends JFrame {
         } catch (Exception ex) {
             ex.printStackTrace();
             try {
-                
+
                 PrintWriter vystup = new PrintWriter(new FileWriter("log-chyb.txt"));
                 StackTraceElement[] el = ex.getStackTrace();
                 for (StackTraceElement els : el) {
                     vystup.println(els.toString());
                 }
                 vystup.println(ex.getMessage());
-                vystup.close();                  
-                
+                vystup.close();
+
             } catch (IOException ex1) {
                 Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex1);
             }
