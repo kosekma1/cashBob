@@ -180,6 +180,11 @@ public class ServiceFacadeSmeny extends UnicastRemoteObject implements IServiceF
     public void deleteAttendanceById(int attendanceId) throws RemoteException {
         AttendanceController.getInstance().deleteById(attendanceId);
     }
+    
+    @Override
+    public void deleteAttendences(Date date, int workShifTypeId, int userId) throws RemoteException {
+        AttendanceController.getInstance().deleteAllByDateWorkShiftTypeUserId(date, workShifTypeId, userId);
+    }
 
     @Override
     public Attendance getAttendaceByWorkShiftAndUser(int workShiftId, int userId) throws RemoteException {

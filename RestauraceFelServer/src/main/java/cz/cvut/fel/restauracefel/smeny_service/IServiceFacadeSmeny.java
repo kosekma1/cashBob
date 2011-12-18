@@ -52,6 +52,7 @@ public interface IServiceFacadeSmeny extends Remote  {
     public List getAttendaceByWorkShiftId(int workShiftId) throws RemoteException;
     public Attendance getAttendanceById(int attendanceId)throws RemoteException;
     public void deleteAttendanceById(int attendanceId)throws RemoteException;
+    public void deleteAttendences(Date date, int workShifTypeId, int userId) throws RemoteException;
     public Attendance getAttendaceByWorkShiftAndUser(int workShiftId, int userId) throws RemoteException;
     
     //USER methods

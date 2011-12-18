@@ -3,6 +3,7 @@ package cz.cvut.fel.restauracefel.server.service.controllers;
 import cz.cvut.fel.restauracefel.hibernate.Attendance;
 import cz.cvut.fel.restauracefel.hibernate.User;
 import cz.cvut.fel.restauracefel.hibernate.Workshift;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -55,6 +56,29 @@ public class AttendanceController {
             return false;
         }
 
+    }
+
+    /**
+     * Delete attendence from all workshifts with the same workShiftType
+     * in the same date.
+     * @param workShiftId
+     * @param userId
+     * @return 
+     */
+    public boolean deleteAllByDateWorkShiftTypeUserId(Date date, int workShifTypeId, int userId) {
+        List workShiftList = WorkShiftController.getInstance().getWorkshiftsFromTo(date, date);
+        Workshift ws = null;
+        Attendance att = null;
+        for (Object o : workShiftList) {
+            ws = (Workshift) o;
+            if (ws.getIdTypeWorkshift() == workShifTypeId) {
+                att = this.findByWorkShiftAndUser(ws.getIdWorkshift(), userId);
+                if (att != null) {
+                    this.deleteById(att.getIdAttendance());
+                }
+            }
+        }
+        return true;
     }
 
     public Attendance findByWorkShiftAndUser(int workShiftId, int userId) {
