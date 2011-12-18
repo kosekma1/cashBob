@@ -234,7 +234,7 @@ public class SmenyController /*implements IModuleInteface */ {
                 break;
             }
         }
-        if (!changed) { //resize                        
+        if (!changed) { //auto-resize                        
             Object[][] newTable = new Object[tableWorkShiftData.length + EXTEND_SIZE][COUNT_PARAMETERS];
             System.arraycopy(tableWorkShiftData, 0, newTable, 0, tableWorkShiftData.length);
             tableWorkShiftData = newTable;
@@ -617,19 +617,56 @@ public class SmenyController /*implements IModuleInteface */ {
         int workShiftId = this.workShiftIds[workShiftIndexId];
         Attendance att = ServiceFacade.getInstance().getAttendaceByWorkShiftAndUser(workShiftId, userId);
         if (att == null) {
-            ServiceFacade.getInstance().createNewAttendance(userId, workShiftId);
+            //kontrola jestli neni obsazen ve smenach stejneho typu v dany den
+            loginUserToWorkShifts(userId, workShiftId);
+            //ServiceFacade.getInstance().createNewAttendance(userId, workShiftId);
         } else {
-            this.showErrorMessage("Uživatel je již přihlášen", "Chyba");
+            this.showErrorMessage("Uživatel je již přihlášen.", "Chyba");
         }
     }
 
     public void saveCurrentUserToWorkShift(int workShiftId) throws FileNotFoundException, NotBoundException, RemoteException {
         Attendance att = ServiceFacade.getInstance().getAttendaceByWorkShiftAndUser(workShiftId, user.getUserId());
         if (att == null) {
-            ServiceFacade.getInstance().createNewAttendance(user.getUserId(), workShiftId);
-            showMessageDialogInformation("Uživatel je přihlášen.", "Informace");
+            loginUserToWorkShifts(user.getUserId(), workShiftId);
+            //ServiceFacade.getInstance().createNewAttendance(user.getUserId(), workShiftId);
+            showMessageDialogInformation("Uživatel je úspěšně přihlášen.", "Informace");
         } else {
             this.showErrorMessage("Uživatel je již přihlášen", "Chyba");
+        }
+    }
+
+    /**
+     * Save user with userId to all workshifts with the same type workshift at the same date.
+     */
+    public void loginUserToWorkShifts(int userId, int workShiftId) throws FileNotFoundException, NotBoundException, RemoteException {
+        Workshift ws = ServiceFacade.getInstance().getWorkshiftById(workShiftId);
+        int workShiftTypeId = ws.getIdTypeWorkshift();
+        List listWorkshifts = ServiceFacade.getInstance().getWorkshiftsFromTo(ws.getDateShift(), ws.getDateShift());
+
+        Workshift workShift = null;
+
+        //test if user is free (not occupied)
+        boolean isFree = true;
+        for (Object o : listWorkshifts) {
+            workShift = (Workshift) o;
+            if (workShift.getIdUser() != null
+                    && workShift.getIdUser() == userId
+                    && workShift.getIdTypeWorkshift() == workShiftTypeId) {
+                isFree = false;
+                break;
+            }
+        }
+
+        if (isFree) {
+            for (Object o : listWorkshifts) {
+                workShift = (Workshift) o;
+                if (workShift.getIdTypeWorkshift() == workShiftTypeId) {
+                    ServiceFacade.getInstance().createNewAttendance(userId, workShift.getIdWorkshift());
+                }
+            }
+        } else {
+            this.showErrorMessage("Uživatel je již obsazen na směnu stejného typu.", "Chyba");
         }
     }
 
@@ -681,12 +718,13 @@ public class SmenyController /*implements IModuleInteface */ {
     public void saveOccupyUser(int userId, int workShiftId) throws FileNotFoundException, NotBoundException, RemoteException {
         Workshift ws = ServiceFacade.getInstance().getWorkshiftById(workShiftId);
         if (ws.getIdUser() != null) {
-            this.showErrorMessage("Směna je již obsazena", "Chyba");
+            this.showErrorMessage("Směna je již obsazena.", "Chyba");
         } else {
             boolean result = ServiceFacade.getInstance().updateWorkshiftLogin(workShiftId, userId);
             if (result) {
-                Attendance att = ServiceFacade.getInstance().getAttendaceByWorkShiftAndUser(workShiftId, userId);
-                ServiceFacade.getInstance().deleteAttendanceById(att.getIdAttendance());
+                ServiceFacade.getInstance().deleteAttendences(ws.getDateShift(), ws.getIdTypeWorkshift(), userId);
+                //Attendance att = ServiceFacade.getInstance().getAttendaceByWorkShiftAndUser(workShiftId, userId);
+                //ServiceFacade.getInstance().deleteAttendanceById(att.getIdAttendance());                               
             }
         }
 
@@ -733,8 +771,9 @@ public class SmenyController /*implements IModuleInteface */ {
         if (att == null) {
             this.showErrorMessage("Na tuto směnu nejste přihlášen/a.", "Chyba");
         } else {
-            ServiceFacade.getInstance().deleteAttendanceById(att.getIdAttendance());
-            this.showMessageDialogInformation("Byl/a jste úspěšně odhlášen ze směny", "Informace");
+            Workshift ws = ServiceFacade.getInstance().getWorkshiftById(workShiftId);
+            ServiceFacade.getInstance().deleteAttendences(ws.getDateShift(), ws.getIdTypeWorkshift(), this.user.getUserId());
+            this.showMessageDialogInformation("Byl/a jste úspěšně odhlášen ze směny.", "Informace");
         }
     }
 
@@ -878,7 +917,7 @@ public class SmenyController /*implements IModuleInteface */ {
             this.showErrorMessage("Šablona nebyla vybrána.", "Chyba");
         } else {
             ServiceFacade.getInstance().deleteTemplateByName(templateName);
-            this.showMessageDialogInformation("Šablona úspěšně smazána", "Informace");
+            this.showMessageDialogInformation("Šablona úspěšně smazána.", "Informace");
         }
     }
 
@@ -923,7 +962,6 @@ public class SmenyController /*implements IModuleInteface */ {
             tw.setStatus(1);
             Role role = ServiceFacade.getInstance().getRoleByName(roleName);
             tw.setIdWorkshiftRole(role.getRoleId());
-            //System.out.println("TW: " + tw.getName() + " " + tw.getFromTime() + " " + tw.getToTime());
             ServiceFacade.getInstance().createNewTypewWorkShift(tw);
 
             showMessageDialogInformation("Typ směny byl uložen.", "Informace");
@@ -958,7 +996,7 @@ public class SmenyController /*implements IModuleInteface */ {
             process = false;
         }
         if (dateFrom.after(dateTo)) {
-            showErrorMessage("Datum do musí být větší než datum od", SmenyController.ERROR_ENTERED_DATA);
+            showErrorMessage("Datum do musí být větší než datum od.", SmenyController.ERROR_ENTERED_DATA);
             process = false;
         }
 

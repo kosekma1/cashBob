@@ -18,6 +18,8 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPopupMenu;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 
 /**
  * Trida reprezentujici GUI formular pro spravu smen zamestnancem.
@@ -31,10 +33,7 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
     private MainFrame parent = null;
     private Point point = new Point(550, 210);
     private JPopupMenu contextMenu = null;
-    //private OverviewEmployeeShiftForm osf = null;
-    private OverviewEmployeeShiftForm osf = this;
-    private int x = 0;
-    private int y = 0;
+    private OverviewEmployeeShiftForm currentForm = this;
     private Locale locale = new Locale("cs", "CZ");
     String[] comboBoxItems = new String[]{"Vše", "Moje role", "Moje přihlášené", "Mnou obsazené", "Mnou potvrzené", "Mnou přihlášené nebo obsazené"};
 
@@ -55,7 +54,7 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
         initComponents();
         initMyComponents();
         setDateFromToWeek();
-        refresh();        
+        refresh();
     }
 
     private void initAllData() throws FileNotFoundException, RemoteException, NotBoundException {
@@ -95,29 +94,34 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
         contextMenu.addSeparator();
         contextMenu.add("Konec");
 
-        this.addMouseMotionListener(new MouseAdapter() {
-
-            @Override
-            public void mouseMoved(MouseEvent me) {
-                //System.out.println(me);
-                x = me.getX();
-                y = me.getY();
-                //refresh();
-            }
-        });
 
         jTableWorkShiftOverview.addMouseListener(new MouseAdapter() {
 
             @Override
-            public void mousePressed(MouseEvent me) {
-                //System.out.println(me);
-                int button = me.getButton();
-                x = me.getX();
-                y = me.getY();
-                if (button == me.BUTTON3) {                    
-                    contextMenu.show(jTableWorkShiftOverview, x, y);
+            public void mouseClicked(MouseEvent e) {  //enable selection of row int table with left and right mouse button
+                // Left mouse click
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    // Do something
+                } // Right mouse click
+                else if (SwingUtilities.isRightMouseButton(e)) {
+                    // get the coordinates of the mouse click
+                    Point point = e.getPoint();
+
+                    // get the row index that contains that coordinate
+                    int rowNumber = jTableWorkShiftOverview.rowAtPoint(point);
+
+                    // Get the ListSelectionModel of the JTable
+                    ListSelectionModel model = jTableWorkShiftOverview.getSelectionModel();
+
+                    // set the selected interval of rows.  Using the "rowNumber"
+                    // variable for the beginning and end selects only that one row.
+                    model.setSelectionInterval(rowNumber, rowNumber);
+
+                    contextMenu.show(jTableWorkShiftOverview, (int) point.getX(), (int) point.getY());
+
+                    currentForm.repaint(); //always redisplay screen
+
                 }
-                osf.repaint(); //always redisplay screen                
             }
         });
 
@@ -125,7 +129,7 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
 
             @Override
             public void mouseEntered(MouseEvent me) { //TODO - solve repaint after action in JComboBox1           
-                osf.repaint(); //always redisplay screen
+                currentForm.repaint(); //always redisplay screen
             }
         });
 
@@ -137,9 +141,7 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
     @Override
     protected void refresh() {
         statusBar.setMessage("Tento formulář slouží k přihlašování a odhlašování na směny.");
-        //tatusBar.setMessage("x: " + this.x + " y: " + this.y);        
     }
-   
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -208,7 +210,7 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
         jTextFieldWeek.setFont(new java.awt.Font("Calibri", 0, 14));
         jTextFieldWeek.setText("14");
 
-        jComboBoxFilter.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        jComboBoxFilter.setFont(new java.awt.Font("Calibri", 0, 14));
         jComboBoxFilter.setModel(new javax.swing.DefaultComboBoxModel(comboBoxItems));
         jComboBoxFilter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -264,7 +266,7 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
 
         jPanel2.setPreferredSize(new java.awt.Dimension(620, 371));
 
-        jTableWorkShiftOverview.setFont(new java.awt.Font("Calibri", 0, 14));
+        jTableWorkShiftOverview.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
         jTableWorkShiftOverview.setModel(SmenyController.getInstance().getModelOverviewWorkShift());
         jTableWorkShiftOverview.setRowHeight(25);
         jScrollPane1.setViewportView(jTableWorkShiftOverview);
@@ -559,9 +561,8 @@ private void jButtonRequestCancelActionPerformed(java.awt.event.ActionEvent evt)
     }//GEN-LAST:event_jComboBoxFilterActionPerformed
 
     private void refreshTableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshTableButtonActionPerformed
-        reloadTable(getCurrentFilter());        
+        reloadTable(getCurrentFilter());
     }//GEN-LAST:event_refreshTableButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonApprovedOccupy;
     private javax.swing.JButton jButtonLoginUser;

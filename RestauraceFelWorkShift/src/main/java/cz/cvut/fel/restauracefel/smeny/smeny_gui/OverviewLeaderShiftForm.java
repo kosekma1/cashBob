@@ -19,6 +19,8 @@ import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPopupMenu;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingUtilities;
 
 /**
  * Trida reprezentujici GUI formular pro spravu planovanych smen.
@@ -33,9 +35,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
     private MainFrame parent = null;
     private Point point = new Point(550, 210);
     private JPopupMenu contextMenu = null;
-    private OverviewLeaderShiftForm osf = this;
-    private int x = 0;
-    private int y = 0;
+    private OverviewLeaderShiftForm currentForm = this;
     private Locale locale = new Locale("cs", "CZ");
     String[] comboBoxItems = new String[]{"Vše", "Obsazené", "Neobsazené", "Potvrzené", "Nepotvrzené", "Žádosti o zrušení"};
 
@@ -48,14 +48,14 @@ public class OverviewLeaderShiftForm extends AbstractForm {
      * @throws java.rmi.NotBoundException
      * @throws java.io.FileNotFoundException
      */
-    public OverviewLeaderShiftForm(MainFrame parent, StatusBar bar) throws FileNotFoundException, NotBoundException, RemoteException {        
+    public OverviewLeaderShiftForm(MainFrame parent, StatusBar bar) throws FileNotFoundException, NotBoundException, RemoteException {
         this.parent = parent;
         this.statusBar = bar;
         initAllData();
         initComponents();
         initMyComponents();
         setDateFromToWeek();
-        refresh();        
+        refresh();
     }
 
     private void initMyComponents() {
@@ -67,40 +67,41 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         contextMenu.addSeparator();
         contextMenu.add("Konec");
 
-        this.addMouseMotionListener(new MouseAdapter() {
-
-            @Override
-            public void mouseMoved(MouseEvent me) {
-                //System.out.println(me);
-                x = me.getX();
-                y = me.getY();
-                refresh();
-            }
-        });
-
         jTableWorkShiftOverview.addMouseListener(new MouseAdapter() {
 
             @Override
-            public void mousePressed(MouseEvent me) {
-                //System.out.println(me);
-                int button = me.getButton();
-                x = me.getX();
-                y = me.getY();
-                if (button == me.BUTTON3) {
-                    ///System.exit(1);
-                    //Component comp = SwingUtilities.getDeepestComponentAt(me.getComponent(), me.getX(), me.getY()); 
-                    //JTextComponent tc = (JTextComponent)comp;                
-                    contextMenu.show(jTableWorkShiftOverview, x, y);
+            public void mouseClicked(MouseEvent e) { //enable selection of row int table with left and right mouse button
+                // Left mouse click
+                if (SwingUtilities.isLeftMouseButton(e)) {
+                    // Do something
+                } // Right mouse click
+                else if (SwingUtilities.isRightMouseButton(e)) {
+                    // get the coordinates of the mouse click
+                    Point p = e.getPoint();
+
+                    // get the row index that contains that coordinate
+                    int rowNumber = jTableWorkShiftOverview.rowAtPoint(p);
+
+                    // Get the ListSelectionModel of the JTable
+                    ListSelectionModel model = jTableWorkShiftOverview.getSelectionModel();
+
+                    // set the selected interval of rows.  Using the "rowNumber"
+                    // variable for the beginning and end selects only that one row.
+                    model.setSelectionInterval(rowNumber, rowNumber);
+
+                    contextMenu.show(jTableWorkShiftOverview, (int) p.getX(), (int) p.getY());
+
+                    currentForm.repaint(); //always redisplay screen
+
                 }
-                osf.repaint(); //always redisplay screen
             }
         });
 
         jComboBoxFilter.addMouseListener(new MouseAdapter() {
 
             @Override
-            public void mouseEntered(MouseEvent me) { //TODO - solve repaint after action in JComboBox1                           
-                osf.repaint(); //always redisplay screen
+            public void mouseEntered(MouseEvent me) {
+                currentForm.repaint(); //always redisplay screen
             }
         });
     }
@@ -111,7 +112,6 @@ public class OverviewLeaderShiftForm extends AbstractForm {
     @Override
     protected void refresh() {
         statusBar.setMessage("Tento formulář slouží k přihlašování a obsazování směn.");
-        //statusBar.setMessage("x: " + this.x + " y: " + this.y);
     }
 
     private void initAllData() throws FileNotFoundException, RemoteException, NotBoundException {
@@ -140,7 +140,7 @@ public class OverviewLeaderShiftForm extends AbstractForm {
         jTextFieldWeek.setText(String.valueOf(week));
         jTextFieldWeekRange.setText(firstDate + " - " + lastDate);
     }
- 
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -418,7 +418,7 @@ private void jButtonCancelOccupyActionPerformed(java.awt.event.ActionEvent evt) 
      * Open window for selecting employee.
      */
     private void selectLoginUser() {
-        int rowNumber = jTableWorkShiftOverview.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny        
+        int rowNumber = jTableWorkShiftOverview.getSelectedRow(); //slouzi jako index pro datovou strukturu ve ktere jsou ulozena id smen                
         if (rowNumber > -1) {
             try {
                 chooseEmployeeDialog = new ChooseEmployeeDialog(parent, true, rowNumber, this);
@@ -440,7 +440,7 @@ private void jButtonCancelOccupyActionPerformed(java.awt.event.ActionEvent evt) 
                 logError(ex);
             }
         } else {
-            parent.showMessageDialogInformation("Vyberte řádek", "Informace");
+            parent.showMessageDialogInformation("Vyberte řádek.", "Informace");
         }
     }
 
@@ -524,7 +524,6 @@ private void jButtonLoginEmployeeActionPerformed(java.awt.event.ActionEvent evt)
     private void refreshTableButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshTableButtonActionPerformed
         reloadTable(getCurrentFilter());
     }//GEN-LAST:event_refreshTableButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonCancelOccupy;
     private javax.swing.JButton jButtonLoginEmployee;
