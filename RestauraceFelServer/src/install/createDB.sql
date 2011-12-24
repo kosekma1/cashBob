@@ -473,7 +473,12 @@ INSERT INTO `right` (`rightID`, `name`, `isDeleted`) VALUES
 (22, 'Editace důvodů odpisu', 0),
 (23, 'Tvorba uzávěrky (zrcadlo)', 0),
 (24, 'Přehled uzávěrek', 0),
-(25, 'Nastavení klienta', 0);
+(25, 'Nastavení klienta', 0),
+(26, 'Tvorba nového typu směny', 0),
+(27, 'Tvorba nového templatu', 0),
+(28, 'Tvorba plánu směn', 0),
+(29, 'Přehled směn - vedoucí', 0),
+(30, 'Přehled směn zaměstnanec', 0);
 
 -- --------------------------------------------------------
 
@@ -577,7 +582,14 @@ INSERT INTO `role_right` (`roleRightID`, `roleID`, `rightID`, `isDeleted`) VALUE
 (36, 3, 19, 0),
 (37, 3, 20, 0),
 (38, 3, 23, 0),
-(39, 3, 24, 0);
+(39, 3, 24, 0),
+(40, 1, 26, 0),
+(41, 1, 27, 0),
+(42, 3, 30, 0),
+(43, 2, 30, 0),
+(44, 1, 28, 0),
+(45, 1, 29, 0),
+(46, 1, 30, 0);
 
 -- --------------------------------------------------------
 
@@ -781,6 +793,102 @@ CREATE TABLE IF NOT EXISTS `xtable` (
   PRIMARY KEY (`tableID`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
 
+
+--
+-- Struktura tabulky `typeworkshift`
+--
+
+CREATE TABLE IF NOT EXISTS `typeworkshift` (
+  `name` varchar(50) COLLATE utf8_czech_ci NOT NULL,
+  `idTypeWorkshift` int(11) NOT NULL AUTO_INCREMENT,
+  `fromTime` time NOT NULL,
+  `toTime` time NOT NULL,
+  `status` int(11) NOT NULL,
+  `idWorkshiftRole` int(11) NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`idTypeWorkshift`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=32 ;
+
+--
+-- Vypisuji data pro tabulku `typeworkshift`
+--
+
+INSERT INTO `typeworkshift` (`name`, `idTypeWorkshift`, `fromTime`, `toTime`, `status`, `idWorkshiftRole`, `isDeleted`) VALUES
+('První', 1, '08:00:00', '16:00:00', 1, 1, 0),
+('Třetí směna', 31, '11:00:00', '00:00:00', 1, 3, 0),
+('Druhá směna', 30, '04:00:00', '09:00:00', 1, 2, 0);
+
+--
+-- Struktura tabulky `template`
+--
+
+CREATE TABLE IF NOT EXISTS `template` (
+  `idTemplate` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(50) COLLATE utf8_czech_ci NOT NULL,
+  `status` int(11) NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`idTemplate`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Struktura tabulky `templatelist`
+--
+
+CREATE TABLE IF NOT EXISTS `templatelist` (
+  `idTemplatelist` int(11) NOT NULL AUTO_INCREMENT,
+  `idTemplate` int(11) NOT NULL,
+  `idTypeworkshift` int(11) NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`idTemplatelist`),
+  KEY `id_template` (`idTemplate`),
+  KEY `id_type_workshift` (`idTypeworkshift`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabulky `workshift`
+--
+CREATE TABLE IF NOT EXISTS `workshift` (
+  `idWorkshift` int(11) NOT NULL AUTO_INCREMENT,
+  `idTypeWorkshift` int(11) NOT NULL,
+  `idUser` int(11) DEFAULT NULL,
+  `leaderSubmit` tinyint(4) DEFAULT NULL,
+  `userSubmit` text COLLATE utf8_czech_ci,
+  `cancelled` text COLLATE utf8_czech_ci,
+  `idTemplate` int(11) DEFAULT NULL,
+  `date_shift` date NOT NULL,
+  `status` int(11) NOT NULL,
+  `isDeleted` int(11) NOT NULL,
+  PRIMARY KEY (`idWorkshift`),
+  KEY `id_type_workshift` (`idTypeWorkshift`),
+  KEY `fk_user_workshift` (`idUser`),
+  KEY `id_template` (`idTemplate`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Struktura tabulky `requestcancelled`
+--
+
+CREATE TABLE IF NOT EXISTS `requestcancelled` (
+  `idRequestCancelled` int(11) NOT NULL AUTO_INCREMENT,
+  `result` int(11) NOT NULL,
+  `idWorkshift` int(11) NOT NULL,
+  `dateCancelled` date DEFAULT NULL,
+  `reason` varchar(200) COLLATE utf8_czech_ci DEFAULT NULL,
+  PRIMARY KEY (`idRequestCancelled`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
+
+--
+-- Struktura tabulky `attendance`
+--
+
+CREATE TABLE IF NOT EXISTS `attendance` (
+  `idAttendance` int(11) NOT NULL AUTO_INCREMENT,
+  `idUser` int(11) NOT NULL,
+  `idWorkshift` int(11) NOT NULL,
+  PRIMARY KEY (`idAttendance`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci AUTO_INCREMENT=1 ;
 
 
 CREATE USER 'restfel'@'localhost' IDENTIFIED BY 'restfel';
