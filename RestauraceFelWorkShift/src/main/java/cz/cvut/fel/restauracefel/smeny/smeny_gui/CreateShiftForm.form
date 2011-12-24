@@ -137,9 +137,6 @@
               <Connection code="new Insets(10, 10, 10, 10)" type="code"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="shiftNameTextFieldActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabelInfoText">
           <Properties>
@@ -193,9 +190,6 @@
               <Connection code="SmenyController.getInstance().getModelRoles()" type="code"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="workRoleComboBoxActionPerformed"/>
-          </Events>
           <AuxValues>
             <AuxValue name="JavaCodeGenerator_SerializeTo" type="java.lang.String" value="CreateAccountForm_jComboBox1"/>
           </AuxValues>

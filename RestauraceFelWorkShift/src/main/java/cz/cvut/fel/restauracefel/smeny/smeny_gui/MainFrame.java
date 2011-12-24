@@ -22,7 +22,7 @@ import javax.swing.JOptionPane;
 /**
  * Hlavní okno aplikace.
  * 
- * @author Martin
+ * @author Martin Kosek
  */
 public class MainFrame extends JFrame {
 
@@ -219,8 +219,7 @@ public class MainFrame extends JFrame {
         AbstractForm af = null;
         try {
             switch (form) {
-                case ADD_TYPE_WORKSHIFT:
-                    //TODO testovat prava                    
+                case ADD_TYPE_WORKSHIFT:                    
                     if (!contains("Tvorba nového typu směny")) {
                         if (!commonViewController.performBaseAdditionalLogin(this, "Tvorba nového typu směny")) {
                             return;
@@ -253,13 +252,11 @@ public class MainFrame extends JFrame {
                         }
                     }
                     af = workShiftPlanForm;
-                    af = new WorkShiftPlanForm(this, statusBar);
-                    //af = new WorkShiftPlanForm(this, statusBar, loggedUser.getUserAttendanceId(), EnumOrder.CREATE_ORDER);
+                    af = new WorkShiftPlanForm(this, statusBar);                    
                     break;
                 case STATISTICS_FORM:
                     af = statisticsForm;
-                    af = new StatisticsForm(this, statusBar);
-                    //af = new WorkShiftPlanForm(this, statusBar, loggedUser.getUserAttendanceId(), EnumOrder.CREATE_ORDER);
+                    af = new StatisticsForm(this, statusBar);                    
                     break;
                 case OVERVIEW_LEADER_SHIFT:
                     if (!contains("Přehled směn - vedoucí")) {

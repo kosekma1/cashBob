@@ -1,12 +1,8 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 
 /**
  * Controller pro zobrazení hlavního okna modulu Směny.
- * @author kosekm
+ * @author Martin Kosek
  */
 public class SmenyViewController {
     private static final SmenyViewController instance = new SmenyViewController(); 

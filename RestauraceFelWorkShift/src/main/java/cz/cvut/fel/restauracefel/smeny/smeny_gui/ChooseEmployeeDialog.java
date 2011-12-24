@@ -9,7 +9,7 @@ import cz.cvut.fel.restauracefel.library.service.EmptyListException;
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
 
 /**
- * Create dialog for choose User/Employee that will be login to workshift.
+ * Trida vytvarejici dialog pro vyber uzivatele, ktery bude prihlasen na smenu. 
  *
  * @author Martin Kosek
  */

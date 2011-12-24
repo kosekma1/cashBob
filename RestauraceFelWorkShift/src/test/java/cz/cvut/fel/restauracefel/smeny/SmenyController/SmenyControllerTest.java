@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fel.restauracefel.smeny.SmenyController;
 
 import cz.cvut.fel.restauracefel.hibernate.Role;
@@ -11,8 +7,9 @@ import java.util.List;
 import junit.framework.TestCase;
 
 /**
- *
- * @author Martin
+ * Testovaci trida pro SmenyController.
+ * Rozpracovana.
+ * @author Martin Kosek
  */
 public class SmenyControllerTest extends TestCase {
     
@@ -76,9 +73,7 @@ public class SmenyControllerTest extends TestCase {
         //pro unit testovani musi byt nezavisle na databazi
         /*System.out.println("generateTableDataTypeShifts");
         SmenyController instance = new SmenyController();
-        instance.generateTableDataTypeShifts();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        instance.generateTableDataTypeShifts();                
          * 
          */
     }
@@ -109,8 +104,6 @@ public class SmenyControllerTest extends TestCase {
         String nameWorkShift = "";
         SmenyController instance = new SmenyController();
         instance.addWorkShift(nameWorkShift);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
          * 
          */
     }
@@ -122,8 +115,7 @@ public class SmenyControllerTest extends TestCase {
         /*System.out.println("test");
         SmenyController instance = new SmenyController();
         instance.test();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");*/
+         */
         
     }
 
@@ -133,9 +125,7 @@ public class SmenyControllerTest extends TestCase {
     public void testMain() {
         /*System.out.println("main");
         String[] args = null;
-        SmenyController.main(args);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        SmenyController.main(args);        
          * 
          */
     }
@@ -148,9 +138,7 @@ public class SmenyControllerTest extends TestCase {
         SmenyController instance = new SmenyController();
         ResultTableModel expResult = null;
         ResultTableModel result = instance.getModelTypeWorkShift();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(expResult, result);        
          * 
          */
     }
@@ -163,9 +151,7 @@ public class SmenyControllerTest extends TestCase {
         SmenyController instance = new SmenyController();
         ResultTableModel expResult = null;
         ResultTableModel result = instance.getModelWorkShift();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(expResult, result);     
          * 
          */
     }
@@ -178,9 +164,7 @@ public class SmenyControllerTest extends TestCase {
         SmenyController instance = new SmenyController();
         DefaultComboBoxModel expResult = null;
         DefaultComboBoxModel result = instance.getModelRoles();
-        assertEquals(expResult, result);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        assertEquals(expResult, result);        
          * 
          */
     }

@@ -12,9 +12,9 @@ import cz.cvut.fel.restauracefel.library.service.Validator;
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
 
 /**
- * Trida reprezentujici GUI formular pro vytvareni noveho uctu.
+ * Trida reprezentujici formular pro vytvareni nove sablony typu smen.s
  *  
- * @author Tomas Hnizdil
+ * @author Martin Kosek
  */
 public class CreateTemplateForm extends AbstractForm {
 

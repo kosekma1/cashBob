@@ -13,7 +13,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JTable;
 
 /**
- * Action for login User to workshift for context menu in OverViewShiftForm.
+ * Trida akce pro prihlaseni uzivatele na smenu z kontextove nabidky ve formulari OverViewShiftForm.
  * 
  * @author Martin Kosek
  */
@@ -48,6 +48,7 @@ public class LoginEmployeeAction extends AbstractAction {
             } catch (FileNotFoundException ex) {                
                 Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
             } catch (Exception ex) {                
+                Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {            
             SmenyController.getInstance().showMessageDialogInformation("Vyberte řádek", "Informace");

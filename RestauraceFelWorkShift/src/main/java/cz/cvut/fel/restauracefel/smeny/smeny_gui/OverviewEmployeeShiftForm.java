@@ -22,7 +22,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
 /**
- * Trida reprezentujici GUI formular pro spravu smen zamestnancem.
+ * Trida reprezentujici formulra pro spravu smen zamestnancem.
  * Zamestnanec se muze prihlasovat, potvrzovat a odhlasovat ze smeny.
  *  
  * @author Martin Kosek
@@ -128,8 +128,8 @@ public class OverviewEmployeeShiftForm extends AbstractForm {
         jComboBoxFilter.addMouseListener(new MouseAdapter() {
 
             @Override
-            public void mouseEntered(MouseEvent me) { //TODO - solve repaint after action in JComboBox1           
-                currentForm.repaint(); //always redisplay screen
+            public void mouseEntered(MouseEvent me) {
+                currentForm.repaint();
             }
         });
 
@@ -551,8 +551,9 @@ private void jButtonRequestCancelActionPerformed(java.awt.event.ActionEvent evt)
                 return WorkShiftFilter.CONFIRMED_USER;
             case 5:
                 return WorkShiftFilter.LOGIN_OR_OCCUPATION_USER;
-        }
-        return WorkShiftFilter.ALL;
+            default:
+                return WorkShiftFilter.ALL;                
+        }        
     }
 
     private void jComboBoxFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBoxFilterActionPerformed

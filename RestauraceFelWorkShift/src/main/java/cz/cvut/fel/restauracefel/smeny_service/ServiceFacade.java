@@ -13,7 +13,7 @@ import javax.swing.JOptionPane;
  * Trida reprezentujici servisni facadu na klientske strane. Tato trida slouzi
  * k navazovani spojeni se serverem.
  *
- * @author Jarda
+ * @author Jarda, Martin Kosek
  */
 public class ServiceFacade {
 
@@ -44,33 +44,41 @@ public class ServiceFacade {
             if (System.getSecurityManager() == null) {
                 System.setSecurityManager(new RMISecurityManager());
             }
-            String name = "ServiceFacadeSmeny";//TODO implementova ServiceFacade pro workshift
+            String name = "ServiceFacadeSmeny";
             facade = null;
             Registry reg = null;
             try {
-                /* Zobrazi inicializovane fasady
                 reg = LocateRegistry.getRegistry(config.getPrimaryServerIP(), 1099);
-                String ip = config.getPrimaryServerIP();
-                String[] list = reg.list();
-                String vystup = "";
-                for (String s : list) {
-                    vystup = vystup + s + "\n";
-                }
-                JOptionPane.showMessageDialog(null, vystup, "SeviceFacade", JOptionPane.ERROR_MESSAGE);
-                 * 
-                 */
-                facade = (IServiceFacadeSmeny) reg.lookup(name);
-                //JOptionPane.showMessageDialog(null, "Facade inicializovana", "SeviceFacade", JOptionPane.ERROR_MESSAGE);
+                //showInicializedFacades(reg);
+                facade = (IServiceFacadeSmeny) reg.lookup(name);                
             } catch (Exception e) {
                 try {
                     reg = LocateRegistry.getRegistry(config.getSecondaryServerIP(), 1099);
                     facade = (IServiceFacadeSmeny) reg.lookup(name);
-                } catch (Exception ex) {                    
+                } catch (Exception ex) {
                     facade = null;
                     throw new RemoteException();
                 }
             }
         }
         return facade;
+    }
+    
+    /**
+     * Zobrazi jmena inicializovanych fasad. Jen pro testovaci ucely.
+     * @param registry
+     * @throws RemoteException
+     * @throws FileNotFoundException
+     * @throws NotBoundException 
+     */
+    private static void showInicializedFacades(Registry registry) throws RemoteException, FileNotFoundException, NotBoundException {
+
+        String[] list = registry.list();
+        String vystup = "";
+        for (String s : list) {
+            vystup = vystup + s + "\n";
+        }
+        JOptionPane.showMessageDialog(null, vystup, "SeviceFacade", JOptionPane.ERROR_MESSAGE);
+
     }
 }

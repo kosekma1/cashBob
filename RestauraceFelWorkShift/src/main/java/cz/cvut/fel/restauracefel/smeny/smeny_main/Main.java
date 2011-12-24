@@ -4,14 +4,9 @@
  */
 package cz.cvut.fel.restauracefel.smeny.smeny_main;
 
-import cz.cvut.fel.restauracefel.hibernate.User;
-import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
-import cz.cvut.fel.restauracefel.smeny.smeny_gui.MainFrame;
-import cz.cvut.fel.restauracefel.smeny.smeny_gui.SmenyViewController;
 import javax.swing.JFrame;
 import javax.swing.UIManager;
 import org.jvnet.substance.skin.SubstanceOfficeSilver2007LookAndFeel;
-import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
 
 /**
  *
@@ -20,6 +15,7 @@ import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
 public class Main {
 
     /**
+     * Tato trida jiz nema vyuziti.
      * @param args the command line arguments
      */
     public static void main(String[] args) {

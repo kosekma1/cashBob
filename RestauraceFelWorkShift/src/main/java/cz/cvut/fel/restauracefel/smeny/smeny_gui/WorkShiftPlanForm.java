@@ -13,12 +13,11 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JPanel;
 
 /**
- * Trida reprezentujici GUI formular pro vytvareni noveho uctu.
+ * Trida reprezentujici formular pro planovani pracovnich smen.
  *  
- * @author Tomas Hnizdil
+ * @author Martin Kosek
  */
 public class WorkShiftPlanForm extends AbstractForm {
 
@@ -33,7 +32,7 @@ public class WorkShiftPlanForm extends AbstractForm {
     String[] comboBoxItems = new String[]{"Všechny dny", "Všední dny", "Víkendy"};
 
     /**
-     * Konstruktor tridy CreateShiftForm.
+     * Konstruktor tridy WorkShiftPlanForm.
      *
      * @param parent
      * @param bar
@@ -89,55 +88,15 @@ public class WorkShiftPlanForm extends AbstractForm {
     protected void refresh() {
         statusBar.setMessage("Tento formulář slouží k plánování směn.");
     }
-
-    /**
-     * Metoda kontrolujici spravnost vyplnenych udaju.
-     *
-     * @return Vraci index urcujici vstupni komponentu, ktera obsahuje
-     * neplatny vstup. Pokud je vse vporadku tak navraci 0.
-     */
-    @Override
-    /* protected EnumSpravnost isValidInput() {
-    if (!Validator.isText(jTextFieldName)) {
-    return EnumSpravnost.NeniToSpravne;
-    }
-    return EnumSpravnost.JeToSpravne;
-    } */
+   
     /**
      * Metoda cisti vsechny vstupni pole formulare.
      */
-    //@Override
+    @Override
     protected void clearFields() {
-        //Validator.clearTextField(jTextFieldName);
-        //Validator.clearTextField(jTextFieldTable);
-        //Validator.clearTextField(jTextFieldPerson);
-        //Validator.clearTextField(jTextFieldDiscountType);
-        //Validator.clearTextField(jTextFieldAccountCategory);
-        //Validator.clearTextField(jTextFieldNote);
+        //Validator.clearTextField(jTextFieldName);        
     }
-
-    /**
-     * Metoda vytvari a zobrazuje formular pro objednani polozek na ucet.
-     *
-     * @param accountId id uctu, na ktery se bude objednavat
-     */
-    public void loadCreateOrderForm(int accountId) {
-        /*try {
-        CreateOrderForm createOrderForm = new CreateOrderForm(parent, statusBar, accountId, MainFrame.loggedUser.getUserAttendanceId());
-        parent.panel.getViewport().add(createOrderForm);
-        parent.panel.validate();
-        parent.panel.repaint();
-        parent.refreshWindowLayout();
-        refresh();
-        } catch (FileNotFoundException fnfe) {
-        JOptionPane.showMessageDialog(this, "Konfigurační soubor \"" + ConfigParser.getConfigFile() + "\" nebyl nalezen.", "Chyba", JOptionPane.ERROR_MESSAGE);
-        } catch (Exception ex) {
-        ex.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Nelze navázat spojení se serverem.", "Chyba komunikace", JOptionPane.ERROR_MESSAGE);
-        }
-         */
-    }
-
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -474,8 +433,9 @@ public class WorkShiftPlanForm extends AbstractForm {
                 return DateFilter.COMMON_DAYS;
             case 2:
                 return DateFilter.WEEKENDS;
-        }
-        return DateFilter.ALL_DAYS;
+            default:
+                return DateFilter.ALL_DAYS;
+        }        
     }
 
     private void jButtonSavePlanWorkShiftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSavePlanWorkShiftActionPerformed
@@ -487,16 +447,7 @@ public class WorkShiftPlanForm extends AbstractForm {
             Logger.getLogger(WorkShiftPlanForm.class.getName()).log(Level.SEVERE, null, ex);
         } catch (RemoteException ex) {
             Logger.getLogger(WorkShiftPlanForm.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        /*
-        KeyboardDialog keyboard = new KeyboardDialog(parent, true);
-        keyboard.setLocation(point);
-        keyboard.setTextField(jTextFieldName);
-        keyboard.setVisible(true);
-         *
-         */
-        
-        
+        }                        
     }//GEN-LAST:event_jButtonSavePlanWorkShiftActionPerformed
 
 private void jButtonAddFromTemplateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddFromTemplateActionPerformed
@@ -532,7 +483,8 @@ private void jButtonAddWorkShiftActionPerformed(java.awt.event.ActionEvent evt) 
 }//GEN-LAST:event_jButtonAddWorkShiftActionPerformed
 
 private void jButtonDeleteWorkShiftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteWorkShiftActionPerformed
-// TODO add your handling code here:
+// TODO pridat smazani smeny z planu smen.
+    parent.showMessageDialogInformation("Jeste neni implementovano", "Info");
 }//GEN-LAST:event_jButtonDeleteWorkShiftActionPerformed
 
 private void jButtonAddWorkShift1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddWorkShift1ActionPerformed

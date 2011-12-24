@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 
 import cz.cvut.fel.restauracefel.hibernate.Typeworkshift;
@@ -10,8 +6,9 @@ import java.util.List;
 import junit.framework.TestCase;
 
 /**
- *
- * @author Martin
+ * Testovaci trida pro testovani vyberu smeny z dialogu.
+ * Nedokoncena.
+ * @author Martin Kosek
  */
 public class ChooseShiftDialogTest extends TestCase {
     
@@ -36,8 +33,6 @@ public class ChooseShiftDialogTest extends TestCase {
         /*System.out.println("refresh");
         ChooseShiftDialog instance = null;
         instance.refresh();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
          * 
          */
         

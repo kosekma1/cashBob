@@ -26,54 +26,57 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 
 /**
- * Controller for workshifts forms. Connects GUI and MODEL.
+ * Kontroler pro vsechny formulare v modulu pro planovani pracovnich smen. 
  * 
  * @author Martin Kosek
  */
-public class SmenyController /*implements IModuleInteface */ {
+public class SmenyController {
 
     private static final SmenyController instance = new SmenyController();
     private SmenyViewController view;
     public User user;
     public String[] prava;
     private Object[][] tableData = null;
-    private String[] headerNames = new String[]{"Název", "Od", "Do", "Role", "Status"}; //Header of table    
+    private String[] headerNames = new String[]{"Název", "Od", "Do", "Role", "Status"}; //hlavicka tabulky
     private ResultTableModel modelTypeWorkShift = null;
-    //form CreateTemplateForm
+    //Formular CreateTemplateForm
     final int INIT_SIZE = 10;
     final int COUNT_PARAMETERS = 1;
-    final int EXTEND_SIZE = 3; //for extension of table
+    final int EXTEND_SIZE = 3; //tabulku rozsiruje o 3
     private Object[][] tableWorkShiftData = new Object[INIT_SIZE][COUNT_PARAMETERS]; //inicializace
     private ResultTableModel modelWorkShift = new ResultTableModel(new String[]{"Směna"}, tableWorkShiftData);
     private DefaultComboBoxModel modelRoles = null;
-    private String[] dataList = null; //for ChooseShiftDialog
-    private String[] dataListForDelete = null; //for ChooseDeleteShiftDialog
-    private String[] dataListTemplates = null; //for ChooseTemplateDialog
+    private String[] dataList = null; //pro ChooseShiftDialog
+    private String[] dataListForDelete = null; //pro ChooseDeleteShiftDialog
+    private String[] dataListTemplates = null; //pro ChooseTemplateDialog
     private Object[][] tableTemplateData = null;
     private String[] headerNameTemplate = new String[]{"Šablona"};
     private ResultTableModel modelTemplate = null;
     public static final String ERROR_ENTERED_DATA = "Chybně zadaná data";
     public static final long MAX_LENGTH_DAYS = 90;
-    public static final long DAY_IN_MILLISECONDS = 3600 * 1000 * 24; //day in milliseconds
-    //Planned workshifts
+    public static final long DAY_IN_MILLISECONDS = 3600 * 1000 * 24; //den v milisekundach
+    //Formular planned workshifts
     private Object[][] tablePlannedWorkShift = null;
     private ResultTableModel modelPlannedWorkShift = null;
     //Users
-    private String[] dataListEmployees = null; //for ChooseEmployeeDialog
+    private String[] dataListEmployees = null; //pro ChooseEmployeeDialog
     private int[] userIds = null;
     //Leader and employee overview
     private String[] headerOverView = new String[]{"Datum a čas", "Typ směny", "Přihlášení", "Obsazení", "Potvrzení"};
     private Object[][] tableWorkShiftOverview = null;
     private ResultTableModel modelOverviewWorkShift = null;
-    private int[] workShiftIds = null; //store workshift id`s that are viewed in table
-    private String[] datalListLoginUsers = null;     //for chooseEmployeeDialog
-    private int[] usersAttendaceIds = null; //for chooseEmployeeDialog - evidence of ids
+    private int[] workShiftIds = null; //slouzi pro ulozeni id pracovnich smen, ktere se zobrazuji v tabulce
+    private String[] datalListLoginUsers = null; //pro chooseEmployeeDialog
+    private int[] usersAttendaceIds = null; //pro chooseEmployeeDialog - evidence id
     private Date dateFrom = null;
     private Date dateTo = null;
     private int week = 0;
     private Locale currentLocale = new Locale("cs", "CZ");
+    //Texty pro dialogova okna
+    public static final String INFORMATION_TEXT = "Informace";
+    public static final String ERROR_TEXT = "Chyba";
 
-    //constants for tilters
+    //Konstanty pro filtry
     public enum WorkShiftFilter {
 
         ALL, LOGIN, LOGIN_USER, OCCUPATION, UNOCCUPATION, UNCONFIRMED, CONFIRMED, REQUEST_CANCEL, OCCUPATION_USER, ROLE_USER, CONFIRMED_USER,
@@ -105,7 +108,7 @@ public class SmenyController /*implements IModuleInteface */ {
     }
 
     /**
-     * Generate TableDataModel for table of Type of Shifts
+     * Generuje TableDataModel pro tabulku typu smen.     
      */
     public void generateTableDataTypeShifts() throws RemoteException, FileNotFoundException, NotBoundException {
         List typeWorkshifts = ServiceFacade.getInstance().getTypeWorkShifts();
@@ -144,7 +147,7 @@ public class SmenyController /*implements IModuleInteface */ {
     }
 
     /**
-     * Generate model for ComboBox for CreateShiftForm
+     * Generuje model pro ComboBox pro formulare CreateShiftForm     
      */
     public void generateComboBoxRoles(List<Role> rolesList) throws FileNotFoundException, NotBoundException, RemoteException {
         String[] roles = new String[rolesList.size()];
@@ -157,7 +160,7 @@ public class SmenyController /*implements IModuleInteface */ {
     }
 
     /**
-     * Generate table with names of shifts for ChooseShiftDialog
+     * Generuje tabulku se jmeny smen pro dialog ChooseShiftDialo     
      * @throws FileNotFoundException
      * @throws RemoteException
      * @throws NotBoundException 
@@ -171,7 +174,7 @@ public class SmenyController /*implements IModuleInteface */ {
     }
 
     /**
-     * Generate table with names of shifts for DeleteShiftDialog
+     * Generuje tabulku se jmeno smen pro dialog DeleteShiftDialog     
      */
     public void generateDataListForDelete() {
         dataListForDelete = new String[tableWorkShiftData.length];
@@ -182,7 +185,7 @@ public class SmenyController /*implements IModuleInteface */ {
     }
 
     /**
-     * Generate list of employees for OverviewLeaderShiftForm.
+     * Generuje seznam zamestnancu pro formular OverviewLeaderShiftForm     .
      * @throws FileNotFoundException
      * @throws NotBoundException
      * @throws RemoteException 
@@ -221,7 +224,7 @@ public class SmenyController /*implements IModuleInteface */ {
     }
 
     /**
-     * Add workshift to table with Workshifts in CreateTemplateForm
+     * Vklada smenu do tabulky se smenami pro vytvoreni sablony ve formulari CreateTemplateForm     
      * @param nameWorkShift 
      */
     public void addWorkShift(String nameWorkShift) {
@@ -234,19 +237,18 @@ public class SmenyController /*implements IModuleInteface */ {
                 break;
             }
         }
-        if (!changed) { //auto-resize                        
+        if (!changed) { //automaticke rozsireni tabulky                  
             Object[][] newTable = new Object[tableWorkShiftData.length + EXTEND_SIZE][COUNT_PARAMETERS];
             System.arraycopy(tableWorkShiftData, 0, newTable, 0, tableWorkShiftData.length);
             tableWorkShiftData = newTable;
             addWorkShift(nameWorkShift);
-            modelWorkShift = new ResultTableModel(new String[]{"Směna"}, tableWorkShiftData); //create new model only if table is extended
+            modelWorkShift = new ResultTableModel(new String[]{"Směna"}, tableWorkShiftData);
         }
     }
 
     /**
-     * Add workshift that are stored in template with name templateName.
-     * Used in CreateTemplateForm.
-     * @param templateName
+     * Vklada do tabulky smeny ktere jsou ulozeny v sablone. Pouzito ve formulari CreateTemplateForm.           
+     * @param templateName  Nazev smeny
      * @throws FileNotFoundException
      * @throws RemoteException
      * @throws NotBoundException 
@@ -265,8 +267,8 @@ public class SmenyController /*implements IModuleInteface */ {
     }
 
     /**
-     * Delete workshift from list in ChooseDeleteShiftDialog
-     * @param index 
+     * Smaze smenu ze seznamu v dialogu ChooseDeleteShiftDialog     
+     * @param index Index na kterem se smena nachazi
      */
     public void deleteWorkShift(int index) {
         int j = 0;
@@ -282,7 +284,7 @@ public class SmenyController /*implements IModuleInteface */ {
     }
 
     /**
-     * Cleare table with workshifts that is showed in UI.
+     * Smaze tabulku se smenami, ktera se zobrazuje ve formulari CreateTemplateForm     
      */
     public void clearTableWorkShiftData() {
         int j = 0;
@@ -293,26 +295,25 @@ public class SmenyController /*implements IModuleInteface */ {
 
     /**
      * 
-     * @return 
+     * @return Tabulka se smenami
      */
     public Object[][] getTableWorkShiftData() {
         return this.tableWorkShiftData;
     }
 
     /**
-     * Print content of array of Work Shifts names. 
-     * For testing purposes.
+     * Vytiskne obsah tabulky(dvourozmerneho pole) smen     
+     * Pouze pro testovaci ucely
      */
     public void printTestTableWorkShiftData() {
         int j = 0;
-        //TODO osetrit preteceni - resp. realokaci  noveho pole
         for (int i = 0; i < tableWorkShiftData.length; i++) {
             System.out.println(tableWorkShiftData[i][j]);
         }
     }
 
     /**
-     * Generate data for Table with templates names for CreateTemplateForm
+     * Generuje data pro tabulku sablon pro formular CreateTemplateForm     
      * @throws FileNotFoundException
      * @throws NotBoundException
      * @throws RemoteException 
@@ -327,12 +328,18 @@ public class SmenyController /*implements IModuleInteface */ {
             }
         } else {
             tableTemplateData = new String[1][1];
-            tableTemplateData[0][0] = null; //empty table
+            tableTemplateData[0][0] = null; //prazdna tabulka
         }
 
         modelTemplate = new ResultTableModel(headerNameTemplate, tableTemplateData);
     }
 
+    /**
+     * Generuje seznam sablon pro ChooseTemplateDialog
+     * @throws FileNotFoundException
+     * @throws NotBoundException
+     * @throws RemoteException 
+     */
     public void generateDataListTemplates() throws FileNotFoundException, NotBoundException, RemoteException {
         List templates = ServiceFacade.getInstance().getTemplates();
         if (templates != null) {
@@ -347,8 +354,7 @@ public class SmenyController /*implements IModuleInteface */ {
     }
 
     /**
-     * Generate table and set model for planned workshifts.
-     * Planned workshifts from current date.
+     * Generuje tabulku a nastavuje model planovanych smen od aktualniho data
      * @throws FileNotFoundException
      * @throws NotBoundException
      * @throws RemoteException 
@@ -529,7 +535,8 @@ public class SmenyController /*implements IModuleInteface */ {
     }
 
     /**
-     * Generate data for table that is displayed in OverviewLeaderShiftForm.
+     * Generuje data pro tabulku, kterea se zobrazuje ve formularich 
+     * OverviewLeaderShiftForm a OverviewEmployeeShiftForm      
      * @throws FileNotFoundException
      * @throws NotBoundException
      * @throws RemoteException 
@@ -547,7 +554,7 @@ public class SmenyController /*implements IModuleInteface */ {
             for (int i = 0; i < 5; i++) {
                 tableWorkShiftOverview[0][i] = null;
             }
-            showMessageDialogInformation("Žádné směny.", "Informace");
+            showMessageDialogInformation("Žádné směny.", INFORMATION_TEXT);
         } else {
             tableWorkShiftOverview = new Object[workShifts.size()][columns];
             Workshift workShift = null;
@@ -588,7 +595,7 @@ public class SmenyController /*implements IModuleInteface */ {
                 StringBuilder sb = new StringBuilder();
                 if (workShift.getIdUser() == null) {
                     tableWorkShiftOverview[i][j++] = "Neobsazeno";
-                } else { //read user in workshit and add to table full name
+                } else { //read user in workshit and add to table his/her full name
                     User userOccupy = ServiceFacade.getInstance().getUserById(workShift.getIdUser());
                     sb.append(userOccupy.getFirstName());
                     sb.append(" ");
@@ -596,7 +603,7 @@ public class SmenyController /*implements IModuleInteface */ {
                     tableWorkShiftOverview[i][j++] = sb.toString();
                 }
 
-                tableWorkShiftOverview[i][j++] = workShift.getUserSubmit() == null ? "Nepotvrzeno" : workShift.getUserSubmit(); //TODO - premenit na jmeno uzivatele, ktery je obsazeny
+                tableWorkShiftOverview[i][j++] = workShift.getUserSubmit() == null ? "Nepotvrzeno" : workShift.getUserSubmit();
 
                 workShiftIds[k++] = workShift.getIdWorkshift();
                 j = 0;
@@ -608,36 +615,48 @@ public class SmenyController /*implements IModuleInteface */ {
     }
 
     /**
-     * Save user attendance to workshift. (to table Attendance)
-     * @param userId
-     * @param workShiftId 
+     * Ulozi uzivatele do tabulky prihlasenych na smenu (tabulka Attendace)
+     * @param userId    id prihalsovaneho uzivatele
+     * @param workShiftId   id smeny na kterou se prihlasuje
      */
     public void saveUserToWorkShift(int userIndexId, int workShiftIndexId) throws FileNotFoundException, NotBoundException, RemoteException {
         int userId = userIds[userIndexId];
         int workShiftId = this.workShiftIds[workShiftIndexId];
         Attendance att = ServiceFacade.getInstance().getAttendaceByWorkShiftAndUser(workShiftId, userId);
         if (att == null) {
-            //kontrola jestli neni obsazen ve smenach stejneho typu v dany den
             loginUserToWorkShifts(userId, workShiftId);
-            //ServiceFacade.getInstance().createNewAttendance(userId, workShiftId);
         } else {
-            this.showErrorMessage("Uživatel je již přihlášen.", "Chyba");
-        }
-    }
-
-    public void saveCurrentUserToWorkShift(int workShiftId) throws FileNotFoundException, NotBoundException, RemoteException {
-        Attendance att = ServiceFacade.getInstance().getAttendaceByWorkShiftAndUser(workShiftId, user.getUserId());
-        if (att == null) {
-            loginUserToWorkShifts(user.getUserId(), workShiftId);
-            //ServiceFacade.getInstance().createNewAttendance(user.getUserId(), workShiftId);
-            showMessageDialogInformation("Uživatel je úspěšně přihlášen.", "Informace");
-        } else {
-            this.showErrorMessage("Uživatel je již přihlášen", "Chyba");
+            this.showErrorMessage("Uživatel je již přihlášen.", ERROR_TEXT);
         }
     }
 
     /**
-     * Save user with userId to all workshifts with the same type workshift at the same date.
+     * Ulozi aktualne prihlasneho uzivatele (prihlasneho do aplikace) 
+     * do tabulky prihlasenych na smenu (tabulka Attendace)
+     * @param workShiftId   id smeny na kterou se uzivatel hlasi
+     * @throws FileNotFoundException
+     * @throws NotBoundException
+     * @throws RemoteException 
+     */
+    public void saveCurrentUserToWorkShift(int workShiftId) throws FileNotFoundException, NotBoundException, RemoteException {
+        Attendance att = ServiceFacade.getInstance().getAttendaceByWorkShiftAndUser(workShiftId, user.getUserId());
+        if (att == null) {
+            loginUserToWorkShifts(user.getUserId(), workShiftId);
+            showMessageDialogInformation("Uživatel je úspěšně přihlášen.", INFORMATION_TEXT);
+        } else {
+            this.showErrorMessage("Uživatel je již přihlášen", ERROR_TEXT);
+        }
+    }
+
+    //Save user with userId to all workshifts with the same type workshift at the same date.
+    /**
+     * Ulozi/prihlasi uzivatele do vsech stejnych typu smen, urcenych dle smeny s workShiftId
+     * v danem dni.
+     * @param userId    id prihlasovaneho uzivatele
+     * @param workShiftId   id vzchozi smeny na kterou se hlasi
+     * @throws FileNotFoundException
+     * @throws NotBoundException
+     * @throws RemoteException 
      */
     public void loginUserToWorkShifts(int userId, int workShiftId) throws FileNotFoundException, NotBoundException, RemoteException {
         Workshift ws = ServiceFacade.getInstance().getWorkshiftById(workShiftId);
@@ -646,7 +665,7 @@ public class SmenyController /*implements IModuleInteface */ {
 
         Workshift workShift = null;
 
-        //test if user is free (not occupied)
+        //kontrola jestli neni obsazen ve smenach stejneho typu v dany den
         boolean isFree = true;
         for (Object o : listWorkshifts) {
             workShift = (Workshift) o;
@@ -666,13 +685,13 @@ public class SmenyController /*implements IModuleInteface */ {
                 }
             }
         } else {
-            this.showErrorMessage("Uživatel je již obsazen na směnu stejného typu.", "Chyba");
+            this.showErrorMessage("Uživatel je již obsazen na směnu stejného typu.", ERROR_TEXT);
         }
     }
 
     /**
-     * Generate list of login users for ChooseOcuppyEmployeeDialog
-     * @param workShiftId
+     * Generuje seznam prihlasenych uzivatelu na smenu s workShiftId pro dialog ChooseOcuppyEmployeeDialog    
+     * @param workShiftId   id smeny
      * @throws FileNotFoundException
      * @throws NotBoundException
      * @throws RemoteException 
@@ -680,7 +699,7 @@ public class SmenyController /*implements IModuleInteface */ {
     public void generateDataListLoginUsers(int workShiftId) throws FileNotFoundException, NotBoundException, RemoteException {
         List attendanceList = ServiceFacade.getInstance().getAttendaceByWorkShiftId(workShiftId);
         if (attendanceList == null || attendanceList.isEmpty()) {
-            this.showErrorMessage("Nikdo není přihlášen.", "Chyba");
+            this.showErrorMessage("Nikdo není přihlášen.", ERROR_TEXT);
             usersAttendaceIds = null;
             datalListLoginUsers = new String[0];
         } else {
@@ -707,10 +726,10 @@ public class SmenyController /*implements IModuleInteface */ {
     }
 
     /**
-     * Save user to workshift to occupy workshift. From login state to occupy state.
-     * Delete from login state (from Attendance table)
-     * @param userId
-     * @param workShiftId
+     * Prihlaseny uzivatel se ulozi jako obsazeny uzivatel na konkretni smenu.
+     * Bude smazan z prihlasenych.     
+     * @param userId    id uzivatele
+     * @param workShiftId   id pracovni smeny
      * @throws FileNotFoundException
      * @throws NotBoundException
      * @throws RemoteException 
@@ -718,21 +737,19 @@ public class SmenyController /*implements IModuleInteface */ {
     public void saveOccupyUser(int userId, int workShiftId) throws FileNotFoundException, NotBoundException, RemoteException {
         Workshift ws = ServiceFacade.getInstance().getWorkshiftById(workShiftId);
         if (ws.getIdUser() != null) {
-            this.showErrorMessage("Směna je již obsazena.", "Chyba");
+            this.showErrorMessage("Směna je již obsazena.", ERROR_TEXT);
         } else {
             boolean result = ServiceFacade.getInstance().updateWorkshiftLogin(workShiftId, userId);
             if (result) {
                 ServiceFacade.getInstance().deleteAttendences(ws.getDateShift(), ws.getIdTypeWorkshift(), userId);
-                //Attendance att = ServiceFacade.getInstance().getAttendaceByWorkShiftAndUser(workShiftId, userId);
-                //ServiceFacade.getInstance().deleteAttendanceById(att.getIdAttendance());                               
             }
         }
 
     }
 
     /**
-     * Cancel occupation of workshift with user.
-     * @param workShiftId
+     * Zrusi obsazeni smeny danym uzivatelem.     
+     * @param workShiftId   id uzivatele
      * @throws FileNotFoundException
      * @throws NotBoundException
      * @throws RemoteException 
@@ -748,20 +765,20 @@ public class SmenyController /*implements IModuleInteface */ {
                 resultUpdate = ServiceFacade.getInstance().updateWorkshiftLogin(workShiftId, null);
                 if (resultUpdate) {
                     updateOccupationMessage(workShiftId, "Nepotvrzeno");
-                    showMessageDialogInformation("Obsazení směny bylo uvolněno.", "Informace");
+                    showMessageDialogInformation("Obsazení směny bylo uvolněno.", INFORMATION_TEXT);
                 } else {
-                    this.showErrorMessage("Nepodařilo se zrušit obsazení směny.", "Chyba");
+                    this.showErrorMessage("Nepodařilo se zrušit obsazení směny.", ERROR_TEXT);
                 }
             }
         } else {
-            showMessageDialogInformation("Vyberte řádek", "Informace");
+            showMessageDialogInformation("Vyberte řádek", INFORMATION_TEXT);
         }
     }
 
     /**
-     * Logout actually login user form workshift where is he login.
+     * Odhlasi aktualne prihlaseneho uzivatele ze smeny na kterou je prihlasen.     
      * 
-     * @param workShiftId
+     * @param workShiftId   id smeny
      * @throws FileNotFoundException
      * @throws NotBoundException
      * @throws RemoteException 
@@ -769,24 +786,40 @@ public class SmenyController /*implements IModuleInteface */ {
     public void logoutCurrentUserFromWorkShift(int workShiftId) throws FileNotFoundException, NotBoundException, RemoteException {
         Attendance att = ServiceFacade.getInstance().getAttendaceByWorkShiftAndUser(workShiftId, user.getUserId());
         if (att == null) {
-            this.showErrorMessage("Na tuto směnu nejste přihlášen/a.", "Chyba");
+            this.showErrorMessage("Na tuto směnu nejste přihlášen/a.", ERROR_TEXT);
         } else {
             Workshift ws = ServiceFacade.getInstance().getWorkshiftById(workShiftId);
             ServiceFacade.getInstance().deleteAttendences(ws.getDateShift(), ws.getIdTypeWorkshift(), this.user.getUserId());
-            this.showMessageDialogInformation("Byl/a jste úspěšně odhlášen ze směny.", "Informace");
+            this.showMessageDialogInformation("Byl/a jste úspěšně odhlášen ze směny.", INFORMATION_TEXT);
         }
     }
 
+    /**
+     * Aktualizuje textovou informaci o stavu smeny pro aktualne prihlaseneho uzivatele
+     * @param idWorkshift   id smeny
+     * @param message   informace
+     * @throws FileNotFoundException
+     * @throws NotBoundException
+     * @throws RemoteException 
+     */
     public void updateOccupationMessageUser(int idWorkshift, String message) throws FileNotFoundException, NotBoundException, RemoteException {
         Workshift ws = ServiceFacade.getInstance().getWorkshiftById(idWorkshift);
         if (ws.getIdUser().equals(user.getUserId())) {
             ServiceFacade.getInstance().updateWorkshiftOccupation(ws.getIdWorkshift(), message);
-            this.showMessageDialogInformation("Akce úspěšně provedena.", "Informace");
+            this.showMessageDialogInformation("Akce úspěšně provedena.", INFORMATION_TEXT);
         } else {
-            this.showErrorMessage("Akce se nezdařila. Nejste obsazen/a do vybrané směny.", "Chyba");
+            this.showErrorMessage("Akce se nezdařila. Nejste obsazen/a do vybrané směny.", ERROR_TEXT);
         }
     }
 
+    /**
+     * Aktualizuje textovou informaci o stavu smeny.
+     * @param idWorkshift
+     * @param message
+     * @throws FileNotFoundException
+     * @throws NotBoundException
+     * @throws RemoteException 
+     */
     public void updateOccupationMessage(int idWorkshift, String message) throws FileNotFoundException, NotBoundException, RemoteException {
         ServiceFacade.getInstance().updateWorkshiftOccupation(idWorkshift, message);
     }
@@ -807,9 +840,6 @@ public class SmenyController /*implements IModuleInteface */ {
         return this.dataListTemplates;
     }
 
-    /**
-     * @return the modelTypeWorkShift
-     */
     public ResultTableModel getModelTypeWorkShift() {
         return modelTypeWorkShift;
     }
@@ -818,9 +848,6 @@ public class SmenyController /*implements IModuleInteface */ {
         return modelWorkShift;
     }
 
-    /**
-     * @return the modelRoles
-     */
     public DefaultComboBoxModel getModelRoles() {
         return modelRoles;
     }
@@ -854,8 +881,9 @@ public class SmenyController /*implements IModuleInteface */ {
     }
 
     /**
-     * Save template in CreateTemplateForm
-     * @param templateName
+     * Ulozi sablonu daneho nazvu.    
+     * 
+     * @param templateName  nazev sablony
      * @throws FileNotFoundException
      * @throws NotBoundException
      * @throws RemoteException 
@@ -906,27 +934,28 @@ public class SmenyController /*implements IModuleInteface */ {
     }
 
     /**
-     * Delete template. Template can not be recovered.
-     * @param templateName
+     * Smaze natrvalo sablonu.
+    
+     * @param templateName  nazev sablony
      * @throws FileNotFoundException
      * @throws RemoteException
      * @throws NotBoundException 
      */
     public void deleteTemplateByName(String templateName) throws FileNotFoundException, RemoteException, NotBoundException {
         if (templateName == null || templateName.trim().equals("")) {
-            this.showErrorMessage("Šablona nebyla vybrána.", "Chyba");
+            this.showErrorMessage("Šablona nebyla vybrána.", ERROR_TEXT);
         } else {
             ServiceFacade.getInstance().deleteTemplateByName(templateName);
-            this.showMessageDialogInformation("Šablona úspěšně smazána.", "Informace");
+            this.showMessageDialogInformation("Šablona úspěšně smazána.", INFORMATION_TEXT);
         }
     }
 
     /**
-     * Save Typeworkshift to database entred from CreateShiftForm
-     * @param shiftName
-     * @param roleName
-     * @param dateFrom
-     * @param dateTo
+     * Ulozi typ pracovni smeny do databaze. Pouzito ve formulari CreateShiftForm     
+     * @param shiftName nazev smeny
+     * @param roleName  nazev role
+     * @param dateFrom  cas trvani smeny "od"
+     * @param dateTo    cas trvani smeny "do"
      * @throws FileNotFoundException
      * @throws NotBoundException
      * @throws RemoteException 
@@ -964,26 +993,26 @@ public class SmenyController /*implements IModuleInteface */ {
             tw.setIdWorkshiftRole(role.getRoleId());
             ServiceFacade.getInstance().createNewTypewWorkShift(tw);
 
-            showMessageDialogInformation("Typ směny byl uložen.", "Informace");
+            showMessageDialogInformation("Typ směny byl uložen.", INFORMATION_TEXT);
         }
 
         return process;
     }
 
     /**
-     * Count days from milliseconds
-     * @param time (in milliseconds)
-     * @return days
+     * Spocita pocet dni z milisekund.     
+     * @param time cas v milisekundach
+     * @return days pocet dni
      */
     private long getDays(long time) {
         return time / 1000 / 3600 / 24;
     }
 
     /**
-     * Save workshift to specified range of dates.
-     * @param dateFrom
-     * @param dateTo
-     * @param typeWorkShifts
+     * Ulozi pracovni smenu do dnu v rozmezi zadanych datumu.     
+     * @param dateFrom  datum "od"
+     * @param dateTo    datum "do"
+     * @param filter    filtr dle ktereho se smeny ukladaji
      * @return
      * @throws FileNotFoundException
      * @throws NotBoundException
@@ -1048,6 +1077,9 @@ public class SmenyController /*implements IModuleInteface */ {
                                     isToSave = true;
                                 }
                                 break;
+                            default:
+                                isToSave = true;
+                                break;
                         }
                         if (isToSave) {
                             ServiceFacade.getInstance().createNewWorkshift(tempDate, idTypeWorkShift);
@@ -1075,78 +1107,64 @@ public class SmenyController /*implements IModuleInteface */ {
     }
 
     /**
-     * Show error message in stand-alone dialog window.
-     * @param error
-     * @param title 
+     * Zobrazi chybovou zpravu v samostatnem dialogovem okne.     
+     * @param error popis chyby
+     * @param title titulek okna
      */
     public void showErrorMessage(String error, String title) {
         JOptionPane.showMessageDialog(null, error, title, JOptionPane.ERROR_MESSAGE);
     }
 
     /**
-     * Show information message in stand-alone dialog window.
-     * @param error
-     * @param title 
+     * Zobrazi spravu v samostatnem dialogovem okne.     
+     * @param text  text zpravy
+     * @param title titulek okna
      */
-    public void showMessageDialogInformation(String error, String title) {
-        JOptionPane.showMessageDialog(null, error, title, JOptionPane.INFORMATION_MESSAGE);
+    public void showMessageDialogInformation(String text, String title) {
+        JOptionPane.showMessageDialog(null, text, title, JOptionPane.INFORMATION_MESSAGE);
     }
 
     /**
      * Klasicke Ano/Ne potvrzovací okno
      * @param text Popis
-     * @param title
+     * @param title titulek okna
      * @return 0, pokud klikne na ano
      */
     public int showConfirmDialogStandard(String text, String title) {
         return JOptionPane.showConfirmDialog(null, text, title, JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
     }
 
-    /**
-     * @return the dateFrom
-     */
     public Date getDateFrom() {
         return dateFrom;
     }
 
-    /**
-     * @param dateFrom the dateFrom to set
-     */
     public void setDateFrom(Date dateFrom) {
         this.dateFrom = dateFrom;
     }
 
-    /**
-     * @return the dateTo
-     */
     public Date getDateTo() {
         return dateTo;
     }
 
-    /**
-     * @param dateTo the dateTo to set
-     */
     public void setDateTo(Date dateTo) {
         this.dateTo = dateTo;
     }
 
     /**
+     * Return the week in wchich is the selected date.
      * @return the week
      */
     public int getWeek() {
         return week;
     }
 
-    /**
-     * @param week the week to set
-     */
     public void setWeek(int week) {
         this.week = week;
     }
 
     /**
-     * Gets and sets a week of year and first and last day in that week where is
-     * current date.
+     * Nastavuje tyden, datum prvniho a posledniho dne v tydnu pro listovani
+     * v tabulce planovanych smen.     
      */
     public void initRangeDate(Locale locale) {
         Calendar cal = Calendar.getInstance(locale);

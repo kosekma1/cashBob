@@ -13,9 +13,10 @@ import cz.cvut.fel.restauracefel.library.service.EmptyListException;
 import cz.cvut.fel.restauracefel.library.service.Validator;
 
 /**
- * Trida reprezentujici GUI formular pro vytvareni noveho uctu.
+ * Trida reprezentujici formular, ktery zobrazi informace o ovladani aplikace.
+ * Neni implementovan.
  *  
- * @author Tomas Hnizdil
+ * @author Martin Kosek
  */
 public class InformationForm extends AbstractForm {
 

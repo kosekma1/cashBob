@@ -11,9 +11,9 @@ import javax.swing.AbstractAction;
 import javax.swing.JTable;
 
 /**
- * Action for logout current user to the workshift for context menu in OverViewShiftForm.
+ * Trida akce pro odhlaseni aktualne prihlaseneho uzivatele ze smeny v kontextove nabidce pro formular OverViewShiftForm.
  * 
- * @author Martin
+ * @author Martin Kosek
  */
 public class LogoutCurrentUserAction extends AbstractAction {
 
@@ -40,6 +40,7 @@ public class LogoutCurrentUserAction extends AbstractAction {
             } catch (RemoteException ex) {                
                 Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
             } catch (Exception ex) {                
+                Logger.getLogger(CreateTemplateForm.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             SmenyController.getInstance().showMessageDialogInformation("Vyberte řádek", "Informace");

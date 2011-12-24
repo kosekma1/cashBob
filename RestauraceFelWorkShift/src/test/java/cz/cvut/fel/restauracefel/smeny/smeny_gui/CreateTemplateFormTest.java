@@ -12,8 +12,8 @@ import java.util.logging.Logger;
 import junit.framework.TestCase;
 
 /**
- *
- * @author Martin
+ * Testovaci trida pro testovani formulare pro vytvareni sablon.
+ * @author Martin Kosek
  */
 public class CreateTemplateFormTest extends TestCase {
     
@@ -38,9 +38,7 @@ public class CreateTemplateFormTest extends TestCase {
     public void testRefresh() {
         /*System.out.println("refresh");
         CreateTemplateForm instance = null;
-        instance.refresh();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        instance.refresh();              
          * 
          */
     }
@@ -51,9 +49,7 @@ public class CreateTemplateFormTest extends TestCase {
     public void testClearFields() {
         /*System.out.println("clearFields");
         CreateTemplateForm instance = null;
-        instance.clearFields();
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        instance.clearFields();        
          * 
          */
     }
@@ -66,9 +62,7 @@ public class CreateTemplateFormTest extends TestCase {
          * System.out.println("loadCreateOrderForm");
         int accountId = 0;
         CreateTemplateForm instance = null;
-        instance.loadCreateOrderForm(accountId);
-        // TODO review the generated test code and remove the default call to fail.
-        fail("The test case is a prototype.");
+        instance.loadCreateOrderForm(accountId);                
          * */
          
     }

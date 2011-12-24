@@ -15,9 +15,9 @@ import javax.swing.AbstractAction;
 import javax.swing.JTable;
 
 /**
- * Action for Request to cancel current user occupation of workshift for context menu in OverViewShiftForm.
+ * Trida akce pro zadost o zruseni obsazeni uzivatele pro kontextove menu ve formulari OverViewShiftForm.
  * 
- * @author Martin
+ * @author Martin Kosek
  */
 public class RequestCancelOccupationAction extends AbstractAction {
 

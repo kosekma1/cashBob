@@ -6,12 +6,12 @@ import java.rmi.RemoteException;
 import cz.cvut.fel.restauracefel.library.service.EmptyListException;
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
 import javax.swing.JTable;
-//import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
 
 /**
- * Trida vytvarejici dialog pro vyber stolu, k nemuz bude ucet nalezet.
+ * Trida vytvarejici dialog pro vyber smeny, ktera bude vlozena do sablony
+ * nebo tabulky pro planovani smen.
  *
- * @author Tomas Hnizdil
+ * @author Martin Kosek
  */
 public class ChooseShiftDialog extends AbstractDialog {
     
@@ -43,10 +43,7 @@ public class ChooseShiftDialog extends AbstractDialog {
      * @throws java.rmi.NotBoundException
      * @throws java.io.FileNotFoundException
      */
-    protected void refresh() throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {
-        //String[] tables = ServiceFacade.getInstance().getTableNames();
-        //if (tables==null) throw new EmptyListException("Žádné stoly", "V systému nejsou momentálně evidovány žádné stoly.");
-        //String[] tables = new String[]{"První směna", "Druhá směna", "Třetí směna", "Čtvrtá směna", "Pátá směna", "Šestá směna", "Sedmá směna", "Osmá směna"};
+    protected void refresh() throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {      
         SmenyController.getInstance().generateDataListWorkShifts();        
         jList1.setListData(SmenyController.getInstance().getDataListWorkShifts());
     }

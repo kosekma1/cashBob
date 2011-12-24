@@ -1,11 +1,6 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
-import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController.WorkShiftFilter;
 import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import java.rmi.NotBoundException;
@@ -16,9 +11,9 @@ import javax.swing.AbstractAction;
 import javax.swing.JTable;
 
 /**
- * Action for approved current user occupation of the workshift for context menu in OverViewShiftForm.
+ * Trida akce potvrzeni aktualne obsazeneho uzivatele na smenu ve formulari OverViewShiftForm 
  * 
- * @author Martin
+ * @author Martin Kosek
  */
 public class ApproveOccupyAction extends AbstractAction {
 
@@ -30,7 +25,7 @@ public class ApproveOccupyAction extends AbstractAction {
         this.parent = parent;
         this.table = table;      
     }
-
+        
     public void actionPerformed(ActionEvent e) {
         int rowNumber = table.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny        
         String message = "Potvrzeno";

@@ -6,12 +6,11 @@ import java.rmi.RemoteException;
 import cz.cvut.fel.restauracefel.library.service.EmptyListException;
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
 import javax.swing.JTable;
-//import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
 
 /**
  * Trida vytvarejici dialog pro vyber smeny pro smazani.
  *
- * @author Tomas Hnizdil
+ * @author Martin Kosek
  */
 public class ChooseDeleteShiftDialog extends AbstractDialog {
 
@@ -22,7 +21,7 @@ public class ChooseDeleteShiftDialog extends AbstractDialog {
      *
      * @param parent instance tridy MainFrame jenz vytvorila tento formular
      * @param modal
-     * @param target textove vstupni pole, do ktereho se bude zapisovat vysledek
+     * @param targetTable tabulka ktera se bude upravovat
      *
      * @throws java.rmi.RemoteException
      * @throws java.rmi.NotBoundException
@@ -43,13 +42,7 @@ public class ChooseDeleteShiftDialog extends AbstractDialog {
      * @throws java.rmi.NotBoundException
      * @throws java.io.FileNotFoundException
      */
-    protected void refresh() throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {
-        //String[] tables = ServiceFacade.getInstance().getTableNames();
-        //if (tables==null) throw new EmptyListException("Žádné stoly", "V systému nejsou momentálně evidovány žádné stoly.");
-        
-        //shifts for delete - odkaz na pole nebo list by mel byt predan konstruktorem nebo nejakou set metodou
-        //String[] tables = new String[]{"První směna", "Druhá směna", "Třetí směna", "Čtvrtá směna", "Pátá směna", "Šestá směna", "Sedmá směna", "Osmá směna"};
-        //jList1.setListData(tables);
+    protected void refresh() throws EmptyListException, RemoteException, NotBoundException, FileNotFoundException {        
         SmenyController.getInstance().generateDataListForDelete();   
         jList1.setListData(SmenyController.getInstance().getDataListForDelete());        
     }

@@ -13,9 +13,10 @@ import cz.cvut.fel.restauracefel.library.service.EmptyListException;
 import cz.cvut.fel.restauracefel.library.service.Validator;
 
 /**
- * Trida reprezentujici GUI formular pro vytvareni noveho uctu.
+ * Trida reprezentujici formular pro zobrazeni ci export statistik z modulu Smeny.
+ * Neni implementovano.
  *  
- * @author Tomas Hnizdil
+ * @author Martin Kosek
  */
 public class StatisticsForm extends AbstractForm {
 

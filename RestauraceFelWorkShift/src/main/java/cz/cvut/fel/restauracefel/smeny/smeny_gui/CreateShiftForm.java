@@ -1,20 +1,15 @@
 package cz.cvut.fel.restauracefel.smeny.smeny_gui;
 
-import cz.cvut.fel.restauracefel.hibernate.Role;
-import cz.cvut.fel.restauracefel.hibernate.Typeworkshift;
 import java.awt.Insets;
 import java.io.FileNotFoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
-import cz.cvut.fel.restauracefel.library.service.EmptyListException;
 
 import cz.cvut.fel.restauracefel.library.service.Validator;
 import cz.cvut.fel.restauracefel.smeny.SmenyController.SmenyController;
 import java.util.Date;
-import java.util.List;
 import cz.cvut.fel.restauracefel.smeny_service.ServiceFacade;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
@@ -135,14 +130,9 @@ public class CreateShiftForm extends AbstractForm {
         billPanel.setBackground(javax.swing.UIManager.getDefaults().getColor("CheckBox.light"));
         billPanel.setOpaque(false);
 
-        shiftNameTextField.setFont(new java.awt.Font("Tahoma", 0, 14));
+        shiftNameTextField.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         shiftNameTextField.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 1, true));
         shiftNameTextField.setMargin(new Insets(10, 10, 10, 10));
-        shiftNameTextField.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                shiftNameTextFieldActionPerformed(evt);
-            }
-        });
 
         jLabelInfoText.setFont(new java.awt.Font("Calibri", 1, 22));
         jLabelInfoText.setText("Nový typ směny");
@@ -160,13 +150,8 @@ public class CreateShiftForm extends AbstractForm {
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14));
         jLabel4.setText("Do:");
 
-        workRoleComboBox.setFont(new java.awt.Font("Tahoma", 0, 12));
+        workRoleComboBox.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         workRoleComboBox.setModel(SmenyController.getInstance().getModelRoles());
-        workRoleComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                workRoleComboBoxActionPerformed(evt);
-            }
-        });
 
         fromSpinner.setFont(new java.awt.Font("Tahoma", 0, 12));
         fromSpinner.setMinimumSize(new java.awt.Dimension(50, 20));
@@ -191,7 +176,7 @@ public class CreateShiftForm extends AbstractForm {
 
         jPanel1.setPreferredSize(new java.awt.Dimension(537, 455));
 
-        shiftTable.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
+        shiftTable.setFont(new java.awt.Font("Calibri", 0, 14));
         shiftTable.setModel(SmenyController.getInstance().getModelTypeWorkShift());
         jScrollPane1.setViewportView(shiftTable);
 
@@ -315,7 +300,7 @@ public class CreateShiftForm extends AbstractForm {
         try {
             saveTypeWorkshift();
 
-            /* TODO - Keybord???
+            /* TODO - zobrazit Keyboard
             KeyboardDialog keyboard = new KeyboardDialog(parent, true);
             keyboard.setLocation(point);
             keyboard.setTextField(jTextFieldName);
@@ -332,13 +317,6 @@ public class CreateShiftForm extends AbstractForm {
 
     }//GEN-LAST:event_jButtonSaveShiftActionPerformed
 
-    private void workRoleComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_workRoleComboBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_workRoleComboBoxActionPerformed
-
-private void shiftNameTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shiftNameTextFieldActionPerformed
-// TODO add your handling code here:
-}//GEN-LAST:event_shiftNameTextFieldActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel billPanel;
     private javax.swing.JSpinner fromSpinner;

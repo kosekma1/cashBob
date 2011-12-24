@@ -23,7 +23,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
 /**
- * Trida reprezentujici GUI formular pro spravu planovanych smen.
+ * Trida reprezentujici formular pro spravu planovanych smen ze strany vedouciho.
  *  
  * @author Martin Kosek
  */
@@ -476,7 +476,7 @@ private void jButtonCancelOccupyActionPerformed(java.awt.event.ActionEvent evt) 
         switch (index) {
             case 0:
                 return WorkShiftFilter.ALL;
-            case 1: //TODO jine filtry POZOR!!!!
+            case 1:
                 return WorkShiftFilter.OCCUPATION;
             case 2:
                 return WorkShiftFilter.UNOCCUPATION;
@@ -486,8 +486,9 @@ private void jButtonCancelOccupyActionPerformed(java.awt.event.ActionEvent evt) 
                 return WorkShiftFilter.UNCONFIRMED;
             case 5:
                 return WorkShiftFilter.REQUEST_CANCEL;
-        }
-        return WorkShiftFilter.ALL;
+            default:
+                return WorkShiftFilter.ALL;
+        }        
     }
 
     private void logError(Exception ex) {

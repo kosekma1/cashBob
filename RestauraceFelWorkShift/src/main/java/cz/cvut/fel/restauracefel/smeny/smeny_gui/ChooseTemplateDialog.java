@@ -14,7 +14,7 @@ import javax.swing.JTable;
 /**
  * Trida vytvarejici dialog pro vyber stolu, k nemuz bude ucet nalezet.
  *
- * @author Tomas Hnizdil
+ * @author Martin Kosek
  */
 public class ChooseTemplateDialog extends AbstractDialog {
 
@@ -175,10 +175,7 @@ public class ChooseTemplateDialog extends AbstractDialog {
     }//GEN-LAST:event_jButtonBackActionPerformed
 
     private void clicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_clicked
-        try {
-            //TODO: implement adding workshifts to table - select all workshifts from template
-            //SmenyController.getInstance().addWorkShift((String) jList1.getSelectedValue());
-            //targetTable.setModel(SmenyController.getInstance().getModelWorkShift());
+        try {            
             SmenyController.getInstance().addWorkShiftFromTemplate((String)jList1.getSelectedValue());
             targetTable.setModel(SmenyController.getInstance().getModelWorkShift());                
         } catch (FileNotFoundException ex) {

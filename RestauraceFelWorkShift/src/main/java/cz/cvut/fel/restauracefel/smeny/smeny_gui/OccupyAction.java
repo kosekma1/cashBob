@@ -12,7 +12,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JTable;
 
 /**
- * Action for make occupation of the workshift for context menu in OverViewShiftForm.
+ * Trida akce pro obsazeni smeny prihlasenym uzivatelem v kontextovem menu ve formulari OverViewShiftForm.
  * 
  * @author Martin Kosek
  */

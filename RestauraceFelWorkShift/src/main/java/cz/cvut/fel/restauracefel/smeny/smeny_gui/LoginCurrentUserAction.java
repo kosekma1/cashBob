@@ -11,9 +11,10 @@ import javax.swing.AbstractAction;
 import javax.swing.JTable;
 
 /**
- * Action for login current user to the workshift for context menu in OverViewShiftForm.
+ * Trida akce pro prihlaseni aktualne prihlaseneho uzivatele do systemu. Je pouzito
+ * v kontextove nabidce ve formulari OverViewShiftForm. 
  * 
- * @author Martin
+ * @author Martin Kosek
  */
 public class LoginCurrentUserAction extends AbstractAction {
 
@@ -27,7 +28,7 @@ public class LoginCurrentUserAction extends AbstractAction {
     }
 
     public void actionPerformed(ActionEvent e) {
-        int rowNumber = this.table.getSelectedRow(); //bude slouzit jako index pro datovou strukturu ve ktere bude ulozeno id smeny                
+        int rowNumber = this.table.getSelectedRow(); //slouzi jako index pro datovou strukturu ve ktere bude ulozeno id smeny                
         if (rowNumber > -1) {
             try {
                 int workShiftId = SmenyController.getInstance().getWorkShiftIdFromOverViewTable(rowNumber);
@@ -40,6 +41,7 @@ public class LoginCurrentUserAction extends AbstractAction {
             } catch (RemoteException ex) {
                 Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
             } catch (Exception ex) {
+                Logger.getLogger(OverviewEmployeeShiftForm.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             SmenyController.getInstance().showMessageDialogInformation("Vyberte řádek", "Informace");           
